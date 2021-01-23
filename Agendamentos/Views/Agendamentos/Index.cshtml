@@ -1,0 +1,95 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<style>
+    .col {
+        padding-left: 0;
+    }
+
+    .col:last-child {
+        padding-right: 0;
+    }
+</style>
+
+@*Aqui é onde o scheduler inicia*@
+<div id='calendar'></div>
+
+<!-- Modal de novo agendamento -->
+<div class="modal fade" id="md-editar-agendamento" data-backdrop="static" data-keyboard="false" tabindex="-1" 
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Criar agendamento</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="container">
+                        <div class="row .no-gutters">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="txt-data">Data:</label>
+                                    <input type="date" class="form-control" id="txt-data">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <label for="sel-status">Status:</label>
+                                <select id="sel-status" class="custom-select">
+                                    <option selected></option>
+                                    <option value="1">Agendado</option>
+                                    <option value="2">Cancelado</option>
+                                    <option value="3">Remarcado</option>
+                                    <option value="4">Finalizado</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="sel-cliente">Cliente:</label>
+                        <select id="sel-cliente" class="custom-select">
+                            <option selected></option>
+                            <option value="1">Heleno Sales Mesquita</option>
+                            <option value="2">Maria da Penha Sales Mesquita</option>
+                            <option value="3">Heidy Sales Mesquita</option>
+                            <option value="4">Sebastião Mesquita de Souza</option>
+                            <option value="5">Helena Mayara Rodrigues Pacheco</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="sel-profissional">Profissional:</label>
+                        <select id="sel-profissional" class="custom-select">
+                            <option selected></option>
+                            <option value="1">Getulio Covas</option>
+                            <option value="2">Sirley Mateus Andova</option>
+                            <option value="3">Welberson Moraes</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="sel-procedimento">Procedimento:</label>
+                        <select id="sel-procedimento" class="custom-select">
+                            <option selected></option>
+                            <option value="1">Escova permanente - Disp: 08:50 as 14:30</option>
+                            <option value="2">Corte masculino - Disp: 14:50 as 18:30</option>
+                            <option value="3">Luzes - Disp: 09:30 as 15:00</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-salvar" type="button" class="btn btn-primary">Salvar</button>
+                <button id="btn-cancelar" type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/lib/fullcalendar-5.5.1/lib/locales/pt-br.js"></script>
+    <script src="~/js/Agendamentos/Index/index.js"></script>
+}
