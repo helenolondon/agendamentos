@@ -5328,19 +5328,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Heleno-pink\\.nuget\\packages\\": {}
+    "C:\\Users\\Heleno\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Lab\\Agendamentos\\Agendamentos\\Agendamentos.Infra\\Agendamentos.Infra.csproj",
+      "projectUniqueName": "C:\\lab\\agendamentos\\Agendamentos.Infra\\Agendamentos.Infra.csproj",
       "projectName": "Agendamentos.Infra",
-      "projectPath": "C:\\Lab\\Agendamentos\\Agendamentos\\Agendamentos.Infra\\Agendamentos.Infra.csproj",
-      "packagesPath": "C:\\Users\\Heleno-pink\\.nuget\\packages\\",
-      "outputPath": "C:\\Lab\\Agendamentos\\Agendamentos\\Agendamentos.Infra\\obj\\",
+      "projectPath": "C:\\lab\\agendamentos\\Agendamentos.Infra\\Agendamentos.Infra.csproj",
+      "packagesPath": "C:\\Users\\Heleno\\.nuget\\packages\\",
+      "outputPath": "C:\\lab\\agendamentos\\Agendamentos.Infra\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Heleno-pink\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Heleno\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -5352,7 +5352,6 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
-          "targetAlias": "netcoreapp3.1",
           "projectReferences": {}
         }
       },
@@ -5364,7 +5363,6 @@
     },
     "frameworks": {
       "netcoreapp3.1": {
-        "targetAlias": "netcoreapp3.1",
         "dependencies": {
           "Microsoft.EntityFrameworkCore": {
             "target": "Package",
@@ -5394,7 +5392,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.101\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.302\\RuntimeIdentifierGraph.json"
       }
     }
   }
