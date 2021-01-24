@@ -20,6 +20,7 @@ namespace Agendamentos.Infra.Repositorios
             return this.dbContext.AgendamentoProfissionais
                 .Include(b => b.Procedimento)
                 .Include(m => m.Procedimento.Pessoa)
+                .Include(s => s.Procedimento.Servico)
                 .ToList();
         }
     }

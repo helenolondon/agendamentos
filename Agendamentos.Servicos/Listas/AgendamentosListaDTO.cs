@@ -28,16 +28,14 @@ namespace Agendamentos.Servicos.Listas
         public void LoadFromAgendamentoProfissionalLista(List<AgendamentoProfissional> lista)
         {
             this.Clear();
+            AgendamentoDTO temp;
 
             lista.ForEach((e) =>
             {
-                this.Add(new AgendamentoDTO()
-                {
-                    CodAgendamento = e.Cd_Agendamento,
-                    CodProcedimento = e.Cd_Procedimento,
-                    Inicio = e.Data_Inicio,
-                    Termino = e.Data_Termino
-                });
+                temp = new AgendamentoDTO();
+                temp.LoadFromAgendamento(e);
+
+                this.Add(temp);
             });
         }
     }
