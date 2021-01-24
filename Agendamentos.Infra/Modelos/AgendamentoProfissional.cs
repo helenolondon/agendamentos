@@ -14,6 +14,8 @@ namespace Agendamentos.Infra.Modelos
         public int Cd_Agendamento { get; set; }
         [Required]
         public int Cd_Procedimento { get; set; }
+        [ForeignKey("Cd_Procedimento")]
+        public Procedimento Procedimento { get; set; }
         [Required]
         public DateTime Data_Inicio { get; set; }
         [Required]

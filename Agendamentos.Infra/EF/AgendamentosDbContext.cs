@@ -12,13 +12,14 @@ namespace Agendamentos.Infra.EF
     {
         private readonly string connectionString;
         public DbSet<AgendamentoProfissional> AgendamentoProfissionais { get; set; }
-        public DbSet<Pessoa> Pessoas { get; set; }
+        public  DbSet<Pessoa> Pessoas { get; set; }
         public DbSet<Servico> Servicos { get; set; }
         public DbSet<Procedimento> Procedimentos { get; set; }
 
         public AgendamentosDbContext(string connectionString)
         {
             this.connectionString = connectionString;
+            this.ChangeTracker.LazyLoadingEnabled = false;
         }
 
         public AgendamentosDbContext(DbContextOptions options) : base(options)
@@ -28,18 +29,11 @@ namespace Agendamentos.Infra.EF
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(this.connectionString);
-            
             base.OnConfiguring(optionsBuilder);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<Procedimento>()
-            //    .HasOne<Pessoa>(l => l.Cd_Pessoa)
-            //    .WithMany()
-            //    .HasForeignKey(l => l.Cd_Pessoa)
-            //    .HasPrincipalKey(u => u.Login);
-
             //modelBuilder.Entity<LoginODP>()
             //    .HasOne<UsuarioODP>(l => l.UsuarioCadastro)
             //    .WithMany()

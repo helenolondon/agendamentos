@@ -1,5 +1,6 @@
 ﻿using Agendamentos.Infra.EF;
 using Agendamentos.Infra.Modelos;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,10 @@ namespace Agendamentos.Infra.Repositorios
         }
         public List<AgendamentoProfissional> ListarAgendamentos()
         {
-            return this.dbContext.AgendamentoProfissionais.ToList();
+            return this.dbContext.AgendamentoProfissionais
+                .Include(b => b.Procedimento)
+                .Include(m => m.Procedimento.Pessoa)
+                .ToList();
         }
     }
 }
