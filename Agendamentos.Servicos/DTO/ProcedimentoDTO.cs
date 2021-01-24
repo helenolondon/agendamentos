@@ -15,8 +15,7 @@ namespace Agendamentos.Servicos.DTO
         public int CodDiaSemana { get; set; }
         public string DiaDaSemana { get; set; }
         public String Num_HoraInicio { get; set; }
-        public String Num_HoraFim { get; set; }
-
+        public string Num_HoraFim { get; set; }
         internal void LoadFromProcedimento(Procedimento e)
         {
             this.CodPessoa = e.Cd_Pessoa;
@@ -25,8 +24,8 @@ namespace Agendamentos.Servicos.DTO
             this.CodServico = e.Cd_Servico;
             this.NomePessoa = e.Pessoa?.Txt_Nome;
             this.NomeServico = e.Servico?.Nome_Servico;
-            this.Num_HoraFim = e.Num_HoraFim.ToString();
-            this.Num_HoraInicio = e.Num_HoraInicio.ToString();
+            this.Num_HoraFim = e.Num_HoraFim.ToString(@"hh\:mm");
+            this.Num_HoraInicio = e.Num_HoraInicio.ToString(@"hh\:mm");
             this.DiaDaSemana = RetDiaSemana(this.CodDiaSemana); 
         }
 
@@ -55,5 +54,16 @@ namespace Agendamentos.Servicos.DTO
             }
         }
 
+        /// <summary>
+        /// Item de display no lookup do scheduler
+        /// </summary>
+        public string ItemDisplay
+        {
+            get
+            {
+                return this.NomeServico + " Disp: " + this.Num_HoraInicio + " as " + 
+                    this.Num_HoraFim;
+            }
+        }
     }
 }

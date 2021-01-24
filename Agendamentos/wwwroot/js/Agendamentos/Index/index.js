@@ -39,17 +39,10 @@
         var pop = $('#md-editar-agendamento');
 
         if (pop) {
-            loadLookups();
-
-            pop.draggable();
-            pop.modal();
-
-            calendar.addEvent({
-                title: 'Event1',
-                start: '2021-01-21 08:00',
-                end: '2021-01-21 08:15'
+            loadLookups(() => {
+                pop.draggable();
+                pop.modal();
             });
-
         }
     }
 
@@ -82,6 +75,29 @@
         form[0].reset();
     })
 
+    $("#sel-profissional").on('change', () => {
+        loadProcedimentos();
+    });
+
+    // Carrega os procedimetos do profiossinal
+    function loadProcedimentos() {
+        var select = $("#sel-procedimento");
+        var selProcCode = $("#sel-profissional").val();
+
+        select.find("option").remove();
+
+        if (!selProcCode) {
+            return $.Deferred().resolve();
+        }
+
+        return $.get("api/procedimentos/" + selProcCode, (data) => {
+            $.each(data, (i, item) => {
+                select.append($("<option>", { value: item.codProcedimento, text: item.itemDisplay }));
+            });
+        });
+    }
+
+    // Carrega Lookups
     function loadLookups(callBack) {
 
         var q1 = $.get("api/pessoas", (data) => {
@@ -99,6 +115,12 @@
             $.each(data, (i, item) => {
                 select.append($("<option>", { value: item.codPessoa, text: item.nomePessoa }));
             })
+
+            select.trigger("change");
+        })
+
+        $.when(q1, loadProcedimentos()).then(() => {
+            callBack();
         })
     }
 });
