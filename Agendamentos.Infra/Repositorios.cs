@@ -16,9 +16,8 @@ namespace Agendamentos.Infra.Repositorios
         }
         
         private string RetConnectionString()
-        {
-            
-            return @"Provider=SQLNCLI11;Server=.\SQLEXPRESS;Database=Odontica;Uid=sa;Pwd=Gaia010265";
+        {            
+            return @"Password=Gaia010265;Persist Security Info=True;User ID=sa;Initial Catalog=Odontica;Data Source=srv-praianorte2\sqlexpress";
         }
 
         public IAgendamentosRepositorio AgendamentosRepositorio

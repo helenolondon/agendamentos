@@ -23,6 +23,8 @@ namespace Agendamentos.Infra.EF
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            optionsBuilder.UseSqlServer(this.connectionString);
+            
             base.OnConfiguring(optionsBuilder);
         }
 
