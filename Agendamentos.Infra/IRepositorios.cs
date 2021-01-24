@@ -9,5 +9,6 @@ namespace Agendamentos.Infra
     {
         IAgendamentosRepositorio AgendamentosRepositorio { get; }
         IPessoasRepositorio PessoasRepositorio { get; }
+        IProcedimentosRepositorio ProcedimentosRepositorio { get; }
     }
 }

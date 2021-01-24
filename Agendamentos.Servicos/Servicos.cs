@@ -10,6 +10,7 @@ namespace Agendamentos.Servicos
 
         private IAgendamentosServico agendamentosServico;
         private IPessoaServico pessoaServico;
+        private IProcedimentoServico procedimentoServico;
 
         public Servicos()
         {
@@ -43,6 +44,20 @@ namespace Agendamentos.Servicos
                 this.pessoaServico = new PessoaServico(this.repositorios);
 
                 return this.pessoaServico;
+            }
+        }
+        public IProcedimentoServico ProcedimentoServico
+        {
+            get
+            {
+                if (this.procedimentoServico != null)
+                {
+                    return this.procedimentoServico;
+                }
+
+                this.procedimentoServico = new ProcedimentoServico(this.repositorios);
+
+                return this.procedimentoServico;
             }
         }
     }

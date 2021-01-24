@@ -10,6 +10,7 @@ namespace Agendamentos.Infra.Repositorios
         private readonly AgendamentosDbContext dbContext;
         private IAgendamentosRepositorio agendamentosRepositorio;
         private IPessoasRepositorio pessoasRepositorio;
+        private IProcedimentosRepositorio procedimentosRepositorio;
 
 
         public Repositorios()
@@ -45,6 +46,19 @@ namespace Agendamentos.Infra.Repositorios
                 }
 
                 return this.pessoasRepositorio;
+            }
+        }
+
+        public IProcedimentosRepositorio ProcedimentosRepositorio
+        {
+            get
+            {
+                if (this.procedimentosRepositorio == null)
+                {
+                    this.procedimentosRepositorio = new ProcedimentosRepositorio(this.dbContext);
+                }
+
+                return this.procedimentosRepositorio;
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Agendamentos.Infra.EF;
 using Agendamentos.Infra.Modelos;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +19,9 @@ namespace Agendamentos.Infra.Repositorios
         {
             return this.dbContext.Procedimentos
                 .Where(p => p.Cd_Pessoa == codProfiossional)
-                .OrderBy(h => h.Num_HoraFim)
+                .Include(t => t.Pessoa)
+                .Include(s => s.Servico)
+                .OrderBy(h => h.Num_HoraInicio)
                 .ToList();
         }
     }

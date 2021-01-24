@@ -12,36 +12,13 @@ namespace Agendamentos.Controllers.Apis
     [ApiController]
     public class ProcedimentosController : ControllerBase
     {
-        // GET: api/<ProcedimentosController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        [Route("{codPessoa:int}")]
+        public IActionResult ListarPorPessoa(int codPessoa)
         {
-            return new string[] { "value1", "value2" };
-        }
+            var servicos = new Agendamentos.Servicos.Servicos();
 
-        // GET api/<ProcedimentosController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<ProcedimentosController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<ProcedimentosController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<ProcedimentosController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return Ok(servicos.ProcedimentoServico.ListaPorPessoa(codPessoa));
         }
     }
 }
