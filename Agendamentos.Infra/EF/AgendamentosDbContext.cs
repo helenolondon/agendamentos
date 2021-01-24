@@ -12,6 +12,10 @@ namespace Agendamentos.Infra.EF
     {
         private readonly string connectionString;
         public DbSet<AgendamentoProfissional> AgendamentoProfissionais { get; set; }
+        public DbSet<Pessoa> Pessoas { get; set; }
+        public DbSet<Servico> Servicos { get; set; }
+        public DbSet<Procedimento> Procedimentos { get; set; }
+
         public AgendamentosDbContext(string connectionString)
         {
             this.connectionString = connectionString;
@@ -30,10 +34,10 @@ namespace Agendamentos.Infra.EF
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Entity<LoginODP>()
-            //    .HasOne<UsuarioODP>(l => l.UsuarioAlteracao)
+            //modelBuilder.Entity<Procedimento>()
+            //    .HasOne<Pessoa>(l => l.Cd_Pessoa)
             //    .WithMany()
-            //    .HasForeignKey(l => l.UsuarioAlt)
+            //    .HasForeignKey(l => l.Cd_Pessoa)
             //    .HasPrincipalKey(u => u.Login);
 
             //modelBuilder.Entity<LoginODP>()

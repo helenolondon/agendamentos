@@ -6,11 +6,12 @@
         initialView: 'timeGridWeek',
         timeZone: 'America/Sao_Paulo',
         locale: 'pt-br',
-        weekends: false,
+        weekends: true,
         slotDuration: '00:15:00',
         slotLabelInterval: '00:30',
         scrollTime: '08:00:00',
         editable: true,
+        events: 'api/agendamentos',
         slotLabelFormat: {
             hour: 'numeric',
             minute: '2-digit',

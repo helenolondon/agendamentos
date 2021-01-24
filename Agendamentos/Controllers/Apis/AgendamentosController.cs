@@ -12,8 +12,6 @@ namespace Agendamentos.Controllers.Apis
     {
         public IActionResult ListarServicos()
         {
-            //return Ok();
-            
             var servicos = new Agendamentos.Servicos.Servicos();
 
             return Ok(servicos.AgendamentosServico.Listar());
