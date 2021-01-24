@@ -39,6 +39,8 @@
         var pop = $('#md-editar-agendamento');
 
         if (pop) {
+            loadLookups();
+
             pop.draggable();
             pop.modal();
 
@@ -80,5 +82,25 @@
         form[0].reset();
     })
 
-    $("#speed").selectmenu();
+    function loadLookups(callBack) {
+
+        var q1 = $.get("api/pessoas", (data) => {
+
+            var select = $("#sel-cliente");
+            select.find("option").remove();
+
+            $.each(data, (i, item) => {
+                select.append($("<option>", { value: item.codPessoa, text: item.nomePessoa }));
+            })
+
+            var select = $("#sel-profissional");
+            select.find("option").remove();
+
+            $.each(data, (i, item) => {
+                select.append($("<option>", { value: item.codPessoa, text: item.nomePessoa }));
+            })
+        })
+    }
 });
+
+
