@@ -7,10 +7,10 @@ using System.Text;
 
 namespace Agendamentos.Infra.Repositorios
 {
-    public class ClientesRepositorio: IClientesRepositorio
+    public class PessoasRepositorio: IPessoasRepositorio
     {
         private readonly AgendamentosDbContext dbContext;
-        public ClientesRepositorio(AgendamentosDbContext dbContext)
+        public PessoasRepositorio(AgendamentosDbContext dbContext)
         {
             this.dbContext = dbContext;
         }

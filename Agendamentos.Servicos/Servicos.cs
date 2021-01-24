@@ -9,6 +9,7 @@ namespace Agendamentos.Servicos
         private readonly IRepositorios repositorios;
 
         private IAgendamentosServico agendamentosServico;
+        private IPessoaServico pessoaServico;
 
         public Servicos()
         {
@@ -28,6 +29,21 @@ namespace Agendamentos.Servicos
 
                 return this.agendamentosServico;
             } 
+        }
+
+        public IPessoaServico PessoaServico
+        {
+            get
+            {
+                if (this.pessoaServico != null)
+                {
+                    return this.pessoaServico;
+                }
+
+                this.pessoaServico = new PessoaServico(this.repositorios);
+
+                return this.pessoaServico;
+            }
         }
     }
 }

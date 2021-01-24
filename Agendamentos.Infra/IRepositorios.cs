@@ -8,5 +8,6 @@ namespace Agendamentos.Infra
     public interface IRepositorios
     {
         IAgendamentosRepositorio AgendamentosRepositorio { get; }
+        IPessoasRepositorio PessoasRepositorio { get; }
     }
 }

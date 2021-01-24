@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Agendamentos.Infra.Repositorios
 {
-    public interface IClientesRepositorio
+    public interface IPessoasRepositorio
     {
         List<Pessoa> Listar();
     }
