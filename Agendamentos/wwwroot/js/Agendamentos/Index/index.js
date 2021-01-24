@@ -40,10 +40,15 @@
 
         if (pop) {
             loadLookups(() => {
+                onNovoAgendamento();
                 pop.draggable();
                 pop.modal();
             });
         }
+    }
+
+    function onNovoAgendamento() {
+        $("#txt-data")[0].valueAsDate = new Date();
     }
 
     dialog = $("#dialog-form").dialog({
@@ -79,6 +84,17 @@
         loadProcedimentos();
     });
 
+    $("#sel-procedimento").on('change', (e, b) => {
+        var selected = $("#sel-procedimento").find('option:selected');
+        var inicio = selected.attr('data-horaInicio');
+        var termino = selected.attr('data-horaTermino');
+
+        $("#txt-ag-inicio").val(inicio);
+        $("#txt-ag-termino").val(termino);
+    });
+
+    $("#sel-status").prop("disabled", true);
+
     // Carrega os procedimetos do profiossinal
     function loadProcedimentos() {
         var select = $("#sel-procedimento");
@@ -92,8 +108,15 @@
 
         return $.get("api/procedimentos/" + selProcCode, (data) => {
             $.each(data, (i, item) => {
-                select.append($("<option>", { value: item.codProcedimento, text: item.itemDisplay }));
+                var opt = $("<option>", { value: item.codProcedimento, text: item.itemDisplay });
+
+                opt.attr("data-horaInicio", item.num_HoraInicio);
+                opt.attr("data-horaTermino", item.num_HoraFim);
+
+                select.append(opt);
             });
+
+            select.trigger('change');
         });
     }
 

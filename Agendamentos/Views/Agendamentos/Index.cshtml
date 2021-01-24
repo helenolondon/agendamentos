@@ -40,8 +40,7 @@
                             <div class="col">
                                 <label for="sel-status">Status:</label>
                                 <select id="sel-status" class="custom-select">
-                                    <option selected></option>
-                                    <option value="1">Agendado</option>
+                                    <option value="1" selected>Agendado</option>
                                     <option value="2">Cancelado</option>
                                     <option value="3">Remarcado</option>
                                     <option value="4">Finalizado</option>
@@ -79,6 +78,25 @@
                             <option value="3">Luzes - Disp: 09:30 as 15:00</option>
                         </select>
                     </div>
+
+                    @*Hora de início e fim*@
+                    <div class="container">
+                        <div class="row .no-gutters">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="txt-ag-inicio">Início:</label>
+                                    <input type="time" class="form-control" id="txt-ag-inicio">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="txt-ag-termino">Término:</label>
+                                    <input type="time" class="form-control" id="txt-ag-termino">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </form>
             </div>
             <div class="modal-footer">
