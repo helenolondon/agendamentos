@@ -1,4 +1,6 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
+    $.ajaxSetup({ contentType: "application/json; charset=utf-8" });
+
     var dialog, form;
 
     var calendarEl = document.getElementById('calendar');
@@ -30,6 +32,7 @@
             right: 'novoAgendamento dayGridMonth,timeGridWeek'
         }
     });
+
     calendar.render();
     //calendar.next();
 
@@ -41,7 +44,7 @@
         if (pop) {
             loadLookups(() => {
                 onNovoAgendamento();
-                pop.draggable();
+                //pop.draggable();
                 pop.modal();
             });
         }
@@ -51,29 +54,17 @@
         $("#txt-data")[0].valueAsDate = new Date();
     }
 
-    dialog = $("#dialog-form").dialog({
-        autoOpen: false,
-        height: 400,
-        width: 350,
-        modal: true,
-        buttons: {
-            "Salvar": function () { },
-            "Cancelar": function () {
-                dialog.dialog("close");
-            }
-        },
-        close: function () {
-            form[0].reset();
-        }
-    });
-
     form = $("form").submit(function (event) {
         event.preventDefault();
-        alert("Form Salvo")
+        
+        onAgendamentoSalvar()
+            .then(() => {
+                $('#md-editar-agendamento').modal("hide");
+            })
     });
 
     $("#btn-salvar").on("click", () => {
-        form.submit()
+        form.submit();
     })
 
     $("#btn-cancelar").on('click', () => {
@@ -94,6 +85,29 @@
     });
 
     $("#sel-status").prop("disabled", true);
+
+    function onAgendamentoSalvar() {
+
+        var codAgendamento = parseInt($("#cod-agendamento").val());
+        var codProcedimento = parseInt($("#sel-procedimento").val());
+        var horaInicio = $("#txt-ag-inicio").val();
+        var horaTermino = $("#txt-ag-termino").val();
+
+        var a = {
+            "codAgendamento": codAgendamento,
+            "codProcedimento": codProcedimento,
+            "horaInicio": horaInicio,
+            "horaTermino": horaTermino
+        }
+
+        return $.post("api/agendamentos/salvar", JSON.stringify(a), function () {
+            onSchedulerRefreshNeeded();
+        });
+    }
+
+    function onSchedulerRefreshNeeded(){
+        calendar.refetchEvents();
+    }
 
     // Carrega os procedimetos do profiossinal
     function loadProcedimentos() {
