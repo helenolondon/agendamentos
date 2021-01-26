@@ -30,6 +30,22 @@
             left: 'prev,next today',
             center: 'title',
             right: 'novoAgendamento dayGridMonth,timeGridWeek'
+        },
+        eventContent: function (arg) {
+            let span = document.createElement("span");
+            span.innerHTML = "X";
+            span.style = "float: right; margin-right: 6px;"
+            span.onclick = ((ev, e) => {
+                onRemoverAgendamento(arg.event.extendedProps.codAgendamento);
+            })
+            let El = document.createElement('p')
+
+            El.innerHTML = arg.event.extendedProps.nomeCliente + "&nbsp; <br>" +
+                arg.event.extendedProps.servico;
+            El.style = "margin-top: 10px;"
+
+            let arrayOfDomNodes = [span, El]
+            return { domNodes: arrayOfDomNodes }
         }
     });
 
@@ -44,7 +60,7 @@
         if (pop) {
             loadLookups(() => {
                 onNovoAgendamento();
-                //pop.draggable();
+                pop.draggable();
                 pop.modal();
             });
         }
@@ -86,23 +102,42 @@
 
     $("#sel-status").prop("disabled", true);
 
+    function onRemoverAgendamento(codAgendamento) {
+        $.ajax({
+            url: 'api/agendamentos/remover?codAgendamento=' + codAgendamento,
+            type: 'DELETE',
+            success: function (result) {
+                onSchedulerRefreshNeeded()
+            }
+        });
+    }
+
     function onAgendamentoSalvar() {
 
         var codAgendamento = parseInt($("#cod-agendamento").val());
         var codProcedimento = parseInt($("#sel-procedimento").val());
         var horaInicio = $("#txt-ag-inicio").val();
         var horaTermino = $("#txt-ag-termino").val();
+        var data = $("#txt-data").val();
 
         var a = {
             "codAgendamento": codAgendamento,
             "codProcedimento": codProcedimento,
-            "horaInicio": horaInicio,
-            "horaTermino": horaTermino
+            "horaInicio": data + " " + horaInicio,
+            "horaTermino": data + " " + horaTermino
         }
 
         return $.post("api/agendamentos/salvar", JSON.stringify(a), function () {
+            clearAgendamentoForm();
             onSchedulerRefreshNeeded();
         });
+    }
+
+    function clearAgendamentoForm() {
+        $("#cod-agendamento").val(0);
+        $("#sel-procedimento").val(null);
+        $("#txt-ag-inicio").val(null);
+        $("#txt-ag-termino").val(null);
     }
 
     function onSchedulerRefreshNeeded(){

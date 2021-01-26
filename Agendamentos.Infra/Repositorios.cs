@@ -12,7 +12,6 @@ namespace Agendamentos.Infra.Repositorios
         private IPessoasRepositorio pessoasRepositorio;
         private IProcedimentosRepositorio procedimentosRepositorio;
 
-
         public Repositorios()
         {
             this.dbContext = new AgendamentosDbContext(this.RetConnectionString());

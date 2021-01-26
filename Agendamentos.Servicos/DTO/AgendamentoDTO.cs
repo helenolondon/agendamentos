@@ -48,5 +48,21 @@ namespace Agendamentos.Servicos.DTO
             this.NomeProfissional = e.Procedimento.Pessoa.Txt_Nome;
             this.Servico = e.Procedimento.Servico.Nome_Servico;
         }
+
+        internal AgendamentoProfissional ToAgendamento()
+        {
+            var temp = new AgendamentoProfissional();
+
+            temp.Cd_Agendamento = this.CodAgendamento;
+            temp.Cd_Procedimento = this.CodProcedimento;
+            temp.Data_Inicio = this.Inicio;
+            temp.Data_Termino = this.Termino;
+            temp.Procedimento = new Procedimento()
+            {
+                Cd_Procedimento = this.CodProcedimento
+            };
+
+            return temp;
+        }
     }
 }

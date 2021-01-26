@@ -28,5 +28,14 @@ namespace Agendamentos.Servicos
 
             return lista;
         }
+
+        public bool RemoverAgendamento(int codAgendamento)
+        {
+            return this.repositorio.AgendamentosRepositorio.RemoverAgendamento(codAgendamento);
+        }
+        public int SalvarAgendamento(AgendamentoDTO agendamento)
+        {
+            return this.repositorio.AgendamentosRepositorio.SalvarAgendamento(agendamento.ToAgendamento());
+        }
     }
 }
