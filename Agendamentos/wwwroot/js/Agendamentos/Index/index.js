@@ -103,13 +103,26 @@
     $("#sel-status").prop("disabled", true);
 
     function onRemoverAgendamento(codAgendamento) {
-        $.ajax({
-            url: 'api/agendamentos/remover?codAgendamento=' + codAgendamento,
-            type: 'DELETE',
-            success: function (result) {
-                onSchedulerRefreshNeeded()
-            }
-        });
+
+        var md = $("#md-confirma");
+        md.find(".modal-body").html("<span>Confirma a exclusão do agendamento?</span>");
+        md.draggable();
+        md.find("#btn-sim").off('click');
+        md.find("#btn-sim").on('click', () => {
+            var q = $.ajax({
+                url: 'api/agendamentos/remover?codAgendamento=' + codAgendamento,
+                type: 'DELETE',
+                success: function (result) {                    
+                    onSchedulerRefreshNeeded()
+                }
+            });
+
+            $.when([q]).then(() => {
+                md.modal('hide');
+            })
+        })
+
+        md.modal();
     }
 
     function onAgendamentoSalvar() {

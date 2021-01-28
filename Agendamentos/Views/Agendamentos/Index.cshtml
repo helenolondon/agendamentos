@@ -8,16 +8,16 @@
         padding-left: 0;
     }
 
-    .col:last-child {
-        padding-right: 0;
-    }
+        .col:last-child {
+            padding-right: 0;
+        }
 </style>
 
 @*Aqui é onde o scheduler inicia*@
 <div id='calendar'></div>
 
 <!-- Modal de novo agendamento -->
-<div class="modal fade" id="md-editar-agendamento" data-backdrop="static" data-keyboard="false" tabindex="-1" 
+<div class="modal fade" id="md-editar-agendamento" data-backdrop="static" data-keyboard="false" tabindex="-1"
      aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -103,6 +103,27 @@
             <div class="modal-footer">
                 <button id="btn-salvar" type="button" class="btn btn-primary">Salvar</button>
                 <button id="btn-cancelar" type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmação -->
+<div class="modal fade" id="md-confirma" data-backdrop="static" data-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Confirmação</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button id="btn-sim" type="button" class="btn btn-primary">Sim</button>
+                <button id="btn-nao" type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
             </div>
         </div>
     </div>
