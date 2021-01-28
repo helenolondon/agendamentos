@@ -61,8 +61,7 @@ namespace Agendamentos.Servicos.DTO
         {
             get
             {
-                return this.NomeServico + " Disp: " + this.Num_HoraInicio + " as " + 
-                    this.Num_HoraFim;
+                return this.NomeServico;
             }
         }
     }

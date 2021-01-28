@@ -100,8 +100,6 @@
         $("#txt-ag-termino").val(termino);
     });
 
-    $("#sel-status").prop("disabled", true);
-
     function onRemoverAgendamento(codAgendamento) {
 
         var md = $("#md-confirma");
