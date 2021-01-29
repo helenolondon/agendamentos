@@ -87,12 +87,12 @@
         form[0].reset();
     })
 
-    $("#sel-servico").on('change', (e, b) => {
-        //var selected = $("#sel-servico").find('option:selected');
-        //var termino = selected.attr('data-horaTermino');
-
-        //$("#txt-ag-inicio").val(inicio);
-        //$("#txt-ag-termino").val(termino);
+    $([]).add("#sel-servico")
+        .add("#txt-ag-inicio")
+        .add("#txt-ag-termino")
+        .add("#txt-data")
+        .on('change', (e, b) => {
+        loadProfissionais();
     });
 
     function onRemoverAgendamento(codAgendamento) {
@@ -150,6 +150,37 @@
         calendar.refetchEvents();
     }
 
+    // Carrega os profiossionais disponíveispara o agendamento
+    function loadProfissionais(){
+
+        let codServico = $("#sel-servico").val();
+        let horaInicio = $("#txt-ag-inicio").val();
+        let horaTermino = $("#txt-ag-termino").val();
+        let data = $("#txt-data").val();
+
+        if (horaInicio.length == 0 || horaTermino.length == 0 || codServico == 0) {
+            return;
+        }
+
+        //// Validação
+
+        let request = {
+            "Data": data,
+            "HoraInicio": horaInicio,
+            "HoraTermino": horaTermino,
+            "CodServico": codServico
+        }
+
+        $.get("api/procedimentos/listar-profissionais-agendamento", request, (data) => {
+            var select = $("#sel-profissional");
+            select.find("option").remove();
+
+            $.each(data, (i, item) => {
+                select.append($("<option>", { value: item.codPessoa, text: item.nomePessoa }));
+            });
+        });
+    }
+
     // Carrega os procedimetos do profiossinal
     function loadServicos() {
         var select = $("#sel-servico");
@@ -178,16 +209,7 @@
 
             $.each(data, (i, item) => {
                 select.append($("<option>", { value: item.codPessoa, text: item.nomePessoa }));
-            })
-
-            var select = $("#sel-profissional");
-            select.find("option").remove();
-
-            $.each(data, (i, item) => {
-                select.append($("<option>", { value: item.codPessoa, text: item.nomePessoa }));
-            })
-
-            select.trigger("change");
+            })            
         })
 
         $.when(q1, loadServicos()).then(() => {

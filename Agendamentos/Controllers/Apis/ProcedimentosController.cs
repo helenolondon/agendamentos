@@ -24,13 +24,13 @@ namespace Agendamentos.Controllers.Apis
 
         [HttpGet]
         [Route("listar-profissionais-agendamento")]
-        public IActionResult ListarPorfissionaisParaAgendamento(ListarProfissionaisDisponiveisParaAgendamento request)
+        public IActionResult ListarPorfissionaisParaAgendamentos([FromQuery]ListarProfissionaisDisponiveisParaAgendamento request)
         {
             var servicos = new Agendamentos.Servicos.Servicos();
-            var diaSemana = (int)request.HoraInicio.DayOfWeek + 1;
+            var diaSemana = (int)request.Data.DayOfWeek + 1;
 
-            var inicio = request.HoraInicio.TimeOfDay.Duration();
-            var termino = request.HoraTernmino.TimeOfDay.Duration();
+            var inicio = TimeSpan.Parse(request.HoraInicio);
+            var termino = TimeSpan.Parse(request.HoraTermino);
 
             return Ok(servicos.ProcedimentoServico.ListarProfissionaisParaAgendamento(diaSemana, inicio, termino, request.CodServico));
         }
