@@ -87,17 +87,12 @@
         form[0].reset();
     })
 
-    $("#sel-profissional").on('change', () => {
-        loadProcedimentos();
-    });
+    $("#sel-servico").on('change', (e, b) => {
+        //var selected = $("#sel-servico").find('option:selected');
+        //var termino = selected.attr('data-horaTermino');
 
-    $("#sel-procedimento").on('change', (e, b) => {
-        var selected = $("#sel-procedimento").find('option:selected');
-        var inicio = selected.attr('data-horaInicio');
-        var termino = selected.attr('data-horaTermino');
-
-        $("#txt-ag-inicio").val(inicio);
-        $("#txt-ag-termino").val(termino);
+        //$("#txt-ag-inicio").val(inicio);
+        //$("#txt-ag-termino").val(termino);
     });
 
     function onRemoverAgendamento(codAgendamento) {
@@ -126,7 +121,7 @@
     function onAgendamentoSalvar() {
 
         var codAgendamento = parseInt($("#cod-agendamento").val());
-        var codProcedimento = parseInt($("#sel-procedimento").val());
+        var codProcedimento = parseInt($("#sel-servico").val());
         var horaInicio = $("#txt-ag-inicio").val();
         var horaTermino = $("#txt-ag-termino").val();
         var data = $("#txt-data").val();
@@ -146,7 +141,7 @@
 
     function clearAgendamentoForm() {
         $("#cod-agendamento").val(0);
-        $("#sel-procedimento").val(null);
+        $("#sel-servico").val(null);
         $("#txt-ag-inicio").val(null);
         $("#txt-ag-termino").val(null);
     }
@@ -156,22 +151,15 @@
     }
 
     // Carrega os procedimetos do profiossinal
-    function loadProcedimentos() {
-        var select = $("#sel-procedimento");
-        var selProcCode = $("#sel-profissional").val();
+    function loadServicos() {
+        var select = $("#sel-servico");
 
         select.find("option").remove();
+        
 
-        if (!selProcCode) {
-            return $.Deferred().resolve();
-        }
-
-        return $.get("api/procedimentos/" + selProcCode, (data) => {
+        return $.get("api/servicos", (data) => {
             $.each(data, (i, item) => {
-                var opt = $("<option>", { value: item.codProcedimento, text: item.itemDisplay });
-
-                opt.attr("data-horaInicio", item.num_HoraInicio);
-                opt.attr("data-horaTermino", item.num_HoraFim);
+                var opt = $("<option>", { value: item.codServico, text: item.nomeServico });
 
                 select.append(opt);
             });
@@ -202,7 +190,7 @@
             select.trigger("change");
         })
 
-        $.when(q1, loadProcedimentos()).then(() => {
+        $.when(q1, loadServicos()).then(() => {
             callBack();
         })
     }
