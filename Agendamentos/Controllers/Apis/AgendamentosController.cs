@@ -23,6 +23,14 @@ namespace Agendamentos.Controllers.Apis
             return Ok(servicos.AgendamentosServico.Listar());
         }
 
+        [HttpGet]
+        public IActionResult ListarProfissionaisDisponiveis()
+        {
+            var servicos = new Agendamentos.Servicos.Servicos();
+            
+            return Ok();
+        }
+
         [HttpPost]
         [Route("salvar")]
         public IActionResult SalvarAgendamento([FromBody]SalvarAgendamentoRequest salvarAgendamentoRequest)

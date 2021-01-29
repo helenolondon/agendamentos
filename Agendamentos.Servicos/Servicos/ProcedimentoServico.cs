@@ -2,6 +2,7 @@
 using Agendamentos.Servicos.Listas;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Agendamentos.Servicos
@@ -24,5 +25,23 @@ namespace Agendamentos.Servicos
 
             return temp;
         }
+
+        public PessoasListaDTO ListarProfissionaisParaAgendamento(int diaSemana, TimeSpan inicio, TimeSpan termino, int codServico)
+        {
+            var procedimentos = this.repositorio.ProcedimentosRepositorio.ListarPorProfissionais(diaSemana, inicio, termino, codServico);
+
+            if(procedimentos == null || procedimentos.Count == 0)
+            {
+                return null;
+            }
+
+            var profissionais = procedimentos.Select(p => p.Pessoa).Distinct().ToList();
+            var dtos = new PessoasListaDTO();
+
+            dtos.LoadFromPessoaLista(profissionais);            
+            
+            return dtos;
+        }
+
     }
 }

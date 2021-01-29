@@ -8,5 +8,6 @@ namespace Agendamentos.Servicos
     public interface IProcedimentoServico
     {
         ProcedimentoListaDTO ListaPorPessoa(int codPessoa);
+        PessoasListaDTO ListarProfissionaisParaAgendamento(int diaSemana, TimeSpan inicio, TimeSpan termino, int codServico);
     }
 }
