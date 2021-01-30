@@ -57,10 +57,10 @@ namespace Agendamentos.Controllers.Apis
 
         [HttpDelete]
         [Route("remover")]
-        public IActionResult Remover(int codAgendamento)
+        public IActionResult Remover(int codAgendamentoItem)
         {
             var servicos = new Agendamentos.Servicos.Servicos();
-            if (servicos.AgendamentosServico.RemoverAgendamento(codAgendamento))
+            if (servicos.AgendamentosServico.RemoverAgendamento(codAgendamentoItem))
             {
                 return NoContent();
             }

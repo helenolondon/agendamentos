@@ -36,7 +36,7 @@
             span.innerHTML = "X";
             span.style = "float: right; margin-right: 6px;"
             span.onclick = ((ev, e) => {
-                onRemoverAgendamento(arg.event.extendedProps.codAgendamento);
+                onRemoverAgendamento(arg.event.extendedProps.codAgendamentoItem);
             })
             let El = document.createElement('p')
 
@@ -95,7 +95,7 @@
         loadProfissionais();
     });
 
-    function onRemoverAgendamento(codAgendamento) {
+    function onRemoverAgendamento(codAgendamentoItem) {
 
         var md = $("#md-confirma");
         md.find(".modal-body").html("<span>Confirma a exclusão do agendamento?</span>");
@@ -103,7 +103,7 @@
         md.find("#btn-sim").off('click');
         md.find("#btn-sim").on('click', () => {
             var q = $.ajax({
-                url: 'api/agendamentos/remover?codAgendamento=' + codAgendamento,
+                url: 'api/agendamentos/remover?codAgendamentoItem=' + codAgendamentoItem,
                 type: 'DELETE',
                 success: function (result) {                    
                     onSchedulerRefreshNeeded()
@@ -121,20 +121,12 @@
     function onAgendamentoSalvar() {
 
         let codAgendamento = parseInt($("#cod-agendamento").val());
-        let codServico = parseInt($("#sel-servico").val());
-        let horaInicio = $("#txt-ag-inicio").val();
-        let horaTermino = $("#txt-ag-termino").val();
         let data = $("#txt-data").val();
         let codStatus = parseInt($("#sel-status").val());
         let codCliente = parseInt($("#sel-cliente").val());
-        let codAgendamentoItem = parseInt($("#cod-agendamento-item").val());
 
         if (Number.isNaN(codAgendamento)) {
             codAgendamento = 0;
-        }
-
-        if (Number.isNaN(codAgendamentoItem)) {
-            codAgendamentoItem = 0;
         }
 
         let request = {
@@ -143,21 +135,36 @@
             "CodStatus": codStatus,
             "CodCliente": codCliente,
 
-            "Itens": [
-                {
-                    "CodAgendamentoItem": codAgendamentoItem,
-                    "CodAgendamento": 1,
-                    "Inicio": data + "T" + horaInicio,
-                    "Termino": data + "T" + horaTermino,
-                    "CodServico": codServico
-    }
-            ]
+            "Itens": retAgendamentoItens(codAgendamento)
         }
 
         return $.post("api/agendamentos/salvar", JSON.stringify(request), function () {
             clearAgendamentoForm();
             onSchedulerRefreshNeeded();
         });
+    }
+
+    function retAgendamentoItens(codAgendamento) {
+        let amat = [];
+        let codServico = parseInt($("#sel-servico").val());
+        let horaInicio = $("#txt-ag-inicio").val();
+        let horaTermino = $("#txt-ag-termino").val();
+        let data = $("#txt-data").val();
+        let codAgendamentoItem = 0;
+
+        if (Number.isNaN(codAgendamentoItem)) {
+            codAgendamentoItem = 0;
+        }
+
+        amat.push({
+            "CodAgendamentoItem": 0,
+            "CodAgendamento": codAgendamento,
+            "Inicio": data + "T" + horaInicio,
+            "Termino": data + "T" + horaTermino,
+            "CodServico": codServico
+        });
+
+        return amat;
     }
 
     function clearAgendamentoForm() {

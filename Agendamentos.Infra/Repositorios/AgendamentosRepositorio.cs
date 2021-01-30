@@ -26,9 +26,9 @@ namespace Agendamentos.Infra.Repositorios
                 .ToList();
         }
 
-        public bool RemoverAgendamento(int codAgendamento)
+        public bool RemoverAgendamento(int codAgendamentoItem)
         {
-            var temp = this.dbContext.AgendamentoItens.Find(codAgendamento);
+            var temp = this.dbContext.AgendamentoItens.Find(codAgendamentoItem);
 
             if(temp == null)
             {
@@ -79,6 +79,11 @@ namespace Agendamentos.Infra.Repositorios
             {
                 var codAgendamento = this.dbContext.Agendamentos.Count()== 0 ? 1 : this.dbContext.Agendamentos.Max(a => a.Cd_Agendamento) + 1;
                 
+                for(var i = 0; i < agendamento.Itens.Count; i++)
+                {
+                    agendamento.Itens[i].Cd_AgendamentoItem = this.dbContext.AgendamentoItens.Count() == 0 ? 1 : this.dbContext.AgendamentoItens.Max(a => a.Cd_AgendamentoItem) + 1 + i;
+                }
+
                 agendamento.Cd_Agendamento = codAgendamento;
 
                 this.dbContext.Agendamentos.Add(agendamento);

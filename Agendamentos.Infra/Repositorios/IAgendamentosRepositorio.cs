@@ -10,6 +10,6 @@ namespace Agendamentos.Infra.Repositorios
         List<AgendamentoItem> ListarAgendamentos();
         int SalvarAgendamento(AgendamentoItem agendamento);
         int SalvarAgendamento(Agendamento agendamento);
-        bool RemoverAgendamento(int codAgendamento);
+        bool RemoverAgendamento(int codAgendamentoItem);
     }
 }

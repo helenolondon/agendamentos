@@ -30,9 +30,9 @@ namespace Agendamentos.Servicos
             return lista;
         }
 
-        public bool RemoverAgendamento(int codAgendamento)
+        public bool RemoverAgendamento(int codAgendamentoItem)
         {
-            return this.repositorio.AgendamentosRepositorio.RemoverAgendamento(codAgendamento);
+            return this.repositorio.AgendamentosRepositorio.RemoverAgendamento(codAgendamentoItem);
         }
         public int SalvarAgendamento(AgendamentoDTO agendamento)
         {
