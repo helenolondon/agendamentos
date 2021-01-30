@@ -13,7 +13,7 @@ namespace Agendamentos.Controllers.Apis.Requests
         public int CodAgendamento { get; set; }
         public DateTime Data { get; set; }
         public int CodStatus { get; set; }
-
+        public int CodCliente { get; set; }
         public List<SalvarAgendamentoItemRequest> Itens { get; set; }
     }
 }

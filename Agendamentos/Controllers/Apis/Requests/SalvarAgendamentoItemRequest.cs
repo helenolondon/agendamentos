@@ -9,7 +9,7 @@ namespace Agendamentos.Controllers.Apis.Requests
     {
         public int CodAgendamentoItem { get; set; }
         public int CodServico { get; set; }
-        public string HoraInicio { get; set; }
-        public string HoraTermino { get; set; }
+        public DateTime HoraInicio { get; set; }
+        public DateTime HoraTermino { get; set; }
     }
 }

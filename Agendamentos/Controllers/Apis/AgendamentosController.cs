@@ -23,7 +23,6 @@ namespace Agendamentos.Controllers.Apis
             return Ok(servicos.AgendamentosServico.Listar());
         }
 
-
         [HttpPost]
         [Route("Salvar")]
         public IActionResult SalvarAgendamento(SalvarAgendamentoRequest agendamento)
@@ -43,8 +42,8 @@ namespace Agendamentos.Controllers.Apis
             model.CodCliente = "0";
             model.CodServico = salvarAgendamentoRequest.CodAgendamentoItem;
             model.CodProfissional = 0;
-            model.Inicio = DateTime.Parse(salvarAgendamentoRequest.HoraInicio);
-            model.Termino = DateTime.Parse(salvarAgendamentoRequest.HoraTermino);
+            model.Inicio = salvarAgendamentoRequest.HoraInicio;
+            model.Termino = salvarAgendamentoRequest.HoraTermino;
 
             if(servicos.AgendamentosServico.SalvarAgendamento(model) > 0)
             {

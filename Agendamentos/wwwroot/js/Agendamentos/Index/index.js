@@ -121,21 +121,18 @@
     function onAgendamentoSalvar() {
 
         let codAgendamento = parseInt($("#cod-agendamento").val());
-        let codProcedimento = parseInt($("#sel-servico").val());
+        let codServico = parseInt($("#sel-servico").val());
         let horaInicio = $("#txt-ag-inicio").val();
         let horaTermino = $("#txt-ag-termino").val();
         let data = $("#txt-data").val();
-        let codStatus = $("#sel-status").val();
-        let codCliente = $("#sel-cliente").val();
+        let codStatus = parseInt($("#sel-status").val());
+        let codCliente = parseInt($("#sel-cliente").val());
 
-        let a = {
-            "codAgendamento": codAgendamento,
-            "codProcedimento": codProcedimento,
-            "horaInicio": data + " " + horaInicio,
-            "horaTermino": data + " " + horaTermino
+        if (Number.isNaN(codAgendamento)) {
+            codAgendamento = 0;
         }
 
-        a = {
+        let request = {
             "CodAgendamento": codAgendamento,
             "Data": data,
             "CodStatus": codStatus,
@@ -143,14 +140,14 @@
 
             "Itens": [
                 {
-                    "HoraInicio": horaInicio,
-                    "HoraTermino": horaTermino,
-                    "CodServico": 1
+                    "HoraInicio": data + "T" + horaInicio,
+                    "HoraTermino": data + "T" + horaTermino,
+                    "CodServico": codServico
     }
             ]
         }
 
-        return $.post("api/agendamentos/salvar", JSON.stringify(a), function () {
+        return $.post("api/agendamentos/salvar", JSON.stringify(request), function () {
             clearAgendamentoForm();
             onSchedulerRefreshNeeded();
         });
