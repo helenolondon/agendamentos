@@ -35,6 +35,10 @@ namespace Agendamentos.Infra.EF
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<AgendamentoItem>()
+                .HasOne(a => a.Agendamento)
+                .WithMany(a => a.Itens);
+
             //modelBuilder.Entity<LoginODP>()
             //    .HasOne<UsuarioODP>(l => l.UsuarioCadastro)
             //    .WithMany()

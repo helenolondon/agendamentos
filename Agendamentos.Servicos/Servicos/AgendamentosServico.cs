@@ -36,6 +36,10 @@ namespace Agendamentos.Servicos
         }
         public int SalvarAgendamento(AgendamentoDTO agendamento)
         {
+            return 0;
+        }
+        public int SalvarAgendamentoItem(AgendamentoItemDTO agendamento)
+        {
             return this.repositorio.AgendamentosRepositorio.SalvarAgendamento(agendamento.ToAgendamento());
         }
     }

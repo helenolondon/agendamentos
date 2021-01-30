@@ -9,7 +9,7 @@ namespace Agendamentos.Servicos
     public interface IAgendamentosServico
     {
         AgendamentosListaDTO Listar();
-        int SalvarAgendamento(AgendamentoDTO agendamento);
+        int SalvarAgendamentoItem(AgendamentoItemDTO agendamento);
         bool RemoverAgendamento(int codAgendamento);
     }
 }

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Agendamentos.Servicos.Listas
 {
-    public class AgendamentosListaDTO: List<AgendamentoDTO>
+    public class AgendamentosListaDTO: List<AgendamentoItemDTO>
     {
         public List<AgendamentoItem> ToAgendamentoProfissionalLista()
         {
@@ -28,11 +28,11 @@ namespace Agendamentos.Servicos.Listas
         public void LoadFromAgendamentoProfissionalLista(List<AgendamentoItem> lista)
         {
             this.Clear();
-            AgendamentoDTO temp;
+            AgendamentoItemDTO temp;
 
             lista.ForEach((e) =>
             {
-                temp = new AgendamentoDTO();
+                temp = new AgendamentoItemDTO();
                 temp.LoadFromAgendamento(e);
 
                 this.Add(temp);

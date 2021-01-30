@@ -36,7 +36,7 @@ namespace Agendamentos.Controllers.Apis
         {
             var servicos = new Agendamentos.Servicos.Servicos();
 
-            var model = new AgendamentoDTO();
+            var model = new AgendamentoItemDTO();
 
             model.CodAgendamento = salvarAgendamentoRequest.CodAgendamentoItem;
             model.CodCliente = "0";
@@ -45,7 +45,7 @@ namespace Agendamentos.Controllers.Apis
             model.Inicio = salvarAgendamentoRequest.HoraInicio;
             model.Termino = salvarAgendamentoRequest.HoraTermino;
 
-            if(servicos.AgendamentosServico.SalvarAgendamento(model) > 0)
+            if(servicos.AgendamentosServico.SalvarAgendamentoItem(model) > 0)
             {
                 return NoContent();
             }

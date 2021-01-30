@@ -17,16 +17,11 @@ namespace Agendamentos.Infra.Modelos
         [Required]
         public int Cd_Agendamento { get; set; }
         [Required]
-        public int Cd_Servico { get; set; }
-        [Required]
-        public int Cd_Cliente { get; set; }
+        public int Cd_Servico { get; set; }        
         [Required]
         public DateTime Dat_Inicio { get; set; }
         [Required]
-        public DateTime Dat_Termino { get; set; }
-
-        [ForeignKey("Cd_Cliente")]
-        public Pessoa Cliente { get; set; }
+        public DateTime Dat_Termino { get; set; }        
         [ForeignKey("Cd_Agendamento")]
         public Agendamento Agendamento { get; set; }
         [ForeignKey("Cd_Servico")]

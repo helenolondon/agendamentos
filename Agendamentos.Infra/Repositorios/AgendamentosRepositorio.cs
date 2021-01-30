@@ -1,4 +1,5 @@
 ﻿using Agendamentos.Infra.EF;
+using Agendamentos.Infra.Erros;
 using Agendamentos.Infra.Modelos;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -19,7 +20,8 @@ namespace Agendamentos.Infra.Repositorios
         {
             return this.dbContext.AgendamentoItens
                 .Include(b => b.Servico)
-                .Include(c => c.Cliente)
+                .Include(a => a.Agendamento)
+                .Include(c => c.Agendamento.Cliente)
                 .Include(m => m.Servico)
                 .ToList();
         }
@@ -37,6 +39,53 @@ namespace Agendamentos.Infra.Repositorios
             this.dbContext.SaveChanges();
 
             return true;
+        }
+
+        private bool ValidaAgendamento(Agendamento agendamento)
+        {
+            if(agendamento == null)
+            {
+                throw new SalvarAgendamentoException("Erro: Agendamento nulo");
+            }
+
+            return true;
+        }
+
+        public int SalvarAgendamento(Agendamento agendamento)
+        {
+            if (!ValidaAgendamento(agendamento))
+            {
+                return 0;
+            }
+
+            var model = this.dbContext.Agendamentos.Where(a => a.Cd_Agendamento == agendamento.Cd_Agendamento).FirstOrDefault();
+
+            if(agendamento.Cd_Agendamento == 0)
+            {
+                var codAgendamento = this.dbContext.Agendamentos.Max(a => a.Cd_Agendamento) + 1;
+                
+                agendamento.Cd_Agendamento = codAgendamento;
+
+                this.dbContext.Agendamentos.Add(agendamento);
+                
+                model = agendamento;
+            }
+            else
+            {
+                model.Cd_Status = agendamento.Cd_Status;
+                model.Dat_Agendamento = agendamento.Dat_Agendamento;
+            }
+
+            model.Itens.Clear();
+
+            agendamento.Itens.ForEach((ag) =>
+            {
+                model.Itens.Add(ag);
+            });
+
+            dbContext.SaveChanges();
+
+            return model.Cd_Agendamento;
         }
         public int SalvarAgendamento(AgendamentoItem agendamento)
         {
