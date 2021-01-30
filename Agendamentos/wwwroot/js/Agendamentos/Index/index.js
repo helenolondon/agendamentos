@@ -35,6 +35,7 @@
             let span = document.createElement("span");
             span.innerHTML = "X";
             span.style = "float: right; margin-right: 6px; font-size: 10px"
+            span.id = "teste";
             span.onclick = ((ev, e) => {
                 onRemoverAgendamento(arg.event.extendedProps.codAgendamentoItem);
             })
@@ -59,10 +60,24 @@
 
             ElServico.innerHTML = arg.event.extendedProps.servico;
 
-            let arrayOfDomNodes = [span, ElHorario, ElCliente, ElProfissional, ElServico]
+            let ElCancelado = document.createElement('p')
+            ElCancelado.style = "font-size: 10px; margin: 0px 2px 2px;"
+
+            ElCancelado.innerHTML = arg.event.extendedProps.status;
+
+            let arrayOfDomNodes = [span, ElCancelado, ElHorario, ElCliente, ElProfissional, ElServico]
             return { domNodes: arrayOfDomNodes }
+        },
+        eventClick: function (e) {
+            if (e.jsEvent.layerY > 10) {
+                onEditarAgendamento(e.event.extendedProps);
+            }
         }
     });
+
+    $("#teste").on("click", function () {
+        alert("teset");
+    })
 
     calendar.render();
     //calendar.next();
@@ -82,6 +97,7 @@
     }
 
     function onNovoAgendamento() {
+        clearAgendamentoForm();
         $("#txt-data")[0].valueAsDate = new Date();
     }
 
@@ -113,7 +129,7 @@
     function onRemoverAgendamento(codAgendamentoItem) {
 
         var md = $("#md-confirma");
-        md.find(".modal-body").html("<span>Confirma a exclusão do agendamento?</span>");
+        md.find(".modal-body").html("<span>Confirma a exclusão do procedimento?</span>");
         md.draggable();
         md.find("#btn-sim").off('click');
         md.find("#btn-sim").on('click', () => {
@@ -189,10 +205,38 @@
         $("#sel-servico").val(null);
         $("#txt-ag-inicio").val(null);
         $("#txt-ag-termino").val(null);
+        $("#txt-data").val(null);
+        $("#sel-cliente").val(null);
+        $("#sel-status").val(1);
+        $("#sel-profissional").val(null);
     }
 
     function onSchedulerRefreshNeeded(){
         calendar.refetchEvents();
+    }
+
+    function onEditarAgendamento(e) {
+
+        var pop = $('#md-editar-agendamento');
+
+        if (pop) {
+            loadLookups(() => {
+
+                $("#cod-agendamento").val(e.codAgendamento);
+                $("#sel-servico").val(e.codServico);
+                $("#txt-ag-inicio").val(e.horaInicio);
+                $("#txt-data")[0].valueAsDate = new Date(e.dataAgendamento);
+                $("#txt-ag-termino").val(e.horaTermino);
+                $("#sel-cliente").val(e.codCliente);
+                $("#sel-status").val(e.codStatus)
+
+                loadProfissionais();
+                $("#sel-profissional").val(e.codProfissional);
+
+                pop.draggable();
+                pop.modal();
+            });
+        };
     }
 
     // Carrega os profiossionais disponíveispara o agendamento

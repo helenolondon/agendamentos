@@ -41,7 +41,7 @@ namespace Agendamentos.Controllers.Apis
             var model = new AgendamentoItemDTO();
 
             model.CodAgendamento = salvarAgendamentoRequest.CodAgendamentoItem;
-            model.CodCliente = "0";
+            model.CodCliente = 0;
             model.CodServico = salvarAgendamentoRequest.CodAgendamentoItem;
             model.CodProfissional = 0;
             model.Inicio = salvarAgendamentoRequest.HoraInicio;

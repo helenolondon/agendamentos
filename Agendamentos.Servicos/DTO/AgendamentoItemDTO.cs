@@ -11,6 +11,7 @@ namespace Agendamentos.Servicos.DTO
     public class AgendamentoItemDTO
     {
         public int CodAgendamento { get; set; }
+        public string DataAgendamento { get; set; }
         public int CodAgendamentoItem { get; set; }
         public DateTime Inicio { get; set; }
         public DateTime Termino { get; set; }
@@ -18,9 +19,12 @@ namespace Agendamentos.Servicos.DTO
         public string NomeProfissional { get; set; }
         public int CodServico { get; set; }
         public string Servico { get; set; }
-        public string CodCliente { get; set; }
+        public int CodCliente { get; set; }
         public string NomeCliente { get; set; }
-        
+        public string HoraInicio { get; set; }
+        public string HoraTermino { get; set; }
+        public int CodStatus { get; set; }
+        public String Status { get; set; }
         /// <summary>
         /// Propriedades do scheduler
         /// </summary>
@@ -44,12 +48,35 @@ namespace Agendamentos.Servicos.DTO
             this.CodAgendamento = e.Cd_Agendamento;
             this.CodAgendamentoItem = e.Cd_AgendamentoItem;
             this.CodServico = e.Cd_Servico;
+            this.CodCliente = e.Agendamento.Cd_Cliente;
+            this.CodProfissional = e.Profissional.Cod_Pessoa;
             this.Inicio = e.Dat_Inicio;
             this.Termino = e.Dat_Termino;
-
+            this.DataAgendamento = e.Agendamento.Dat_Agendamento.ToString("yyyy-MM-dd");
+            this.HoraInicio = e.Dat_Inicio.ToString("HH':'mm");
+            this.HoraTermino = e.Dat_Termino.ToString("HH':'mm");
+            this.CodStatus = e.Agendamento.Cd_Status;
             this.NomeCliente = e.Agendamento.Cliente.Txt_Nome;
             this.NomeProfissional = e.Profissional.Txt_Nome;
             this.Servico = e.Servico.Nome_Servico;
+
+            switch (this.CodStatus)
+            {
+                case 1:
+                    this.Status = "Agendado";
+                    break;
+                case 2:
+                    this.Status = "Cancelado";
+                    break;
+                case 3:
+                    this.Status = "Remarcado";
+                    break;
+                case 4:
+                    this.Status = "Finalizado";
+                    break;
+                default:
+                    break;
+            }
         }
 
         internal AgendamentoItem ToAgendamento()
