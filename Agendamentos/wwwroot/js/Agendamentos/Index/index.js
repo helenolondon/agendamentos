@@ -127,9 +127,14 @@
         let data = $("#txt-data").val();
         let codStatus = parseInt($("#sel-status").val());
         let codCliente = parseInt($("#sel-cliente").val());
+        let codAgendamentoItem = parseInt($("#cod-agendamento-item").val());
 
         if (Number.isNaN(codAgendamento)) {
             codAgendamento = 0;
+        }
+
+        if (Number.isNaN(codAgendamentoItem)) {
+            codAgendamentoItem = 0;
         }
 
         let request = {
@@ -140,8 +145,10 @@
 
             "Itens": [
                 {
-                    "HoraInicio": data + "T" + horaInicio,
-                    "HoraTermino": data + "T" + horaTermino,
+                    "CodAgendamentoItem": codAgendamentoItem,
+                    "CodAgendamento": 1,
+                    "Inicio": data + "T" + horaInicio,
+                    "Termino": data + "T" + horaTermino,
                     "CodServico": codServico
     }
             ]

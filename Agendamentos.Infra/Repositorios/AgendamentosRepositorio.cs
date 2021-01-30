@@ -91,25 +91,42 @@ namespace Agendamentos.Infra.Repositorios
                 model.Dat_Agendamento = agendamento.Dat_Agendamento;
 
                 model.Itens
-                    .RemoveAll( (i) =>
+                    .RemoveAll((i) =>
                     {
                         return agendamento.Itens.Where(a => a.Cd_AgendamentoItem == i.Cd_AgendamentoItem).FirstOrDefault() == null;
                     });
 
                 agendamento.Itens.ForEach((e) =>
                 {
-                    var item = model.Itens.Where(i => i.Cd_AgendamentoItem == e.Cd_AgendamentoItem).FirstOrDefault();
-
-                    if(item == null)
+                    if (e.Cd_AgendamentoItem == 0)
                     {
-                        dbContext.AgendamentoItens.Add(e);
+                        var novo = new AgendamentoItem()
+                        {
+                            Cd_Agendamento = agendamento.Cd_Agendamento,
+                            Cd_Servico = e.Cd_Servico,
+                            Dat_Inicio = e.Dat_Inicio,
+                            Dat_Termino = e.Dat_Termino
+                        };
+                        
+                        novo.Cd_AgendamentoItem = this.dbContext.AgendamentoItens.Count() == 0 ? 1 : this.dbContext.AgendamentoItens.Max(a => a.Cd_AgendamentoItem) + 1;
+
+                        dbContext.AgendamentoItens.Add(novo);
                     }
                     else
                     {
-                        item.Cd_Servico = e.Cd_Servico;
-                        item.Dat_Inicio = e.Dat_Inicio;
-                        item.Dat_Termino = e.Dat_Termino;
-                    };
+                        var item = model.Itens.Where(i => i.Cd_AgendamentoItem == e.Cd_AgendamentoItem).FirstOrDefault();
+
+                        if (item == null)
+                        {
+                            dbContext.AgendamentoItens.Add(e);
+                        }
+                        else
+                        {
+                            item.Cd_Servico = e.Cd_Servico;
+                            item.Dat_Inicio = e.Dat_Inicio;
+                            item.Dat_Termino = e.Dat_Termino;
+                        };
+                    }
                 });
             }
 
