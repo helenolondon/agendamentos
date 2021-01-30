@@ -11,10 +11,11 @@ namespace Agendamentos.Infra.EF
     public class AgendamentosDbContext: DbContext
     {
         private readonly string connectionString;
-        public DbSet<AgendamentoProfissional> AgendamentoProfissionais { get; set; }
         public  DbSet<Pessoa> Pessoas { get; set; }
         public DbSet<Servico> Servicos { get; set; }
         public DbSet<Procedimento> Procedimentos { get; set; }
+        public DbSet<AgendamentoItem> AgendamentoItens { get; set; }
+        public DbSet<Agendamento> Agendamentos { get; set; }
 
         public AgendamentosDbContext(string connectionString)
         {

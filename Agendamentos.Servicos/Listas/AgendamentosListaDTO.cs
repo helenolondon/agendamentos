@@ -8,24 +8,24 @@ namespace Agendamentos.Servicos.Listas
 {
     public class AgendamentosListaDTO: List<AgendamentoDTO>
     {
-        public List<AgendamentoProfissional> ToAgendamentoProfissionalLista()
+        public List<AgendamentoItem> ToAgendamentoProfissionalLista()
         {
-            var temp = new List<AgendamentoProfissional>();
+            var temp = new List<AgendamentoItem>();
 
             this.ForEach((e) =>
             {
-                temp.Add(new AgendamentoProfissional()
+                temp.Add(new AgendamentoItem()
                 {
                     Cd_Agendamento = e.CodAgendamento,
                     Cd_Procedimento = e.CodProcedimento,
-                    Data_Inicio = e.Inicio,
-                    Data_Termino = e.Termino
+                    Dat_Inicio = e.Inicio,
+                    Dat_Termino = e.Termino
                 });
             });
 
             return temp;
         }
-        public void LoadFromAgendamentoProfissionalLista(List<AgendamentoProfissional> lista)
+        public void LoadFromAgendamentoProfissionalLista(List<AgendamentoItem> lista)
         {
             this.Clear();
             AgendamentoDTO temp;

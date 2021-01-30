@@ -37,26 +37,26 @@ namespace Agendamentos.Servicos.DTO
             } 
         }
 
-        internal void LoadFromAgendamento(AgendamentoProfissional e)
+        internal void LoadFromAgendamento(AgendamentoItem e)
         {
             this.CodAgendamento = e.Cd_Agendamento;
             this.CodProcedimento = e.Cd_Procedimento;
-            this.Inicio = e.Data_Inicio;
-            this.Termino = e.Data_Termino;
+            this.Inicio = e.Dat_Inicio;
+            this.Termino = e.Dat_Termino;
 
             this.NomeCliente = "Cliente não informado";
             this.NomeProfissional = e.Procedimento.Pessoa.Txt_Nome;
             this.Servico = e.Procedimento.Servico.Nome_Servico;
         }
 
-        internal AgendamentoProfissional ToAgendamento()
+        internal AgendamentoItem ToAgendamento()
         {
-            var temp = new AgendamentoProfissional();
+            var temp = new AgendamentoItem();
 
             temp.Cd_Agendamento = this.CodAgendamento;
             temp.Cd_Procedimento = this.CodProcedimento;
-            temp.Data_Inicio = this.Inicio;
-            temp.Data_Termino = this.Termino;
+            temp.Dat_Inicio = this.Inicio;
+            temp.Dat_Termino = this.Termino;
             temp.Procedimento = new Procedimento()
             {
                 Cd_Procedimento = this.CodProcedimento

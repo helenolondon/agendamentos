@@ -15,9 +15,9 @@ namespace Agendamentos.Infra.Repositorios
         {
             this.dbContext = dbContext;
         }
-        public List<AgendamentoProfissional> ListarAgendamentos()
+        public List<AgendamentoItem> ListarAgendamentos()
         {
-            return this.dbContext.AgendamentoProfissionais
+            return this.dbContext.AgendamentoItens
                 .Include(b => b.Procedimento)
                 .Include(m => m.Procedimento.Pessoa)
                 .Include(s => s.Procedimento.Servico)
@@ -26,35 +26,35 @@ namespace Agendamentos.Infra.Repositorios
 
         public bool RemoverAgendamento(int codAgendamento)
         {
-            var temp = this.dbContext.AgendamentoProfissionais.Find(codAgendamento);
+            var temp = this.dbContext.AgendamentoItens.Find(codAgendamento);
 
             if(temp == null)
             {
                 return false;
             }
 
-            this.dbContext.AgendamentoProfissionais.Remove(temp);
+            this.dbContext.AgendamentoItens.Remove(temp);
             this.dbContext.SaveChanges();
 
             return true;
         }
-        public int SalvarAgendamento(AgendamentoProfissional agendamento)
+        public int SalvarAgendamento(AgendamentoItem agendamento)
         {
-            var temp = this.dbContext.AgendamentoProfissionais.Find(agendamento.Cd_Agendamento);
+            var temp = this.dbContext.AgendamentoItens.Find(agendamento.Cd_Agendamento);
 
             agendamento.Procedimento = this.dbContext.Procedimentos.Find(agendamento.Procedimento.Cd_Procedimento);
 
             if(temp != null)
             {
                 temp.Cd_Procedimento = agendamento.Cd_Procedimento;
-                temp.Data_Inicio = agendamento.Data_Inicio;
-                temp.Data_Termino = agendamento.Data_Termino;
+                temp.Dat_Inicio = agendamento.Dat_Inicio;
+                temp.Dat_Termino = agendamento.Dat_Termino;
             }
             else
             {
-                if(this.dbContext.AgendamentoProfissionais.Count() > 0)
+                if(this.dbContext.AgendamentoItens.Count() > 0)
                 {
-                    agendamento.Cd_Agendamento = this.dbContext.AgendamentoProfissionais.Max(id => id.Cd_Agendamento)+ 1;
+                    agendamento.Cd_Agendamento = this.dbContext.AgendamentoItens.Max(id => id.Cd_Agendamento)+ 1;
                 }
                 else
                 {
@@ -62,7 +62,7 @@ namespace Agendamentos.Infra.Repositorios
                 }
 
 
-                this.dbContext.AgendamentoProfissionais.Add(agendamento);
+                this.dbContext.AgendamentoItens.Add(agendamento);
             }
 
             this.dbContext.SaveChanges();
