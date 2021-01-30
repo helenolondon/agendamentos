@@ -21,6 +21,7 @@ namespace Agendamentos.Infra.Repositorios
             return this.dbContext.AgendamentoItens
                 .Include(b => b.Servico)
                 .Include(a => a.Agendamento)
+                .Include(p => p.Profissional)
                 .Include(c => c.Agendamento.Cliente)
                 .Include(m => m.Servico)
                 .ToList();
@@ -110,7 +111,8 @@ namespace Agendamentos.Infra.Repositorios
                             Cd_Agendamento = agendamento.Cd_Agendamento,
                             Cd_Servico = e.Cd_Servico,
                             Dat_Inicio = e.Dat_Inicio,
-                            Dat_Termino = e.Dat_Termino
+                            Dat_Termino = e.Dat_Termino,
+                            Cd_Profissional = e.Cd_Profissional
                         };
                         
                         novo.Cd_AgendamentoItem = this.dbContext.AgendamentoItens.Count() == 0 ? 1 : this.dbContext.AgendamentoItens.Max(a => a.Cd_AgendamentoItem) + 1;
@@ -130,6 +132,7 @@ namespace Agendamentos.Infra.Repositorios
                             item.Cd_Servico = e.Cd_Servico;
                             item.Dat_Inicio = e.Dat_Inicio;
                             item.Dat_Termino = e.Dat_Termino;
+                            item.Cd_Profissional = e.Cd_Profissional;
                         };
                     }
                 });
@@ -150,6 +153,7 @@ namespace Agendamentos.Infra.Repositorios
                 temp.Cd_Servico = agendamento.Cd_Servico;
                 temp.Dat_Inicio = agendamento.Dat_Inicio;
                 temp.Dat_Termino = agendamento.Dat_Termino;
+                temp.Cd_Profissional = agendamento.Cd_Profissional;
             }
             else
             {

@@ -34,17 +34,32 @@
         eventContent: function (arg) {
             let span = document.createElement("span");
             span.innerHTML = "X";
-            span.style = "float: right; margin-right: 6px;"
+            span.style = "float: right; margin-right: 6px; font-size: 10px"
             span.onclick = ((ev, e) => {
                 onRemoverAgendamento(arg.event.extendedProps.codAgendamentoItem);
             })
-            let El = document.createElement('p')
 
-            El.innerHTML = arg.event.extendedProps.nomeCliente + "&nbsp; <br>" +
-                arg.event.extendedProps.servico;
-            El.style = "margin-top: 10px;"
+            let ElHorario = document.createElement('p')
 
-            let arrayOfDomNodes = [span, El]
+            ElHorario.innerHTML = arg.event.extendedProps.horarioLabel;
+            ElHorario.style = "margin: 10px 2px 2px; font-size: 11px;"
+
+            let ElCliente = document.createElement('p')
+
+            ElCliente.innerHTML = arg.event.extendedProps.nomeCliente;
+            ElCliente.style = "margin: 0px 2px 2px; font-size: 11px; margin-top: 10px;"
+
+            let ElProfissional = document.createElement('p')
+            ElProfissional.style = "font-size: 10px; margin: 0px 2px 2px;"
+
+            ElProfissional.innerHTML = arg.event.extendedProps.nomeProfissional;
+
+            let ElServico = document.createElement('p')
+            ElServico.style = "font-size: 10px; margin: 0px 2px 2px;"
+
+            ElServico.innerHTML = arg.event.extendedProps.servico;
+
+            let arrayOfDomNodes = [span, ElHorario, ElCliente, ElProfissional, ElServico]
             return { domNodes: arrayOfDomNodes }
         }
     });
@@ -147,6 +162,7 @@
     function retAgendamentoItens(codAgendamento) {
         let amat = [];
         let codServico = parseInt($("#sel-servico").val());
+        let codProfissional = parseInt($("#sel-profissional").val());
         let horaInicio = $("#txt-ag-inicio").val();
         let horaTermino = $("#txt-ag-termino").val();
         let data = $("#txt-data").val();
@@ -161,7 +177,8 @@
             "CodAgendamento": codAgendamento,
             "Inicio": data + "T" + horaInicio,
             "Termino": data + "T" + horaTermino,
-            "CodServico": codServico
+            "CodServico": codServico,
+            "CodProfissional": codProfissional
         });
 
         return amat;

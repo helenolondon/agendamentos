@@ -27,11 +27,13 @@ namespace Agendamentos.Servicos.DTO
         public string start { get { return this.Inicio.ToString("yyyy-MM-dd HH':'mm':'ss"); } }
         public string end { get { return this.Termino.ToString("yyyy-MM-dd HH':'mm':'ss"); } }
         public string id { get { return this.CodAgendamento.ToString(); } }
+        public string horarioLabel { get { return this.Inicio.ToString("HH':'mm") + " - " + this.Termino.ToString("HH':'mm"); } }
         public string title 
         { 
             get 
             {
                 return this.NomeCliente + "\n" +
+                    this.NomeProfissional + "n"+
                     this.Servico + "\n" +
                     this.NomeProfissional; 
             } 
@@ -45,8 +47,8 @@ namespace Agendamentos.Servicos.DTO
             this.Inicio = e.Dat_Inicio;
             this.Termino = e.Dat_Termino;
 
-            this.NomeCliente = "Cliente não informado";
-            this.NomeProfissional = e.Agendamento.Cliente.Txt_Nome;
+            this.NomeCliente = e.Agendamento.Cliente.Txt_Nome;
+            this.NomeProfissional = e.Profissional.Txt_Nome;
             this.Servico = e.Servico.Nome_Servico;
         }
 
@@ -59,10 +61,7 @@ namespace Agendamentos.Servicos.DTO
             temp.Cd_Servico = this.CodServico;
             temp.Dat_Inicio = this.Inicio;
             temp.Dat_Termino = this.Termino;
-            //temp.Servico = new Servico()
-            //{
-            //    Id_Servico = this.CodServico
-            //};
+            temp.Cd_Profissional = this.CodProfissional;
 
             return temp;
         }
