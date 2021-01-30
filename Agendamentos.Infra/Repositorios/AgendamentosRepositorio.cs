@@ -18,9 +18,9 @@ namespace Agendamentos.Infra.Repositorios
         public List<AgendamentoItem> ListarAgendamentos()
         {
             return this.dbContext.AgendamentoItens
-                .Include(b => b.Procedimento)
-                .Include(m => m.Procedimento.Pessoa)
-                .Include(s => s.Procedimento.Servico)
+                .Include(b => b.Servico)
+                .Include(c => c.Cliente)
+                .Include(m => m.Servico)
                 .ToList();
         }
 
@@ -42,11 +42,11 @@ namespace Agendamentos.Infra.Repositorios
         {
             var temp = this.dbContext.AgendamentoItens.Find(agendamento.Cd_Agendamento);
 
-            agendamento.Procedimento = this.dbContext.Procedimentos.Find(agendamento.Procedimento.Cd_Procedimento);
+            agendamento.Servico = this.dbContext.Servicos.Find(agendamento.Servico.Id_Servico);
 
             if(temp != null)
             {
-                temp.Cd_Procedimento = agendamento.Cd_Procedimento;
+                temp.Cd_Servico = agendamento.Cd_Servico;
                 temp.Dat_Inicio = agendamento.Dat_Inicio;
                 temp.Dat_Termino = agendamento.Dat_Termino;
             }

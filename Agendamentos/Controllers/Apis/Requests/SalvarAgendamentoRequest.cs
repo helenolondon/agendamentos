@@ -5,11 +5,15 @@ using System.Threading.Tasks;
 
 namespace Agendamentos.Controllers.Apis.Requests
 {
+    /// <summary>
+    /// Representa o request da api de salvar agendamentos
+    /// </summary>
     public class SalvarAgendamentoRequest
     {
-        public int? CodAgendamento { get; set; }
-        public int? CodProcedimento { get; set; }
-        public string HoraInicio { get; set; }
-        public string HoraTermino { get; set; }
+        public int CodAgendamento { get; set; }
+        public DateTime Data { get; set; }
+        public int CodStatus { get; set; }
+
+        public List<SalvarAgendamentoItemRequest> Itens { get; set; }
     }
 }

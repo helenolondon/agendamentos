@@ -17,7 +17,7 @@ namespace Agendamentos.Infra.Modelos
         [Required]
         public int Cd_Agendamento { get; set; }
         [Required]
-        public int Cd_Procedimento { get; set; }
+        public int Cd_Servico { get; set; }
         [Required]
         public int Cd_Cliente { get; set; }
         [Required]
@@ -27,11 +27,9 @@ namespace Agendamentos.Infra.Modelos
 
         [ForeignKey("Cd_Cliente")]
         public Pessoa Cliente { get; set; }
-
-        [ForeignKey("Cd_Procedimento")]
-        public Procedimento Procedimento { get; set; }
-
         [ForeignKey("Cd_Agendamento")]
         public Agendamento Agendamento { get; set; }
+        [ForeignKey("Cd_Servico")]
+        public Servico Servico { get; set; }
     }
 }

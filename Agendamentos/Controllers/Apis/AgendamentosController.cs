@@ -25,16 +25,23 @@ namespace Agendamentos.Controllers.Apis
 
 
         [HttpPost]
-        [Route("salvar")]
-        public IActionResult SalvarAgendamento([FromBody]SalvarAgendamentoRequest salvarAgendamentoRequest)
+        [Route("Salvar")]
+        public IActionResult SalvarAgendamento(SalvarAgendamentoRequest agendamento)
+        {
+            return Ok(agendamento);
+        }
+
+        [HttpPost]
+        [Route("salvar-item")]
+        public IActionResult SalvarAgendamentoItem([FromBody]SalvarAgendamentoItemRequest salvarAgendamentoRequest)
         {
             var servicos = new Agendamentos.Servicos.Servicos();
 
             var model = new AgendamentoDTO();
 
-            model.CodAgendamento = salvarAgendamentoRequest.CodAgendamento ?? 0;
+            model.CodAgendamento = salvarAgendamentoRequest.CodAgendamentoItem;
             model.CodCliente = "0";
-            model.CodProcedimento = salvarAgendamentoRequest.CodProcedimento ?? 0;
+            model.CodServico = salvarAgendamentoRequest.CodAgendamentoItem;
             model.CodProfissional = 0;
             model.Inicio = DateTime.Parse(salvarAgendamentoRequest.HoraInicio);
             model.Termino = DateTime.Parse(salvarAgendamentoRequest.HoraTermino);

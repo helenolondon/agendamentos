@@ -120,17 +120,34 @@
 
     function onAgendamentoSalvar() {
 
-        var codAgendamento = parseInt($("#cod-agendamento").val());
-        var codProcedimento = parseInt($("#sel-servico").val());
-        var horaInicio = $("#txt-ag-inicio").val();
-        var horaTermino = $("#txt-ag-termino").val();
-        var data = $("#txt-data").val();
+        let codAgendamento = parseInt($("#cod-agendamento").val());
+        let codProcedimento = parseInt($("#sel-servico").val());
+        let horaInicio = $("#txt-ag-inicio").val();
+        let horaTermino = $("#txt-ag-termino").val();
+        let data = $("#txt-data").val();
+        let codStatus = $("#sel-status").val();
+        let codCliente = $("#sel-cliente").val();
 
-        var a = {
+        let a = {
             "codAgendamento": codAgendamento,
             "codProcedimento": codProcedimento,
             "horaInicio": data + " " + horaInicio,
             "horaTermino": data + " " + horaTermino
+        }
+
+        a = {
+            "CodAgendamento": codAgendamento,
+            "Data": data,
+            "CodStatus": codStatus,
+            "CodCliente": codCliente,
+
+            "Itens": [
+                {
+                    "HoraInicio": horaInicio,
+                    "HoraTermino": horaTermino,
+                    "CodServico": 1
+    }
+            ]
         }
 
         return $.post("api/agendamentos/salvar", JSON.stringify(a), function () {

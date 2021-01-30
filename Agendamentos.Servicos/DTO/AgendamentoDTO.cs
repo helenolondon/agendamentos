@@ -13,7 +13,6 @@ namespace Agendamentos.Servicos.DTO
         public int CodAgendamento { get; set; }
         public DateTime Inicio { get; set; }
         public DateTime Termino { get; set; }
-        public int CodProcedimento { get; set; }
         public int CodProfissional { get; set; }
         public string NomeProfissional { get; set; }
         public int CodServico { get; set; }
@@ -40,13 +39,13 @@ namespace Agendamentos.Servicos.DTO
         internal void LoadFromAgendamento(AgendamentoItem e)
         {
             this.CodAgendamento = e.Cd_Agendamento;
-            this.CodProcedimento = e.Cd_Procedimento;
+            this.CodServico = e.Cd_Servico;
             this.Inicio = e.Dat_Inicio;
             this.Termino = e.Dat_Termino;
 
             this.NomeCliente = "Cliente não informado";
-            this.NomeProfissional = e.Procedimento.Pessoa.Txt_Nome;
-            this.Servico = e.Procedimento.Servico.Nome_Servico;
+            this.NomeProfissional = e.Cliente.Txt_Nome;
+            this.Servico = e.Servico.Nome_Servico;
         }
 
         internal AgendamentoItem ToAgendamento()
@@ -54,12 +53,12 @@ namespace Agendamentos.Servicos.DTO
             var temp = new AgendamentoItem();
 
             temp.Cd_Agendamento = this.CodAgendamento;
-            temp.Cd_Procedimento = this.CodProcedimento;
+            temp.Cd_Servico = this.CodServico;
             temp.Dat_Inicio = this.Inicio;
             temp.Dat_Termino = this.Termino;
-            temp.Procedimento = new Procedimento()
+            temp.Servico = new Servico()
             {
-                Cd_Procedimento = this.CodProcedimento
+                Id_Servico = this.CodServico
             };
 
             return temp;
