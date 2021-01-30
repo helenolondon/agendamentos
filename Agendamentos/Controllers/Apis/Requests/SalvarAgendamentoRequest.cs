@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Agendamentos.Servicos.DTO;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +15,6 @@ namespace Agendamentos.Controllers.Apis.Requests
         public DateTime Data { get; set; }
         public int CodStatus { get; set; }
         public int CodCliente { get; set; }
-        public List<SalvarAgendamentoItemRequest> Itens { get; set; }
+        public List<AgendamentoItemDTO> Itens { get; set; }
     }
 }

@@ -11,6 +11,7 @@ namespace Agendamentos.Servicos.DTO
     public class AgendamentoItemDTO
     {
         public int CodAgendamento { get; set; }
+        public int CodAgendamentoItem { get; set; }
         public DateTime Inicio { get; set; }
         public DateTime Termino { get; set; }
         public int CodProfissional { get; set; }
@@ -39,6 +40,7 @@ namespace Agendamentos.Servicos.DTO
         internal void LoadFromAgendamento(AgendamentoItem e)
         {
             this.CodAgendamento = e.Cd_Agendamento;
+            this.CodAgendamentoItem = e.Cd_AgendamentoItem;
             this.CodServico = e.Cd_Servico;
             this.Inicio = e.Dat_Inicio;
             this.Termino = e.Dat_Termino;
@@ -53,13 +55,14 @@ namespace Agendamentos.Servicos.DTO
             var temp = new AgendamentoItem();
 
             temp.Cd_Agendamento = this.CodAgendamento;
+            temp.Cd_AgendamentoItem = this.CodAgendamentoItem;
             temp.Cd_Servico = this.CodServico;
             temp.Dat_Inicio = this.Inicio;
             temp.Dat_Termino = this.Termino;
-            temp.Servico = new Servico()
-            {
-                Id_Servico = this.CodServico
-            };
+            //temp.Servico = new Servico()
+            //{
+            //    Id_Servico = this.CodServico
+            //};
 
             return temp;
         }

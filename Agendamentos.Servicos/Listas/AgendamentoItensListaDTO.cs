@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Agendamentos.Servicos.Listas
 {
-    public class AgendamentosListaDTO: List<AgendamentoItemDTO>
+    public class AgendamentoItensListaDTO: List<AgendamentoItemDTO>
     {
         public List<AgendamentoItem> ToAgendamentoProfissionalLista()
         {
@@ -17,6 +17,7 @@ namespace Agendamentos.Servicos.Listas
                 temp.Add(new AgendamentoItem()
                 {
                     Cd_Agendamento = e.CodAgendamento,
+                    Cd_AgendamentoItem = e.CodAgendamentoItem,
                     Cd_Servico = e.CodServico,
                     Dat_Inicio = e.Inicio,
                     Dat_Termino = e.Termino

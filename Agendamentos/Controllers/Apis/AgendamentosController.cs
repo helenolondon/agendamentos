@@ -25,9 +25,11 @@ namespace Agendamentos.Controllers.Apis
 
         [HttpPost]
         [Route("Salvar")]
-        public IActionResult SalvarAgendamento(SalvarAgendamentoRequest agendamento)
+        public IActionResult SalvarAgendamento(AgendamentoDTO agendamento)
         {
-            return Ok(agendamento);
+            var servicos = new Agendamentos.Servicos.Servicos();
+
+            return Ok(servicos.AgendamentosServico.SalvarAgendamento(agendamento));
         }
 
         [HttpPost]

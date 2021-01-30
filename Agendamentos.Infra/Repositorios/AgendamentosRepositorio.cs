@@ -48,6 +48,21 @@ namespace Agendamentos.Infra.Repositorios
                 throw new SalvarAgendamentoException("Erro: Agendamento nulo");
             }
 
+            if(agendamento.Dat_Agendamento == null)
+            {
+                throw new SalvarAgendamentoException("Erro: Agendamento sem data");
+            }
+
+            if (agendamento.Itens.Count() == 0)
+            {
+                throw new SalvarAgendamentoException("Erro: Agendamento sem itens");
+            }
+            
+            if (agendamento.Cd_Cliente == 0)
+            {
+                throw new SalvarAgendamentoException("Erro: Agendamento sem cliente");
+            }
+
             return true;
         }
 
@@ -58,11 +73,11 @@ namespace Agendamentos.Infra.Repositorios
                 return 0;
             }
 
-            var model = this.dbContext.Agendamentos.Where(a => a.Cd_Agendamento == agendamento.Cd_Agendamento).FirstOrDefault();
+            var model = this.dbContext.Agendamentos.Where(a => a.Cd_Agendamento == agendamento.Cd_Agendamento).Include(i => i.Itens).FirstOrDefault();
 
             if(agendamento.Cd_Agendamento == 0)
             {
-                var codAgendamento = this.dbContext.Agendamentos.Max(a => a.Cd_Agendamento) + 1;
+                var codAgendamento = this.dbContext.Agendamentos.Count()== 0 ? 1 : this.dbContext.Agendamentos.Max(a => a.Cd_Agendamento) + 1;
                 
                 agendamento.Cd_Agendamento = codAgendamento;
 
@@ -74,14 +89,29 @@ namespace Agendamentos.Infra.Repositorios
             {
                 model.Cd_Status = agendamento.Cd_Status;
                 model.Dat_Agendamento = agendamento.Dat_Agendamento;
+
+                model.Itens
+                    .RemoveAll( (i) =>
+                    {
+                        return agendamento.Itens.Where(a => a.Cd_AgendamentoItem == i.Cd_AgendamentoItem).FirstOrDefault() == null;
+                    });
+
+                agendamento.Itens.ForEach((e) =>
+                {
+                    var item = model.Itens.Where(i => i.Cd_AgendamentoItem == e.Cd_AgendamentoItem).FirstOrDefault();
+
+                    if(item == null)
+                    {
+                        dbContext.AgendamentoItens.Add(e);
+                    }
+                    else
+                    {
+                        item.Cd_Servico = e.Cd_Servico;
+                        item.Dat_Inicio = e.Dat_Inicio;
+                        item.Dat_Termino = e.Dat_Termino;
+                    };
+                });
             }
-
-            model.Itens.Clear();
-
-            agendamento.Itens.ForEach((ag) =>
-            {
-                model.Itens.Add(ag);
-            });
 
             dbContext.SaveChanges();
 
