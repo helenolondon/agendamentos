@@ -75,14 +75,9 @@
         }
     });
 
-    $("#teste").on("click", function () {
-        alert("teset");
-    })
-
     calendar.render();
-    //calendar.next();
 
-    //calendar.scrollToTime('16:00')
+    calendar.scrollToTime(new Date().getTime())
 
     function addAgenmento() {
         var pop = $('#md-editar-agendamento');
@@ -118,13 +113,59 @@
         form[0].reset();
     })
 
-    $([]).add("#sel-servico")
-        .add("#txt-ag-inicio")
-        .add("#txt-ag-termino")
-        .add("#txt-data")
-        .on('change', (e, b) => {
-        loadProfissionais();
-    });
+    $("#btn-novo-procedimento").click(() => {
+        addProcedimentoItem();
+    })
+
+    $("#txt-data").on('change', function () {
+        $(".procedimento-item")
+            .find("input[type='time']")
+            .first()
+            .trigger('change');
+    })
+
+    // Primeiro procedimento
+    addProcedimentoItem();
+
+    function addProcedimentoItem(permitirRemover) {
+        const procedimentoTemplate = ({ id, codProcedimentoItem }) => retProcedimentoTemplate(id, codProcedimentoItem);
+        let novaId = $(".procedimento-item").length + 1;
+
+        $('#novo-procedimento').append([
+            { id: novaId, codProcedimentoItem: '0' }
+
+        ].map(procedimentoTemplate).join(''));
+
+        $(".btn-remover-item").click(function() {
+            if ($(".procedimento-item").length > 1) {
+                $(this).parent().parent().remove();
+            }
+
+            botoesRemoverDisableEnable();
+        });
+
+        loadServicos(novaId);
+
+        $([]).add("#sel-servico-" + novaId)
+            .add("#txt-ag-inicio-" + novaId)
+            .add("#txt-ag-termino-" + novaId)
+            .on('change', (e, b) => {
+                loadProfissionais(novaId);
+            });
+
+        botoesRemoverDisableEnable();
+    }
+
+    function botoesRemoverDisableEnable() {
+        if ($(".procedimento-item").length == 1) {
+            $(".btn-remover-item").prop('disabled', true);
+            $("#txt-data").prop('disabled', false);
+        }
+        else {
+            $(".btn-remover-item").prop('disabled', false);
+            $("#txt-data").prop('disabled', true);
+        }
+    }
 
     function onRemoverAgendamento(codAgendamentoItem) {
 
@@ -177,25 +218,30 @@
 
     function retAgendamentoItens(codAgendamento) {
         let amat = [];
-        let codServico = parseInt($("#sel-servico").val());
-        let codProfissional = parseInt($("#sel-profissional").val());
-        let horaInicio = $("#txt-ag-inicio").val();
-        let horaTermino = $("#txt-ag-termino").val();
-        let data = $("#txt-data").val();
-        let codAgendamentoItem = 0;
 
-        if (Number.isNaN(codAgendamentoItem)) {
-            codAgendamentoItem = 0;
-        }
+        $(".procedimento-item").each(function (i) {
+            let id = $(this).attr("data-id");
 
-        amat.push({
-            "CodAgendamentoItem": 0,
-            "CodAgendamento": codAgendamento,
-            "Inicio": data + "T" + horaInicio,
-            "Termino": data + "T" + horaTermino,
-            "CodServico": codServico,
-            "CodProfissional": codProfissional
-        });
+            let codServico = parseInt($("#sel-servico-" + id).val());
+            let codProfissional = parseInt($("#sel-profissional-" + id).val());
+            let horaInicio = $("#txt-ag-inicio-" + id).val();
+            let horaTermino = $("#txt-ag-termino-" + id).val();
+            let data = $("#txt-data").val();
+            let codAgendamentoItem = parseInt($(this).attr("data-cod-procedimento"));
+
+            if (Number.isNaN(codAgendamentoItem)) {
+                codAgendamentoItem = 0;
+            }
+
+            amat.push({
+                "CodAgendamentoItem": codAgendamentoItem,
+                "CodAgendamento": codAgendamento,
+                "Inicio": data + "T" + horaInicio,
+                "Termino": data + "T" + horaTermino,
+                "CodServico": codServico,
+                "CodProfissional": codProfissional
+            });
+        })
 
         return amat;
     }
@@ -240,11 +286,11 @@
     }
 
     // Carrega os profiossionais disponíveispara o agendamento
-    function loadProfissionais(){
+    function loadProfissionais(id){
 
-        let codServico = $("#sel-servico").val();
-        let horaInicio = $("#txt-ag-inicio").val();
-        let horaTermino = $("#txt-ag-termino").val();
+        let codServico = $("#sel-servico-" + id).val();
+        let horaInicio = $("#txt-ag-inicio-" + id).val();
+        let horaTermino = $("#txt-ag-termino-" + id).val();
         let data = $("#txt-data").val();
 
         if (horaInicio.length == 0 || horaTermino.length == 0 || codServico == 0) {
@@ -261,7 +307,7 @@
         }
 
         $.get("api/procedimentos/listar-profissionais-agendamento", request, (data) => {
-            var select = $("#sel-profissional");
+            var select = $("#sel-profissional-" + id);
             select.find("option").remove();
 
             $.each(data, (i, item) => {
@@ -271,8 +317,8 @@
     }
 
     // Carrega os procedimetos do profiossinal
-    function loadServicos() {
-        var select = $("#sel-servico");
+    function loadServicos(id) {
+        var select = $("#sel-servico-" + id);
 
         select.find("option").remove();
         
@@ -301,9 +347,51 @@
             })            
         })
 
-        $.when(q1, loadServicos()).then(() => {
+        $.when(q1).then(() => {
             callBack();
         })
+    }
+
+    function retProcedimentoTemplate(id, codProcedimentoItem) {
+        return `
+<div class="procedimento-item" data-id=${id} data-cod-procedimento=${codProcedimentoItem}>
+    <div>Procedimento ${id} <button class="btn btn-link btn-remover-item" type="button" style="float: right">Remover</button></div>
+    <hr />
+    <!--Hora de início e fim-->
+    <div class="container">
+        <div class="row .no-gutters">
+            <div class="col">
+                <div class="form-group">
+                    <label for=txt-ag-inicio-${id}>Início:</label>
+                    <input type="time" class="form-control" id=txt-ag-inicio-${id}>
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group">
+                    <label for=txt-ag-termino-${id}>Término:</label>
+                    <input type="time" class="form-control" id=txt-ag-termino-${id}>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Procedimento-->
+    <div class="form-group">
+        <label for=sel-servico-${id}>Procedimento:</label>
+        <select id=sel-servico-${id} class="custom-select">
+            <option selected></option>
+        </select>
+    </div>
+
+    <!--Profissional-->
+    <div class="form-group">
+        <label for=sel-profissional-${id}>Profissional:</label>
+        <select id=sel-profissional-${id} class="custom-select profissional">
+            <option selected></option>
+        </select>
+    </div>
+</div>
+    `;
     }
 });
 

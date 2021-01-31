@@ -11,6 +11,31 @@
         .col:last-child {
             padding-right: 0;
         }
+    #novo-procedimento {
+/*        margin-top: -15px;*/
+        margin-bottom: 0px;
+    }
+
+    #novo-procedimento-row{
+        margin-top: 0px;
+    }
+
+    .modal-body{
+        padding-bottom: 0px;
+    }
+
+    #btn-novo-procedimento, #btn-novo-procedimento:focus {
+        box-shadow: none;
+    }
+
+    #btn-novo-procedimento:focus, #btn-novo-procedimento:hover {
+        text-decoration: none;
+    }
+
+    .btn.btn-remover-item{
+        float: right;
+        padding-top: 0px;
+    }
 </style>
 
 @*Aqui é onde o scheduler inicia*@
@@ -58,38 +83,18 @@
                         </select>
                     </div>
 
-                    @*Hora de início e fim*@
-                    <div class="container">
-                        <div class="row .no-gutters">
-                            <div class="col">
-                                <div class="form-group">
-                                    <label for="txt-ag-inicio">Início:</label>
-                                    <input type="time" class="form-control" id="txt-ag-inicio">
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-group">
-                                    <label for="txt-ag-termino">Término:</label>
-                                    <input type="time" class="form-control" id="txt-ag-termino">
+                    @*Procedimentos*@
+                    <div id="procedimentos-container">
+
+                        <div id="novo-procedimento"></div>
+
+                        <div class="container">
+                            <div id="novo-procedimento-row" class="row text text-center">
+                                <div class="col">
+                                    <button type="button" id="btn-novo-procedimento" class="btn btn-link">Novo Procedimento</button>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    @*Procedimento*@
-                    <div class="form-group">
-                        <label for="sel-servico">Procedimento:</label>
-                        <select id="sel-servico" class="custom-select">
-                            <option selected></option>
-                        </select>
-                    </div>
-
-                    @*Profissional*@
-                    <div class="form-group">
-                        <label for="sel-profissional">Profissional:</label>
-                        <select id="sel-profissional" class="custom-select">
-                            <option selected></option>
-                        </select>
                     </div>
                 </form>
             </div>
