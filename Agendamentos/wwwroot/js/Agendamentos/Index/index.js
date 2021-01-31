@@ -127,7 +127,7 @@
     // Primeiro procedimento
     addProcedimentoItem();
 
-    function addProcedimentoItem(permitirRemover) {
+    function addProcedimentoItem() {
         const procedimentoTemplate = ({ id, codProcedimentoItem }) => retProcedimentoTemplate(id, codProcedimentoItem);
         let novaId = $(".procedimento-item").length + 1;
 
@@ -266,14 +266,15 @@
         var pop = $('#md-editar-agendamento');
 
         if (pop) {
-            loadLookups(() => {
+            loadClientes(() => {
 
                 $("#cod-agendamento").val(e.codAgendamento);
                 $("#sel-servico").val(e.codServico);
-                $("#txt-ag-inicio").val(e.horaInicio);
-                $("#txt-data")[0].valueAsDate = new Date(e.dataAgendamento);
-                $("#txt-ag-termino").val(e.horaTermino);
                 $("#sel-cliente").val(e.codCliente);
+                $("#txt-data")[0].valueAsDate = new Date(e.dataAgendamento);
+
+                $("#txt-ag-inicio").val(e.horaInicio);
+                $("#txt-ag-termino").val(e.horaTermino);
                 $("#sel-status").val(e.codStatus)
 
                 loadProfissionais();
@@ -335,7 +336,7 @@
     }
 
     // Carrega Lookups
-    function loadLookups(callBack) {
+    function loadClientes(callBack) {
 
         var q1 = $.get("api/pessoas", (data) => {
 
@@ -394,5 +395,3 @@
     `;
     }
 });
-
-

@@ -26,7 +26,7 @@ namespace Agendamentos.Servicos.Listas
 
             return temp;
         }
-        public void LoadFromAgendamentoProfissionalLista(List<AgendamentoItem> lista)
+        public void LoadFromAgendamentoLista(List<AgendamentoItem> lista)
         {
             this.Clear();
             AgendamentoItemDTO temp;

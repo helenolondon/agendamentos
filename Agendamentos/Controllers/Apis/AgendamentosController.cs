@@ -23,6 +23,24 @@ namespace Agendamentos.Controllers.Apis
             return Ok(servicos.AgendamentosServico.Listar());
         }
 
+        [HttpGet]
+        [Route("{codAgendamento:int}")]
+        public IActionResult ConsultaAgendamento(int codAgendamento)
+        {
+            var servicos = new Agendamentos.Servicos.Servicos();
+            var agendamento = servicos.AgendamentosServico.Consultar(codAgendamento);
+
+            if(agendamento == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(agendamento);
+        }
+
+        /// <summary>
+        /// Salva um agendamento completo
+        /// </summary>
         [HttpPost]
         [Route("Salvar")]
         public IActionResult SalvarAgendamento(AgendamentoDTO agendamento)
@@ -32,6 +50,9 @@ namespace Agendamentos.Controllers.Apis
             return Ok(servicos.AgendamentosServico.SalvarAgendamento(agendamento));
         }
 
+        /// <summary>
+        /// Salva um iten de agendamento
+        /// </summary>
         [HttpPost]
         [Route("salvar-item")]
         public IActionResult SalvarAgendamentoItem([FromBody]SalvarAgendamentoItemRequest salvarAgendamentoRequest)
@@ -55,6 +76,9 @@ namespace Agendamentos.Controllers.Apis
             return BadRequest();
         }
 
+        /// <summary>
+        /// Remove um agendamento
+        /// </summary>
         [HttpDelete]
         [Route("remover")]
         public IActionResult Remover(int codAgendamentoItem)

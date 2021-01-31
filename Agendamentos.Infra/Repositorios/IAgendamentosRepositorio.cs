@@ -8,6 +8,7 @@ namespace Agendamentos.Infra.Repositorios
     public interface IAgendamentosRepositorio
     {
         List<AgendamentoItem> ListarAgendamentos();
+        Agendamento ConsultarAgendamento(int codAgendamento);
         int SalvarAgendamento(AgendamentoItem agendamento);
         int SalvarAgendamento(Agendamento agendamento);
         bool RemoverAgendamento(int codAgendamentoItem);

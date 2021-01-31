@@ -14,6 +14,21 @@ namespace Agendamentos.Servicos
     {
         public AgendamentosServico(IRepositorios repositorio) : base(repositorio) { }
 
+        public AgendamentoDTO Consultar(int codAgendamento)
+        {
+            var q = this.repositorio.AgendamentosRepositorio.ConsultarAgendamento(codAgendamento);
+            
+            if(q != null) 
+            {
+                var novo = new AgendamentoDTO();
+                novo.LoadFromAgendamento(q);
+
+                return novo;
+            }
+
+            return null;
+        }
+
         public AgendamentoItensListaDTO Listar()
         {
             var temp = this.repositorio.AgendamentosRepositorio.ListarAgendamentos();
@@ -25,7 +40,7 @@ namespace Agendamentos.Servicos
 
             var lista = new AgendamentoItensListaDTO();
 
-            lista.LoadFromAgendamentoProfissionalLista(temp);
+            lista.LoadFromAgendamentoLista(temp);
 
             return lista;
         }

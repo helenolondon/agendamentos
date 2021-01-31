@@ -36,5 +36,16 @@ namespace Agendamentos.Servicos.DTO
 
             return ag;
         }
+
+        internal void LoadFromAgendamento(Agendamento agendamento)
+        {
+            this.CodAgendamento = agendamento.Cd_Agendamento;
+            this.CodCliente = agendamento.Cd_Cliente;
+            this.CodStatus = agendamento.Cd_Status;
+            this.Data = agendamento.Dat_Agendamento;
+
+            this.Itens = new AgendamentoItensListaDTO();
+            this.Itens.LoadFromAgendamentoLista(agendamento.Itens);
+        }
     }
 }
