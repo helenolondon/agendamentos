@@ -83,7 +83,7 @@
         var pop = $('#md-editar-agendamento');
 
         if (pop) {
-            loadLookups(() => {
+            loadClientes().then(() => {
                 onNovoAgendamento();
                 pop.draggable();
                 pop.modal();
@@ -93,12 +93,14 @@
 
     function onNovoAgendamento() {
         clearAgendamentoForm();
+        addProcedimentoItem();
+
         $("#txt-data")[0].valueAsDate = new Date();
     }
 
     form = $("form").submit(function (event) {
         event.preventDefault();
-        
+
         onAgendamentoSalvar()
             .then(() => {
                 $('#md-editar-agendamento').modal("hide");
@@ -124,9 +126,6 @@
             .trigger('change');
     })
 
-    // Primeiro procedimento
-    addProcedimentoItem();
-
     function addProcedimentoItem() {
         const procedimentoTemplate = ({ id, codProcedimentoItem }) => retProcedimentoTemplate(id, codProcedimentoItem);
         let novaId = $(".procedimento-item").length + 1;
@@ -136,7 +135,7 @@
 
         ].map(procedimentoTemplate).join(''));
 
-        $(".btn-remover-item").click(function() {
+        $(".btn-remover-item").click(function () {
             if ($(".procedimento-item").length > 1) {
                 $(this).parent().parent().remove();
             }
@@ -154,6 +153,8 @@
             });
 
         botoesRemoverDisableEnable();
+
+        return novaId;
     }
 
     function botoesRemoverDisableEnable() {
@@ -177,7 +178,7 @@
             var q = $.ajax({
                 url: 'api/agendamentos/remover?codAgendamentoItem=' + codAgendamentoItem,
                 type: 'DELETE',
-                success: function (result) {                    
+                success: function (result) {
                     onSchedulerRefreshNeeded()
                 }
             });
@@ -248,46 +249,61 @@
 
     function clearAgendamentoForm() {
         $("#cod-agendamento").val(0);
-        $("#sel-servico").val(null);
-        $("#txt-ag-inicio").val(null);
-        $("#txt-ag-termino").val(null);
         $("#txt-data").val(null);
         $("#sel-cliente").val(null);
         $("#sel-status").val(1);
-        $("#sel-profissional").val(null);
+
+        $(".procedimento-item").remove();
     }
 
-    function onSchedulerRefreshNeeded(){
+    function onSchedulerRefreshNeeded() {
         calendar.refetchEvents();
     }
 
     function onEditarAgendamento(e) {
 
         var pop = $('#md-editar-agendamento');
+        var agendamento = consultarAgendamento(e.codAgendamento)
+            .then((data) => {
+                agendamento = data
+            });
 
-        if (pop) {
-            loadClientes(() => {
+        clearAgendamentoForm();
 
+        $.when(agendamento, loadClientes())
+            .then(() => {
+
+                // Cabeçalho
                 $("#cod-agendamento").val(e.codAgendamento);
-                $("#sel-servico").val(e.codServico);
                 $("#sel-cliente").val(e.codCliente);
                 $("#txt-data")[0].valueAsDate = new Date(e.dataAgendamento);
-
-                $("#txt-ag-inicio").val(e.horaInicio);
-                $("#txt-ag-termino").val(e.horaTermino);
                 $("#sel-status").val(e.codStatus)
 
-                loadProfissionais();
-                $("#sel-profissional").val(e.codProfissional);
+                $.each(agendamento.itens, (index, item) => {
+                    var novoItem = addProcedimentoItem();
+
+                    $(".procedimento-item[data-id=" + novoItem + "]").attr("data-cod-procedimento", item.codAgendamentoItem);
+                    $("#sel-profissional-" + novoItem).val(item.codProfissional);
+                    $("#sel-servico-" + novoItem).val(item.codServico);
+                    $("#txt-ag-inicio-" + novoItem).val(item.horaInicio);
+                    $("#txt-ag-termino-" + novoItem).val(item.horaTermino);
+                });
 
                 pop.draggable();
                 pop.modal();
             });
-        };
+    }
+
+    function consultarAgendamento(codAgendamento) {
+        return $.get("api/agendamentos/" + codAgendamento);
     }
 
     // Carrega os profiossionais disponíveispara o agendamento
     function loadProfissionais(id){
+
+        if (Number.isNaN(id) || id == null) {
+            return;
+        }
 
         let codServico = $("#sel-servico-" + id).val();
         let horaInicio = $("#txt-ag-inicio-" + id).val();
@@ -335,10 +351,10 @@
         });
     }
 
-    // Carrega Lookups
-    function loadClientes(callBack) {
+    // Carrega clientes
+    function loadClientes() {
 
-        var q1 = $.get("api/pessoas", (data) => {
+        return $.get("api/pessoas", (data) => {
 
             var select = $("#sel-cliente");
             select.find("option").remove();
@@ -346,10 +362,6 @@
             $.each(data, (i, item) => {
                 select.append($("<option>", { value: item.codPessoa, text: item.nomePessoa }));
             })            
-        })
-
-        $.when(q1).then(() => {
-            callBack();
         })
     }
 
