@@ -12,7 +12,7 @@
         slotDuration: '00:15:00',
         slotLabelInterval: '00:30',
         scrollTime: '08:00:00',
-        editable: true,
+        editable: false,
         events: 'api/agendamentos',
         slotLabelFormat: {
             hour: 'numeric',
@@ -77,7 +77,8 @@
 
     calendar.render();
 
-    calendar.scrollToTime(new Date().getTime())
+    // Mostra a área emm volta do horári atual;
+    calendar.scrollToTime(moment(new Date().getTime()).format("hh:mm"));
 
     function addAgenmento() {
         var pop = $('#md-editar-agendamento');
@@ -85,10 +86,17 @@
         if (pop) {
             loadClientes().then(() => {
                 onNovoAgendamento();
+                setPopAgendamentoTitle("Criar Agendamento");
                 pop.draggable();
                 pop.modal();
             });
         }
+    }
+
+    function setPopAgendamentoTitle(titulo) {
+        $("#md-editar-agendamento")
+            .find(".modal-title")
+            .html(titulo);
     }
 
     function onNovoAgendamento() {
@@ -268,6 +276,7 @@
                 agendamento = data
             });
 
+        setPopAgendamentoTitle("Editar Agendamento");
         clearAgendamentoForm();
 
         $.when(agendamento, loadClientes())
@@ -367,7 +376,7 @@
 
     function retProcedimentoTemplate(id, codProcedimentoItem) {
         return `
-<div class="procedimento-item" data-id=${id} data-cod-procedimento=${codProcedimentoItem}>
+<div class="procedimento-item border-top-10" data-id=${id} data-cod-procedimento=${codProcedimentoItem}>
     <div>Procedimento ${id} <button class="btn btn-link btn-remover-item" type="button" style="float: right">Remover</button></div>
     <hr />
     <!--Hora de início e fim-->
@@ -397,7 +406,7 @@
     </div>
 
     <!--Profissional-->
-    <div class="form-group">
+    <div class="form-group no-border-bottom">
         <label for=sel-profissional-${id}>Profissional:</label>
         <select id=sel-profissional-${id} class="custom-select profissional">
             <option selected></option>
