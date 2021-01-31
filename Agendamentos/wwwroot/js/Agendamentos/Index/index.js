@@ -13,7 +13,7 @@
         slotLabelInterval: '00:30',
         scrollTime: '08:00:00',
         editable: false,
-        events: 'api/agendamentos',
+        events: '/agendamentos/api/agendamentos',
         slotLabelFormat: {
             hour: 'numeric',
             minute: '2-digit',
@@ -78,7 +78,7 @@
     calendar.render();
 
     // Mostra a área emm volta do horári atual;
-    calendar.scrollToTime(moment(new Date().getTime()).format("hh:mm"));
+    calendar.scrollToTime(moment(new Date().getTime()).format("H:mm"));
 
     function addAgenmento() {
         var pop = $('#md-editar-agendamento');
@@ -151,18 +151,18 @@
             botoesRemoverDisableEnable();
         });
 
-        loadServicos(novaId);
+        return loadServicos(novaId)
+            .then(() => {
+                $([]).add("#sel-servico-" + novaId)
+                    .add("#txt-ag-inicio-" + novaId)
+                    .add("#txt-ag-termino-" + novaId)
+                    .on('change', (e, b) => {
+                        loadProfissionais(novaId);
+                    });
+                botoesRemoverDisableEnable();
 
-        $([]).add("#sel-servico-" + novaId)
-            .add("#txt-ag-inicio-" + novaId)
-            .add("#txt-ag-termino-" + novaId)
-            .on('change', (e, b) => {
-                loadProfissionais(novaId);
-            });
-
-        botoesRemoverDisableEnable();
-
-        return novaId;
+                return $.Deferred().resolve(novaId);
+            });        
     }
 
     function botoesRemoverDisableEnable() {
@@ -184,7 +184,7 @@
         md.find("#btn-sim").off('click');
         md.find("#btn-sim").on('click', () => {
             var q = $.ajax({
-                url: 'api/agendamentos/remover?codAgendamentoItem=' + codAgendamentoItem,
+                url: 'agendamentos/api/agendamentos/remover?codAgendamentoItem=' + codAgendamentoItem,
                 type: 'DELETE',
                 success: function (result) {
                     onSchedulerRefreshNeeded()
@@ -219,7 +219,7 @@
             "Itens": retAgendamentoItens(codAgendamento)
         }
 
-        return $.post("api/agendamentos/salvar", JSON.stringify(request), function () {
+        return $.post("agendamentos/api/agendamentos/salvar", JSON.stringify(request), function () {
             clearAgendamentoForm();
             onSchedulerRefreshNeeded();
         });
@@ -279,7 +279,7 @@
         setPopAgendamentoTitle("Editar Agendamento");
         clearAgendamentoForm();
 
-        $.when(agendamento, loadClientes())
+        $.when(agendamento, loadClientes(), loadServicos())
             .then(() => {
 
                 // Cabeçalho
@@ -289,22 +289,30 @@
                 $("#sel-status").val(e.codStatus)
 
                 $.each(agendamento.itens, (index, item) => {
-                    var novoItem = addProcedimentoItem();
+                    
+                    addProcedimentoItem()
+                        .then((novoItem) => {
+                            $(".procedimento-item[data-id=" + novoItem + "]").attr("data-cod-procedimento", item.codAgendamentoItem);
 
-                    $(".procedimento-item[data-id=" + novoItem + "]").attr("data-cod-procedimento", item.codAgendamentoItem);
-                    $("#sel-profissional-" + novoItem).val(item.codProfissional);
-                    $("#sel-servico-" + novoItem).val(item.codServico);
-                    $("#txt-ag-inicio-" + novoItem).val(item.horaInicio);
-                    $("#txt-ag-termino-" + novoItem).val(item.horaTermino);
+                            $("#sel-servico-" + novoItem).val(item.codServico);
+
+                            $("#txt-ag-inicio-" + novoItem).val(item.horaInicio);
+                            $("#txt-ag-termino-" + novoItem).val(item.horaTermino);
+
+                            loadProfissionais(novoItem)
+                                .then(() => {
+                                    $("#sel-profissional-" + novoItem).val(item.codProfissional);
+                                });
+
+                            pop.draggable();
+                            pop.modal();
+                        })
                 });
-
-                pop.draggable();
-                pop.modal();
             });
     }
 
     function consultarAgendamento(codAgendamento) {
-        return $.get("api/agendamentos/" + codAgendamento);
+        return $.get("agendamentos/api/agendamentos/" + codAgendamento);
     }
 
     // Carrega os profiossionais disponíveispara o agendamento
@@ -332,7 +340,7 @@
             "CodServico": codServico
         }
 
-        $.get("api/procedimentos/listar-profissionais-agendamento", request, (data) => {
+        return $.get("agendamentos/api/procedimentos/listar-profissionais-agendamento", request, (data) => {
             var select = $("#sel-profissional-" + id);
             select.find("option").remove();
 
@@ -347,9 +355,8 @@
         var select = $("#sel-servico-" + id);
 
         select.find("option").remove();
-        
 
-        return $.get("api/servicos", (data) => {
+        return $.get("agendamentos/api/servicos", (data) => {
             $.each(data, (i, item) => {
                 var opt = $("<option>", { value: item.codServico, text: item.nomeServico });
 
@@ -363,7 +370,7 @@
     // Carrega clientes
     function loadClientes() {
 
-        return $.get("api/pessoas", (data) => {
+        return $.get("agendamentos/api/pessoas", (data) => {
 
             var select = $("#sel-cliente");
             select.find("option").remove();
