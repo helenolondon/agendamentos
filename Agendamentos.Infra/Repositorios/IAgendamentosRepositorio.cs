@@ -9,6 +9,8 @@ namespace Agendamentos.Infra.Repositorios
     {
         List<AgendamentoItem> ListarAgendamentos();
         Agendamento ConsultarAgendamento(int codAgendamento);
+        List<AgendamentoItem> ListarAgendamentosItens(int? codProfissional, DateTime? dataInicial, DateTime? dataFinal);
+        List<AgendamentoItem> ListarAgendamentosItens(System.Linq.Expressions.Expression<Func<AgendamentoItem, bool>> filtro);
         int SalvarAgendamento(AgendamentoItem agendamento);
         int SalvarAgendamento(Agendamento agendamento);
         bool RemoverAgendamento(int codAgendamentoItem);

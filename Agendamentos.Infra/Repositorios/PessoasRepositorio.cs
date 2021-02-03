@@ -20,5 +20,11 @@ namespace Agendamentos.Infra.Repositorios
                 .OrderBy(c => c.Txt_Nome)
                 .ToList();
         }
+        public Pessoa Obter(int codPessoa)
+        {
+            return this.dbContext.Pessoas
+                .Where(c => c.Cod_Pessoa == codPessoa)
+                .FirstOrDefault();
+        }
     }
 }

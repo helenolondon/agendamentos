@@ -1,6 +1,8 @@
 ﻿using Agendamentos.Controllers.Apis.Requests;
 using Agendamentos.Servicos.DTO;
+using Agendamentos.Servicos.Erros;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,8 +48,18 @@ namespace Agendamentos.Controllers.Apis
         public IActionResult SalvarAgendamento(AgendamentoDTO agendamento)
         {
             var servicos = new Agendamentos.Servicos.Servicos();
+            
+            try
+            {
+                return Ok(servicos.AgendamentosServico.SalvarAgendamento(agendamento));
+            }
+            catch (AgendamentoConflitoException ex)
+            {
+                var erros = new ModelStateDictionary();
+                erros.AddModelError("ERR", ex.Message);
 
-            return Ok(servicos.AgendamentosServico.SalvarAgendamento(agendamento));
+                return BadRequest(erros);
+            }
         }
 
         /// <summary>

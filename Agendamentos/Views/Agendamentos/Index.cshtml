@@ -61,7 +61,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form>
+                <form class="needs-validation" novalidate>
                     <input type="hidden" name="cod-procedimento" id="cod-agendamento" />
 
                     <div class="container">
@@ -69,12 +69,12 @@
                             <div class="col">
                                 <div class="form-group">
                                     <label for="txt-data">Data:</label>
-                                    <input type="date" class="form-control" id="txt-data">
+                                    <input required type="date" class="form-control" id="txt-data">
                                 </div>
                             </div>
                             <div class="col">
                                 <label for="sel-status">Status:</label>
-                                <select id="sel-status" class="custom-select">
+                                <select required id="sel-status" class="custom-select">
                                     <option value="1" selected>Agendado</option>
                                     <option value="2">Cancelado</option>
                                     <option value="3">Remarcado</option>
@@ -86,7 +86,7 @@
 
                     <div class="form-group no-norder-bottom">
                         <label for="sel-cliente">Cliente:</label>
-                        <select id="sel-cliente" class="custom-select">
+                        <select required id="sel-cliente" class="custom-select">
                             <option selected></option>
                         </select>
                     </div>
@@ -97,7 +97,7 @@
                         <div id="novo-procedimento"></div>
 
                         <div class="container">
-                            <div id="novo-procedimento-row" class="row text text-center">
+                            <div id="novo-procedimento-row" class="row text">
                                 <div class="col">
                                     <button type="button" id="btn-novo-procedimento" class="btn btn-link">Novo Procedimento</button>
                                 </div>
@@ -105,6 +105,10 @@
                         </div>
                     </div>
                 </form>
+
+                <div id="salvar-erros" class="text-danger text-center">
+
+                </div>
             </div>
             <div class="modal-footer">
                 <button id="btn-salvar" type="button" class="btn btn-primary">Salvar</button>

@@ -20,8 +20,8 @@ namespace Agendamentos.Infra.Repositorios
         
         private string RetConnectionString()
         {
-            //return @"Password=Gaia010265;Persist Security Info=True;User ID=sa;Initial Catalog=Odontica;Data Source=srv-praianorte2\sqlexpress";
-            return @"data source=INTEGRO\IMOBIX;Initial Catalog=devsig;User ID=sa;Password=!Imo2@19Bix#";
+            return @"Password=Gaia010265;Persist Security Info=True;User ID=sa;Initial Catalog=Odontica;Data Source=192.168.100.8\sqlexpress";
+            //return @"data source=INTEGRO\IMOBIX;Initial Catalog=devsig;User ID=sa;Password=!Imo2@19Bix#";
         }
 
         public IAgendamentosRepositorio AgendamentosRepositorio

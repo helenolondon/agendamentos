@@ -26,6 +26,31 @@ namespace Agendamentos.Infra.Repositorios
                 .Include(m => m.Servico)
                 .ToList();
         }
+        public List<AgendamentoItem> ListarAgendamentosItens(System.Linq.Expressions.Expression<Func<AgendamentoItem, bool>> filtro)
+        {
+            return this.dbContext.AgendamentoItens
+                .Where(filtro)
+                .Include(b => b.Servico)
+                .Include(a => a.Agendamento)
+                .Include(p => p.Profissional)
+                .Include(c => c.Agendamento.Cliente)
+                .Include(m => m.Servico)
+                .ToList();
+        }
+        public List<AgendamentoItem> ListarAgendamentosItens(int? codProfissional, DateTime? dataInicial, DateTime? dataFinal)
+        {
+            return this.dbContext.AgendamentoItens
+                .Where(p => p.Cd_Profissional == codProfissional || !codProfissional.HasValue)
+                .Where(d => d.Dat_Inicio >= dataInicial || !dataInicial.HasValue)
+                .Where(d => d.Dat_Termino <= dataFinal || !dataFinal.HasValue)
+                .Include(b => b.Servico)
+                .Include(a => a.Agendamento)
+                .Include(p => p.Profissional)
+                .Include(c => c.Agendamento.Cliente)
+                .Include(m => m.Servico)
+                .ToList();
+        }
+
         public Agendamento ConsultarAgendamento(int codAgendamento)
         {
             var q = this.dbContext.Agendamentos

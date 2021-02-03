@@ -109,6 +109,14 @@
     form = $("form").submit(function (event) {
         event.preventDefault();
 
+        if (!$("form")[0].checkValidity()) {
+
+            form[0].classList.add('was-validated');
+            event.stopPropagation();
+
+            return;
+        }
+
         onAgendamentoSalvar()
             .then(() => {
                 $('#md-editar-agendamento').modal("hide");
@@ -216,16 +224,24 @@
             "CodStatus": codStatus,
             "CodCliente": codCliente,
 
-            "Itens": retAgendamentoItens(codAgendamento)
+            "Itens": retAgendamentoItens(codAgendamento, codCliente)
         }
 
         return $.post("agendamentos/api/agendamentos/salvar", JSON.stringify(request), function () {
-            clearAgendamentoForm();
+            clearAgendamentoForm();            
             onSchedulerRefreshNeeded();
+        }).fail((resp) => {
+            if (resp.responseJSON) {
+                setValidacaoRemota(null);
+
+                $.each(resp.responseJSON, (index, item) => {
+                    setValidacaoRemota(item);
+                })
+            }
         });
     }
 
-    function retAgendamentoItens(codAgendamento) {
+    function retAgendamentoItens(codAgendamento, codCliente) {
         let amat = [];
 
         $(".procedimento-item").each(function (i) {
@@ -247,6 +263,7 @@
                 "CodAgendamento": codAgendamento,
                 "Inicio": data + "T" + horaInicio,
                 "Termino": data + "T" + horaTermino,
+                "codCliente": + codCliente,
                 "CodServico": codServico,
                 "CodProfissional": codProfissional
             });
@@ -262,6 +279,9 @@
         $("#sel-status").val(1);
 
         $(".procedimento-item").remove();
+        setValidacaoRemota(null);
+
+        $("form").removeClass("was-validated");
     }
 
     function onSchedulerRefreshNeeded() {
@@ -381,6 +401,17 @@
         })
     }
 
+    // Mostra mensagem de erro na parte inferior do modal de editar agendamento
+    function setValidacaoRemota(erro) {
+
+        if (!erro) {
+            $("#salvar-erros").html(null);
+            return;
+        }
+
+        $("#salvar-erros").append("<p>" + erro + "</p>")
+    }
+
     function retProcedimentoTemplate(id, codProcedimentoItem) {
         return `
 <div class="procedimento-item border-top-10" data-id=${id} data-cod-procedimento=${codProcedimentoItem}>
@@ -392,13 +423,13 @@
             <div class="col">
                 <div class="form-group">
                     <label for=txt-ag-inicio-${id}>Início:</label>
-                    <input type="time" class="form-control" id=txt-ag-inicio-${id}>
+                    <input required type="time" class="form-control" id=txt-ag-inicio-${id}>
                 </div>
             </div>
             <div class="col">
                 <div class="form-group">
                     <label for=txt-ag-termino-${id}>Término:</label>
-                    <input type="time" class="form-control" id=txt-ag-termino-${id}>
+                    <input required type="time" class="form-control" id=txt-ag-termino-${id}>
                 </div>
             </div>
         </div>
@@ -407,7 +438,7 @@
     <!--Procedimento-->
     <div class="form-group">
         <label for=sel-servico-${id}>Procedimento:</label>
-        <select id=sel-servico-${id} class="custom-select">
+        <select required id=sel-servico-${id} class="custom-select">
             <option selected></option>
         </select>
     </div>
@@ -415,7 +446,7 @@
     <!--Profissional-->
     <div class="form-group no-border-bottom">
         <label for=sel-profissional-${id}>Profissional:</label>
-        <select id=sel-profissional-${id} class="custom-select profissional">
+        <select required id=sel-profissional-${id} class="custom-select profissional">
             <option selected></option>
         </select>
     </div>
