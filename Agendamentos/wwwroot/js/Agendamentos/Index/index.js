@@ -132,8 +132,13 @@
     })
 
     $("#btn-novo-procedimento").click(() => {
+        collapseProcedimentos();
         addProcedimentoItem();
     })
+
+    function collapseProcedimentos() {
+        $(".collapse").collapse('hide');
+    }
 
     $("#txt-data").on('change', function () {
         $(".procedimento-item")
@@ -141,12 +146,19 @@
             .first()
             .trigger('change');
     })
-
+        
     function addProcedimentoItem() {
         const procedimentoTemplate = ({ id, codProcedimentoItem }) => retProcedimentoTemplate(id, codProcedimentoItem);
-        let novaId = $(".procedimento-item").length + 1;
 
-        $('#novo-procedimento').append([
+        let novaId = 1;
+
+        let cl = $(".procedimento-item").first();
+
+        if (cl.length > 0) {
+            novaId = parseInt(cl.attr("data-id")) + 1;
+        };
+
+        $('#novo-procedimento').prepend([
             { id: novaId, codProcedimentoItem: '0' }
 
         ].map(procedimentoTemplate).join(''));
@@ -157,6 +169,14 @@
             }
 
             botoesRemoverDisableEnable();
+        });
+
+        $("#collapse-content-" + novaId).on("show.bs.collapse", () => {
+            $("#btn-collape-item-" + novaId).html("<i class='bi bi-arrows-angle-contract'>");
+        });
+
+        $("#collapse-content-" + novaId).on("hide.bs.collapse", () => {
+            $("#btn-collape-item-" + novaId).html("<i class='bi bi-arrows-angle-expand'>");
         });
 
         return loadServicos(novaId)
@@ -328,6 +348,14 @@
                             pop.modal();
                         })
                 });
+
+                $(".collapse.show").each((index, el) => {
+                    if (index == 0) {
+                        $(el).collapse('show')
+                    } else {
+                        $(el).collapse('hide');
+                    }
+                });
             });
     }
 
@@ -415,41 +443,48 @@
     function retProcedimentoTemplate(id, codProcedimentoItem) {
         return `
 <div class="procedimento-item border-top-10" data-id=${id} data-cod-procedimento=${codProcedimentoItem}>
-    <div>Procedimento ${id} <button class="btn btn-link btn-remover-item" type="button" style="float: right">Remover</button></div>
+    <div><strong>Procedimento ${id}</strong> 
+        <button class="btn btn-link btn-remover-item" type="button" style="float: right">Remover</button>
+        <button class="btn btn-link btn-collape-item" id="btn-collape-item-${id}" data-toggle="collapse"
+            data-target="#collapse-content-${id}" type="button" style="float: right"><i class="bi bi-arrows-angle-contract"></i></button>
+    </div>
     <hr />
-    <!--Hora de início e fim-->
-    <div class="container">
-        <div class="row .no-gutters">
-            <div class="col">
-                <div class="form-group">
-                    <label for=txt-ag-inicio-${id}>Início:</label>
-                    <input required type="time" class="form-control" id=txt-ag-inicio-${id}>
+    <div id="collapse-content-${id}" class="collapse show">
+        <!--Hora de início e fim-->
+        <div class="container">
+            <div class="row .no-gutters">
+                <div class="col">
+                    <div class="form-group">
+                        <label for=txt-ag-inicio-${id}>Início:</label>
+                        <input required type="time" class="form-control" id=txt-ag-inicio-${id}>
+                    </div>
                 </div>
-            </div>
-            <div class="col">
-                <div class="form-group">
-                    <label for=txt-ag-termino-${id}>Término:</label>
-                    <input required type="time" class="form-control" id=txt-ag-termino-${id}>
+                <div class="col">
+                    <div class="form-group">
+                        <label for=txt-ag-termino-${id}>Término:</label>
+                        <input required type="time" class="form-control" id=txt-ag-termino-${id}>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!--Procedimento-->
+        <div class="form-group">
+            <label for=sel-servico-${id}>Procedimento:</label>
+            <select required id=sel-servico-${id} class="custom-select">
+                <option selected></option>
+            </select>
+        </div>
+
+        <!--Profissional-->
+        <div class="form-group">
+            <label for=sel-profissional-${id}>Profissional:</label>
+            <select required id=sel-profissional-${id} class="custom-select profissional">
+                <option selected></option>
+            </select>
+        </div>
     </div>
 
-    <!--Procedimento-->
-    <div class="form-group">
-        <label for=sel-servico-${id}>Procedimento:</label>
-        <select required id=sel-servico-${id} class="custom-select">
-            <option selected></option>
-        </select>
-    </div>
-
-    <!--Profissional-->
-    <div class="form-group no-border-bottom">
-        <label for=sel-profissional-${id}>Profissional:</label>
-        <select required id=sel-profissional-${id} class="custom-select profissional">
-            <option selected></option>
-        </select>
-    </div>
 </div>
     `;
     }
