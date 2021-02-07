@@ -11,13 +11,13 @@ namespace Agendamentos.Controllers.Apis
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProcedimentosController : ControllerBase
+    public class ProcedimentosController : ApibaseController
     {
         [HttpGet]
         [Route("{codPessoa:int}")]
         public IActionResult ListarPorPessoa(int codPessoa)
         {
-            var servicos = new Agendamentos.Servicos.Servicos();
+            var servicos = this.CriarServicos();
 
             return Ok(servicos.ProcedimentoServico.ListaPorPessoa(codPessoa));
         }
@@ -26,7 +26,7 @@ namespace Agendamentos.Controllers.Apis
         [Route("listar-profissionais-agendamento")]
         public IActionResult ListarPorfissionaisParaAgendamentos([FromQuery]ListarProfissionaisDisponiveisParaAgendamento request)
         {
-            var servicos = new Agendamentos.Servicos.Servicos();
+            var servicos = this.CriarServicos();
             var diaSemana = (int)request.Data.DayOfWeek + 1;
 
             var inicio = TimeSpan.Parse(request.HoraInicio);

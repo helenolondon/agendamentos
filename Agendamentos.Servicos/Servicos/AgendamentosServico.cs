@@ -110,7 +110,7 @@ namespace Agendamentos.Servicos
                 var nome = this.repositorio.PessoasRepositorio.Obter(agendamentoItem.CodProfissional)?.Txt_Nome ?? "profissional não identificado";
                 nome = nome.Split(" ")[0];
 
-                throw new AgendamentoConflitoException(nome + " não disponível no horário " + agendamentoItem.horarioLabel);
+                throw new AgendamentoConflitoException(nome + " não está disponível no horário " + agendamentoItem.horarioLabel);
             }
         }
     }

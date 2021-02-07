@@ -12,7 +12,7 @@ namespace Agendamentos.Controllers.Apis
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AgendamentosController : ControllerBase
+    public class AgendamentosController : ApibaseController
     {
         /// <summary>
         /// Lista todos os agendamentos
@@ -20,7 +20,7 @@ namespace Agendamentos.Controllers.Apis
         [HttpGet]
         public IActionResult ListarAgendamentos()
         {
-            var servicos = new Agendamentos.Servicos.Servicos();
+            var servicos = this.CriarServicos();
 
             return Ok(servicos.AgendamentosServico.Listar());
         }
@@ -29,7 +29,7 @@ namespace Agendamentos.Controllers.Apis
         [Route("{codAgendamento:int}")]
         public IActionResult ConsultaAgendamento(int codAgendamento)
         {
-            var servicos = new Agendamentos.Servicos.Servicos();
+            var servicos = this.CriarServicos();
             var agendamento = servicos.AgendamentosServico.Consultar(codAgendamento);
 
             if(agendamento == null)
@@ -47,8 +47,8 @@ namespace Agendamentos.Controllers.Apis
         [Route("Salvar")]
         public IActionResult SalvarAgendamento(AgendamentoDTO agendamento)
         {
-            var servicos = new Agendamentos.Servicos.Servicos();
-            
+            var servicos = this.CriarServicos();
+
             try
             {
                 return Ok(servicos.AgendamentosServico.SalvarAgendamento(agendamento));
@@ -69,7 +69,7 @@ namespace Agendamentos.Controllers.Apis
         [Route("salvar-item")]
         public IActionResult SalvarAgendamentoItem([FromBody]SalvarAgendamentoItemRequest salvarAgendamentoRequest)
         {
-            var servicos = new Agendamentos.Servicos.Servicos();
+            var servicos = this.CriarServicos();
 
             var model = new AgendamentoItemDTO();
 
@@ -95,7 +95,7 @@ namespace Agendamentos.Controllers.Apis
         [Route("remover")]
         public IActionResult Remover(int codAgendamentoItem)
         {
-            var servicos = new Agendamentos.Servicos.Servicos();
+            var servicos = this.CriarServicos();
             if (servicos.AgendamentosServico.RemoverAgendamento(codAgendamentoItem))
             {
                 return NoContent();

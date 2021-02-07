@@ -10,13 +10,13 @@ namespace Agendamentos.Controllers.Apis
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PessoasController : ControllerBase
+    public class PessoasController : ApibaseController
     {
         // GET: api/<Cientes>
         [HttpGet]
         public IActionResult ListarPessoas()
         {
-            var servicos = new Agendamentos.Servicos.Servicos();
+            var servicos = this.CriarServicos();
 
             return Ok(servicos.PessoaServico.ListarPessoas());
         }

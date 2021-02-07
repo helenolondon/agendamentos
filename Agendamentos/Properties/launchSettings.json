@@ -12,25 +12,21 @@
     }
   },
   "profiles": {
-    "IIS Express": {
-      "commandName": "IISExpress",
+    "IIS Desenvolvimento": {
+      "commandName": "IIS",
       "launchBrowser": true,
+      "launchUrl": "http://localhost/agendamentos",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Agendamentos": {
-      "commandName": "Project",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "applicationUrl": "https://localhost:5001;http://localhost:5000"
-    },
-    "IIS": {
+    "IIS Producao": {
       "commandName": "IIS",
       "launchBrowser": true,
-      "launchUrl": "http://localhost/agendamentos"
+      "launchUrl": "http://localhost/agendamentos",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Production"
+      }
     }
   }
 }

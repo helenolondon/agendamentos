@@ -1,5 +1,6 @@
 ﻿using Agendamentos.Infra;
 using Agendamentos.Infra.Repositorios;
+using Microsoft.Extensions.Configuration;
 using System;
 
 namespace Agendamentos.Servicos
@@ -13,9 +14,9 @@ namespace Agendamentos.Servicos
         private IProcedimentoServico procedimentoServico;
         private IServicosServico servicosServico;
 
-        public Servicos()
+        public Servicos(IConfiguration configuration)
         {
-            this.repositorios = new Repositorios();
+            this.repositorios = new Repositorios(configuration);
         }
 
         public IAgendamentosServico AgendamentosServico 

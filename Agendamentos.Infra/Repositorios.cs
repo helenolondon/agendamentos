@@ -1,4 +1,5 @@
 ﻿using Agendamentos.Infra.EF;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,17 +14,11 @@ namespace Agendamentos.Infra.Repositorios
         private IProcedimentosRepositorio procedimentosRepositorio;
         private IServicosRepositorio servicosRepositorio;
 
-        public Repositorios()
+        public Repositorios(IConfiguration configuration)
         {
-            this.dbContext = new AgendamentosDbContext(this.RetConnectionString());
+            this.dbContext = new AgendamentosDbContext(configuration.GetConnectionString("agenda-connection-str"));
         }
         
-        private string RetConnectionString()
-        {
-            return @"Password=Gaia010265;Persist Security Info=True;User ID=sa;Initial Catalog=Odontica;Data Source=192.168.100.8\sqlexpress";
-            //return @"data source=INTEGRO\IMOBIX;Initial Catalog=devsig;User ID=sa;Password=!Imo2@19Bix#";
-        }
-
         public IAgendamentosRepositorio AgendamentosRepositorio
         {
             get

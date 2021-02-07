@@ -9,12 +9,12 @@ namespace Agendamentos.Controllers.Apis
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ServicosController : ControllerBase
+    public class ServicosController : ApibaseController
     {
         [HttpGet]
         public IActionResult Listar()
         {
-            var servicos = new Servicos.Servicos();
+            var servicos = this.CriarServicos();
 
             var q = servicos.ServicosServico.Listar();
 
