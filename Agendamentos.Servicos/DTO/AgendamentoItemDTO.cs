@@ -25,6 +25,12 @@ namespace Agendamentos.Servicos.DTO
         public string HoraTermino { get; set; }
         public int CodStatus { get; set; }
         public String Status { get; set; }
+        
+        /// <summary>
+        /// Este é o valor do serviço no dia que o procedimento é realizado
+        /// </summary>
+        public decimal? ValorServico { get; set; }
+
         /// <summary>
         /// Propriedades do scheduler
         /// </summary>
@@ -59,6 +65,7 @@ namespace Agendamentos.Servicos.DTO
             this.NomeCliente = e.Agendamento.Cliente.Txt_Nome;
             this.NomeProfissional = e.Profissional.Txt_Nome;
             this.Servico = e.Servico.Nome_Servico;
+            this.ValorServico = (decimal)(e.Num_ValorServico ?? 0);
 
             switch (this.CodStatus)
             {
@@ -86,6 +93,7 @@ namespace Agendamentos.Servicos.DTO
             temp.Dat_Inicio = this.Inicio;
             temp.Dat_Termino = this.Termino;
             temp.Cd_Profissional = this.CodProfissional;
+            temp.Num_ValorServico = this.ValorServico;
 
             return temp;
         }

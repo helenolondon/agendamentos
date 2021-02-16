@@ -8,5 +8,6 @@ namespace Agendamentos.Infra.Repositorios
     public interface IServicosRepositorio
     {
         List<Servico> Listar();
+        Servico ListarPorCodigo(int id);
     }
 }

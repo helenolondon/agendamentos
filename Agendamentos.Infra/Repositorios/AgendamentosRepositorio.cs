@@ -23,7 +23,6 @@ namespace Agendamentos.Infra.Repositorios
                 .Include(a => a.Agendamento)
                 .Include(p => p.Profissional)
                 .Include(c => c.Agendamento.Cliente)
-                .Include(m => m.Servico)
                 .ToList();
         }
         public List<AgendamentoItem> ListarAgendamentosItens(System.Linq.Expressions.Expression<Func<AgendamentoItem, bool>> filtro)
@@ -159,8 +158,9 @@ namespace Agendamentos.Infra.Repositorios
                             Cd_Servico = e.Cd_Servico,
                             Dat_Inicio = e.Dat_Inicio,
                             Dat_Termino = e.Dat_Termino,
-                            Cd_Profissional = e.Cd_Profissional
-                        };
+                            Cd_Profissional = e.Cd_Profissional,
+                            Num_ValorServico = e.Num_ValorServico
+                    };
                         
                         novo.Cd_AgendamentoItem = this.dbContext.AgendamentoItens.Count() == 0 ? 1 : this.dbContext.AgendamentoItens.Max(a => a.Cd_AgendamentoItem) + 1;
 
@@ -180,6 +180,7 @@ namespace Agendamentos.Infra.Repositorios
                             item.Dat_Inicio = e.Dat_Inicio;
                             item.Dat_Termino = e.Dat_Termino;
                             item.Cd_Profissional = e.Cd_Profissional;
+                            item.Num_ValorServico = e.Num_ValorServico;
                         };
                     }
                 });

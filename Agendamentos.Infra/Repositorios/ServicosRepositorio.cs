@@ -21,5 +21,11 @@ namespace Agendamentos.Infra.Repositorios
                 .OrderBy(s => s.Nome_Servico)
                 .ToList();
         }
+        public Servico ListarPorCodigo(int id)
+        {
+            return this.dbContext.Servicos
+                .OrderBy(s => s.Id_Servico == id)
+                .FirstOrDefault();
+        }
     }
 }

@@ -56,6 +56,17 @@ namespace Agendamentos.Servicos
             agendamento.Itens.ForEach((ag) => 
             {
                 this.ValidaAgendamento(ag);
+                
+                // Realizado, atualiza preço na data do fechamento
+                if(agendamento.CodStatus == 3)
+                {
+                    var servico = this.repositorio.ServicosRepositorio.ListarPorCodigo(ag.CodServico);
+                    
+                    if(servico != null)
+                    {
+                        ag.ValorServico = servico.Valor;
+                    }
+                }
             });
             
             return this.repositorio.AgendamentosRepositorio.SalvarAgendamento(agendamento.ToAgendamento());

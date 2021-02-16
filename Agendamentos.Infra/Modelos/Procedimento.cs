@@ -19,6 +19,6 @@ namespace Agendamentos.Infra.Modelos
         public Servico Servico { get; set; }
         public int Cd_DiaSemana { get; set; }
         public TimeSpan Num_HoraInicio { get; set; }
-        public TimeSpan Num_HoraFim { get; set; }
+        public TimeSpan Num_HoraFim { get; set; }        
     }
 }

@@ -29,5 +29,6 @@ namespace Agendamentos.Infra.Modelos
         public Servico Servico { get; set; }
         [ForeignKey("Cd_Profissional")]
         public Pessoa Profissional { get; set; }
+        public decimal? Num_ValorServico { get; set; }
     }
 }
