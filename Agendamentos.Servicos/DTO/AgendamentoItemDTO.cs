@@ -69,10 +69,7 @@ namespace Agendamentos.Servicos.DTO
                     this.Status = "Cancelado";
                     break;
                 case 3:
-                    this.Status = "Remarcado";
-                    break;
-                case 4:
-                    this.Status = "Finalizado";
+                    this.Status = "Realizado";
                     break;
                 default:
                     break;
