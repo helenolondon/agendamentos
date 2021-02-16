@@ -1,5 +1,6 @@
 ﻿using Agendamentos.Infra;
 using Agendamentos.Infra.EF;
+using Agendamentos.Infra.Erros;
 using Agendamentos.Infra.Modelos;
 using Agendamentos.Infra.Repositorios;
 using Agendamentos.Servicos.DTO;
@@ -57,6 +58,17 @@ namespace Agendamentos.Servicos
             {
                 this.ValidaAgendamento(ag);
                 
+                if(agendamento.CodStatus != 3)
+                {
+                    var agOld = this.repositorio.AgendamentosRepositorio
+                    .ConsultarAgendamento(agendamento.CodAgendamento);
+
+                    if(agOld!= null && agOld.Cd_Status == 3)
+                    {
+                        throw new ReAbrirAgendamentoException("Agendamento já foi realizado e não pode ser reaberto");
+                    }
+                }
+
                 // Realizado, atualiza preço na data do fechamento
                 if(agendamento.CodStatus == 3)
                 {

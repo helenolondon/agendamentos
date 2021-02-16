@@ -4,10 +4,11 @@ using System.Text;
 
 namespace Agendamentos.Servicos.Erros
 {
-    public class AgendamentoConflitoException : ServicosException
+    public class ServicosException: Exception
     {
-        public AgendamentoConflitoException(string message) : base(message)
+        public ServicosException(string message): base(message)
         {
+
         }
     }
 }

@@ -4,9 +4,9 @@ using System.Text;
 
 namespace Agendamentos.Servicos.Erros
 {
-    public class AgendamentoConflitoException : ServicosException
+    public class ReAbrirAgendamentoException : ServicosException
     {
-        public AgendamentoConflitoException(string message) : base(message)
+        public ReAbrirAgendamentoException(string message) : base(message)
         {
         }
     }

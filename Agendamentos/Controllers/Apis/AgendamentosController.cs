@@ -53,7 +53,7 @@ namespace Agendamentos.Controllers.Apis
             {
                 return Ok(servicos.AgendamentosServico.SalvarAgendamento(agendamento));
             }
-            catch (AgendamentoConflitoException ex)
+            catch (ServicosException ex)
             {
                 var erros = new ModelStateDictionary();
                 erros.AddModelError("ERR", ex.Message);
