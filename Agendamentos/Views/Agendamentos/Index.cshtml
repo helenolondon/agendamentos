@@ -11,13 +11,6 @@
         .col:last-child {
             padding-right: 0;
         }
-    #novo-procedimento {
-        margin-bottom: 0px;
-    }
-
-    #novo-procedimento-row{
-        margin-top: 0px;
-    }
 
     #novo-procedimento-row > .col{
         text-align: center;
@@ -26,19 +19,6 @@
 
     .modal-body{
         padding-bottom: 0px;
-    }
-
-    #btn-novo-procedimento, #btn-novo-procedimento:focus {
-        box-shadow: none;
-    }
-
-    #btn-novo-procedimento:focus, #btn-novo-procedimento:hover {
-        text-decoration: none;
-    }
-
-    .btn.btn-remover-item, .btn-collape-item {
-        float: right;
-        padding-top: 0px;
     }
 
     .border-top-10 {
@@ -95,19 +75,9 @@
                         </select>
                     </div>
 
-                    @*Procedimentos*@
-                <div id="procedimentos-container">
-
-                    <div class="container">
-                        <div id="novo-procedimento-row" class="row text">
-                            <div class="col">
-                                <button type="button" id="btn-novo-procedimento" class="btn btn-link">Novo Procedimento</button>
-                            </div>
-                        </div>
+                    <div id="procedimentos-container">
+                        <div id="novo-procedimento"></div>
                     </div>
-
-                    <div id="novo-procedimento"></div>
-                </div>
                 </form>
 
                 <div id="salvar-erros" class="text-danger text-center"></div>

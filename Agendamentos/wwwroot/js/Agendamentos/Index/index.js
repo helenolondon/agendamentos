@@ -443,12 +443,6 @@
     function retProcedimentoTemplate(id, codProcedimentoItem) {
         return `
 <div class="procedimento-item border-top-10" data-id=${id} data-cod-procedimento=${codProcedimentoItem}>
-    <div><strong>Procedimento ${id}</strong> 
-        <button class="btn btn-link btn-remover-item" type="button" style="float: right">Remover</button>
-        <button class="btn btn-link btn-collape-item" id="btn-collape-item-${id}" data-toggle="collapse"
-            data-target="#collapse-content-${id}" type="button" style="float: right"><i class="bi bi-arrows-angle-contract"></i></button>
-    </div>
-    <hr />
     <div id="collapse-content-${id}" class="collapse show">
         <!--Hora de início e fim-->
         <div class="container">
@@ -484,7 +478,6 @@
             </select>
         </div>
     </div>
-
 </div>
     `;
     }
