@@ -4,7 +4,7 @@
     <Controller_SelectedScaffolderID>ApiControllerEmptyScaffolder</Controller_SelectedScaffolderID>
     <Controller_SelectedScaffolderCategoryPath>root/Controller</Controller_SelectedScaffolderCategoryPath>
     <NameOfLastUsedPublishProfile>IIS Producao</NameOfLastUsedPublishProfile>
-    <ActiveDebugProfile>IIS Producao</ActiveDebugProfile>
+    <ActiveDebugProfile>IIS Desenvolvimento</ActiveDebugProfile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>

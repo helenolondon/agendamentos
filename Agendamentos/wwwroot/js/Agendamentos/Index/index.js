@@ -24,12 +24,16 @@
             novoAgendamento: {
                 text: 'Agendar',
                 click: addAgenmento
+            },
+            caixa: {
+                text: 'Caixa',
+                click: abreCaixa
             }
         },
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
-            right: 'novoAgendamento dayGridMonth,timeGridWeek'
+            right: 'novoAgendamento caixa dayGridMonth,timeGridWeek'
         },
         eventContent: function (arg) {
             let span = document.createElement("span");
@@ -91,6 +95,35 @@
                 pop.modal();
             });
         }
+    }
+
+    function abreCaixa() {
+        //var myWindow = window.open(, "", "width=800,height=600", "menubar=false,location=yes,resizable=yes,scrollbars=yes,status=yes");
+        var myWindow = popWindow("http://localhost/caixa/caixa", 'test', window, 800, 600);
+
+
+        
+    }
+
+    function onCaixaClosed() {
+        //await new Promise(resolve => window.addEventListener('custom', function () {
+        //    onSchedulerRefreshNeeded();
+        //    alert("Scheduler updated");
+        //    stopPropagation();
+        //}));
+
+        onSchedulerRefreshNeeded();
+    }
+
+    async function  popWindow(url, windowName, win, w, h) {
+        const y = win.top.outerHeight / 2 + win.top.screenY - (h / 2);
+        const x = win.top.outerWidth / 2 + win.top.screenX - (w / 2);
+        var r = win.open(url, windowName, `menubar=false,location=yes,resizable=yes,scrollbars=yes,status=yes, width=${w}, height=${h}, top=${y}, left=${x}`);
+
+        window.removeEventListener('custom', onCaixaClosed);
+        window.addEventListener('custom', onCaixaClosed);
+
+        return r;
     }
 
     function setPopAgendamentoTitle(titulo) {
