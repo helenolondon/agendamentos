@@ -33,6 +33,8 @@
         $("#md-caixa").on("shown.bs.modal", function () {
             procedimentosDtTable.columns.adjust();
         })
+
+        $("#gr-add-saldo").hide();
         
         $("input[type=number]").val(Number(0).toFixed(2).toString());
 
@@ -73,6 +75,7 @@
         loadClientes()
             .then(() => {
                 $("#sel-cliente-caixa").on('change', () => {
+                    mostraSaldoCliente();
                     mostraTotais();
                     loadDataTables();
                 });
@@ -117,6 +120,13 @@
             $("#txt-total").val(Number(total).toFixed(2).toString());
         }
 
+        function mostraSaldoCliente() {
+            obterSaldoCliente($("#sel-cliente-caixa").val())
+                .then(function (response) {
+                    $("#txt-saldo").val(Number(response).toFixed(2).toString())
+                })
+        }
+
         function loadClientes() {
 
             return $.get("/caixa/api/pessoas", (data) => {
@@ -131,6 +141,29 @@
                 });
             })
         };
+
+        $("#btn-add-saldo").click(function () {
+            mostraAddSaldo();
+        });
+
+        $("#btn-add-saldo-salva").click(function () {
+            debugger;
+            let r = new AdicionaSaldoClienteRequest(parseInt($("#sel-cliente-caixa").val(), 10), parseFloat($("#txt-novo-saldo").val()));
+
+            adicionarSaldoCliente(r)
+                .then(() => {
+                    escondeAddSaldo();
+                    mostraSaldoCliente();
+                })
+        });
+
+        function mostraAddSaldo() {
+            $("#gr-add-saldo").show();
+        }
+
+        function escondeAddSaldo() {
+            $("#gr-add-saldo").hide();
+        }
     });
 });
 

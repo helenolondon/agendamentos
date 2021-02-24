@@ -90,3 +90,11 @@ input[type=number] {
 table.dataTable td.dataTables_empty {
     text-align: center !important;
 }
+
+#btn-add-saldo, #btn-add-saldo-salva {
+    margin-top: 5px;
+}
+
+#gr-add-saldo{
+    margin-top: -10px;
+}
