@@ -1,0 +1,92 @@
+﻿.display {
+    width: 1500px;
+}
+
+.col {
+    padding-left: 0;
+}
+
+    .col:last-child {
+        padding-right: 0;
+    }
+
+#novo-procedimento-row > .col {
+    text-align: center;
+    margin-top: -10px;
+}
+
+.modal-body {
+    padding-bottom: 0px;
+}
+
+.border-top-10 {
+    margin-top: 10px;
+}
+
+.no-border-bottom {
+    margin-bottom: 0px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+table.dataTable thead th {
+    text-align: left;
+}
+
+    table.dataTable thead th:first-child, table.dataTable tbody td:first-child {
+        text-align: center;
+    }
+
+    table.dataTable thead th:last-child, table.dataTable tbody td:last-child, tfoot td {
+        text-align: right;
+    }
+
+table.dataTable tfoot td:last-child {
+    padding-right: 10px;
+}
+
+table.dataTable tfoot td:first-child {
+    text-align: center;
+}
+
+#btn-add-saldo {
+    height: 20px;
+    font-size: 12px;
+    padding-top: 0px;
+}
+
+.card-header {
+}
+
+.card-body {
+    padding: 1rem;
+}
+
+legend {
+    margin-bottom: 0;
+    font-size: 1rem;
+}
+
+input[type=number] {
+    text-align: right;
+}
+
+#fg-total {
+    margin-top: 10px;
+}
+
+#sp-qtd-itens {
+    float: right;
+}
+
+table.dataTable td.dataTables_empty {
+    text-align: center !important;
+}
