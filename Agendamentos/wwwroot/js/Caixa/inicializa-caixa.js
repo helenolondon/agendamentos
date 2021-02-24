@@ -151,7 +151,6 @@
         });
 
         $("#btn-add-saldo-salva").click(function () {
-            debugger;
             let r = new AdicionaSaldoClienteRequest(parseInt($("#sel-cliente-caixa").val(), 10), parseFloat($("#txt-novo-saldo").val()));
 
             adicionarSaldoCliente(r)
@@ -170,9 +169,8 @@
         }
 
         function limparTelaCaixa() {
-            $("#sel-cliente-caixa").val(0);
+            $("#sel-cliente-caixa,#txt-recebido,#txt-novo-saldo,#txt-total").val(0);
             $("#sel-cliente-caixa").trigger("change");
-            $("#txt-recebido,#txt-novo-saldo,#txt-total").val(0);
 
             escondeAddSaldo();
         }

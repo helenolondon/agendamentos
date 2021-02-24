@@ -31,6 +31,8 @@ namespace Agendamentos.Servicos.DTO
         /// </summary>
         public decimal? ValorServico { get; set; }
 
+        public string Pago { get; set; }
+
         /// <summary>
         /// Propriedades do scheduler
         /// </summary>
@@ -66,6 +68,8 @@ namespace Agendamentos.Servicos.DTO
             this.NomeProfissional = e.Profissional.Txt_Nome;
             this.Servico = e.Servico.Nome_Servico;
             this.ValorServico = (decimal)(e.Num_ValorServico ?? 0);
+            this.Pago = e.Pago;
+
 
             switch (this.CodStatus)
             {

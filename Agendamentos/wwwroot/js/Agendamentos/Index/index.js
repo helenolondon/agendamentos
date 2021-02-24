@@ -39,7 +39,6 @@
             let span = document.createElement("span");
             span.innerHTML = "X";
             span.style = "float: right; margin-right: 6px; font-size: 10px"
-            span.id = "teste";
             span.onclick = ((ev, e) => {
                 onRemoverAgendamento(arg.event.extendedProps.codAgendamentoItem);
             })
@@ -67,7 +66,12 @@
             let ElCancelado = document.createElement('p')
             ElCancelado.style = "font-size: 10px; margin: 0px 2px 2px;"
 
-            ElCancelado.innerHTML = arg.event.extendedProps.status;
+            if (arg.event.extendedProps.pago == "S") {
+                ElCancelado.innerHTML = arg.event.extendedProps.status + " (Pago)";
+            }
+            else {
+                ElCancelado.innerHTML = arg.event.extendedProps.status;
+            }
 
             let arrayOfDomNodes = [span, ElCancelado, ElHorario, ElCliente, ElProfissional, ElServico]
             return { domNodes: arrayOfDomNodes }
@@ -99,6 +103,10 @@
 
     function abreCaixa() {
         let mdCx = $("#md-caixa");
+
+        mdCx.on("hidden.bs.modal", function () {
+            onCaixaClosed();
+        });
 
         mdCx.draggable();
         mdCx.modal("show");
