@@ -98,32 +98,14 @@
     }
 
     function abreCaixa() {
-        //var myWindow = window.open(, "", "width=800,height=600", "menubar=false,location=yes,resizable=yes,scrollbars=yes,status=yes");
-        var myWindow = popWindow("http://localhost/caixa/caixa", 'test', window, 800, 600);
+        let mdCx = $("#md-caixa");
 
-
-        
+        mdCx.draggable();
+        mdCx.modal("show");
     }
 
     function onCaixaClosed() {
-        //await new Promise(resolve => window.addEventListener('custom', function () {
-        //    onSchedulerRefreshNeeded();
-        //    alert("Scheduler updated");
-        //    stopPropagation();
-        //}));
-
         onSchedulerRefreshNeeded();
-    }
-
-    async function  popWindow(url, windowName, win, w, h) {
-        const y = win.top.outerHeight / 2 + win.top.screenY - (h / 2);
-        const x = win.top.outerWidth / 2 + win.top.screenX - (w / 2);
-        var r = win.open(url, windowName, `menubar=false,location=yes,resizable=yes,scrollbars=yes,status=yes, width=${w}, height=${h}, top=${y}, left=${x}`);
-
-        window.removeEventListener('custom', onCaixaClosed);
-        window.addEventListener('custom', onCaixaClosed);
-
-        return r;
     }
 
     function setPopAgendamentoTitle(titulo) {
@@ -450,7 +432,6 @@
 
     // Carrega clientes
     function loadClientes() {
-
         return $.get("agendamentos/api/pessoas", (data) => {
 
             var select = $("#sel-cliente");
@@ -458,7 +439,7 @@
 
             $.each(data, (i, item) => {
                 select.append($("<option>", { value: item.codPessoa, text: item.nomePessoa }));
-            })            
+            })
         })
     }
 

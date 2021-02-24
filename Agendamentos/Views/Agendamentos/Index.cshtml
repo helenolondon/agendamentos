@@ -1,34 +1,101 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-<style>
-    .col {
-        padding-left: 0;
-    }
-
-        .col:last-child {
-            padding-right: 0;
+﻿@section styles{
+    <style>
+        .display {
+            width: 1500px;
         }
 
-    #novo-procedimento-row > .col{
-        text-align: center;
-        margin-top: -10px;
-    }
+        .col {
+            padding-left: 0;
+        }
 
-    .modal-body{
-        padding-bottom: 0px;
-    }
+            .col:last-child {
+                padding-right: 0;
+            }
 
-    .border-top-10 {
-        margin-top: 10px;
-    }
+        #novo-procedimento-row > .col {
+            text-align: center;
+            margin-top: -10px;
+        }
 
-    .no-border-bottom {
-        margin-bottom: 0px;
-    }
-</style>
+        .modal-body {
+            padding-bottom: 0px;
+        }
+
+        .border-top-10 {
+            margin-top: 10px;
+        }
+
+        .no-border-bottom {
+            margin-bottom: 0px;
+        }
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        table.dataTable thead th {
+            text-align: left;
+        }
+
+            table.dataTable thead th:first-child, table.dataTable tbody td:first-child {
+                text-align: center;
+            }
+
+            table.dataTable thead th:last-child, table.dataTable tbody td:last-child, tfoot td {
+                text-align: right;
+            }
+
+        table.dataTable tfoot td:last-child {
+            padding-right: 10px;
+        }
+
+        table.dataTable tfoot td:first-child {
+            text-align: center;
+        }
+
+        #btn-add-saldo {
+            height: 20px;
+            font-size: 12px;
+            padding-top: 0px;
+        }
+
+        .card-header {
+        }
+
+        .card-body {
+            padding: 1rem;
+        }
+
+        legend {
+            margin-bottom: 0;
+            font-size: 1rem;
+        }
+
+        input[type=number] {
+            text-align: right;
+        }
+
+        #fg-total {
+            margin-top: 10px;
+        }
+
+        #sp-qtd-itens {
+            float: right;
+        }
+
+        table.dataTable td.dataTables_empty {
+            text-align: center !important;
+        }
+    </style>
+}
+
+
 
 @*Aqui é onde o scheduler inicia*@
 <div id='calendar'></div>
@@ -110,11 +177,90 @@
     </div>
 </div>
 
-<div id="caixa-container" style="height: 800px; width: 1200px">
+<!-- Modal do caixa -->
+<div class="modal fade" id="md-caixa" data-backdrop="static" data-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="container-fluid">
+                    <div class="col">
+                        <h5 class="modal-title text-center" id="staticBackdropLabel">Caixa</h5>
+                    </div>
+                </div>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="sel-cliente-caixa">Cliente:</label>
+                                <select required id="sel-cliente-caixa" class="custom-select">
+                                    <option selected></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <table id="dt-tb-procedimentos" class="display" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Data</th>
+                            <th>Cód./Proc.</th>
+                            <th>Procedimento</th>
+                            <th>Valor</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
 
+                <br />
+
+                <div class="container">
+                    <div class="row align-items-end">
+                        <div class="col">
+                            <div class="form-group row" id="fg-total">
+                                <label for="txt-total" class="col-sm-9 col-form-label text-right">Total</label>
+                                <div class="col-sm-3">
+                                    <input type="number" disabled id="txt-total" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="txt-recebido" class="col-sm-9 col-form-label text-right">Recebido</label>
+                                <div class="col-sm-3">
+                                    <input type="number" id="txt-recebido" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="sel-forma-de-pagamento" class="col-sm-9 col-form-label text-right">Foma de Pagamento</label>
+                                <div class="col-sm-3">
+                                    <select name="sel-forma-de-pagamento" disabled id="sel-forma-de-pagamento" class="form-control">
+                                        <option value="1">Dinheiro</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button id="btn-salvar-pagamento" type="button" class="btn btn-primary">Salvar</button>
+                <button id="btn-nao" type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section scripts{
     <script src="~/lib/fullcalendar-5.5.1/lib/locales/pt-br.js"></script>
+    <script src="~/js/Caixa/pagamentos.js"></script>
+    <script src="~/js/Caixa/inicializa-caixa.js"></script>
     <script src="~/js/Agendamentos/Index/index.js"></script>
 }
