@@ -34,6 +34,10 @@
             procedimentosDtTable.columns.adjust();
         })
 
+        $("#md-caixa").on("hidden.bs.modal", function () {
+            limparTelaCaixa();
+        });
+
         $("#gr-add-saldo").hide();
         
         $("input[type=number]").val(Number(0).toFixed(2).toString());
@@ -163,6 +167,14 @@
 
         function escondeAddSaldo() {
             $("#gr-add-saldo").hide();
+        }
+
+        function limparTelaCaixa() {
+            $("#sel-cliente-caixa").val(0);
+            $("#sel-cliente-caixa").trigger("change");
+            $("#txt-recebido,#txt-novo-saldo,#txt-total").val(0);
+
+            escondeAddSaldo();
         }
     });
 });
