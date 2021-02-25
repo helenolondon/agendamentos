@@ -1,4 +1,12 @@
-﻿.display {
+﻿#calendar{
+    height: 100%;
+}
+
+.fc .fc-toolbar-title{
+    font-size: 1.2em;
+}
+
+.display {
     width: 1500px;
 }
 

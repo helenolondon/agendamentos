@@ -31,11 +31,16 @@
             }
         },
         headerToolbar: {
-            left: 'prev,next today',
+            left: 'prev,next,today',
             center: 'title',
-            right: 'novoAgendamento caixa dayGridMonth,timeGridWeek'
+            right: 'novoAgendamento,caixa,dayGridMonth,timeGridWeek'
         },
         eventContent: function (arg) {
+
+            if (arg.view.type !== 'timeGridWeek') {
+                return;
+            };
+
             let span = document.createElement("span");
             span.innerHTML = "X";
             span.style = "float: right; margin-right: 6px; font-size: 10px"
