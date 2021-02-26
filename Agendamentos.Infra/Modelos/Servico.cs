@@ -10,6 +10,6 @@ namespace Agendamentos.Infra.Modelos
         [Key]
         public int Id_Servico { get; set; }
         public string Nome_Servico { get; set; }
-        public int Valor { get; set; }
+        public decimal Valor { get; set; }
     }
 }
