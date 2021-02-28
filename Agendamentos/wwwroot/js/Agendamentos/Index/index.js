@@ -1,7 +1,7 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
     $.ajaxSetup({ contentType: "application/json; charset=utf-8" });
 
-    var dialog, form;
+    var form;
 
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -113,8 +113,7 @@
             onCaixaClosed();
         });
 
-        mdCx.draggable();
-        mdCx.modal("show");
+        caixa();
     }
 
     function onCaixaClosed() {
