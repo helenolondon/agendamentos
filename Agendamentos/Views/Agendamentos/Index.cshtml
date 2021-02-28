@@ -88,16 +88,32 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="container-fluid">
-                    <div class="col">
-                        <h5 class="modal-title text-center" id="staticBackdropLabel">Caixa</h5>
-                    </div>
-                </div>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
+                <div class="container-fluid" id="cabecalho-caixa">
+                    <div class="row">
+                        <div class="col-9 col-titulo">
+                            <div class="alert alert-success" role="alert">
+                                <h4 class="alert-heading text-center">Caixa</h4>
+                                <p id="p-hora" class="text-center">10:20</p>
+                                <hr>
+                                <p class="mb-0">Integro Consultores 2021</p>
+                            </div>
+                        </div>
+                        <div class="col-3 col-saldo">
+                            <div class="card border-success mb-3" style="max-width: 18rem;">
+                                <div class="card-header text-center">Saldo</div>
+                                <div class="card-body">
+                                    <div class="card-title text-center"><h5>R$</h5></div>
+                                    <div class="text-center" id="txt-saldo">0,00</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col">
@@ -110,7 +126,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <table id="dt-tb-procedimentos" class="display" style="width:100%">
                     <thead>
                         <tr>
@@ -128,21 +144,10 @@
                 <br />
 
                 <div class="container">
-                    <div class="row align-items-start">
+                    <div class="row align-items-end">
                         <div class="col">
-                            <div class="form-group row">
-                                <label for="txt-total" class="col-sm-2 col-form-label text-right">Saldo</label>
-                                <div class="col-sm-4">
-                                    <input type="number" disabled id="txt-saldo" class="form-control">
-                                    <button type="button" class="btn btn-block  btn-outline-primary" id="btn-add-saldo">+</button>
-                                </div>
-                            </div>
-                            <div class="form-group row" id="gr-add-saldo">
-                                <label for="txt-novo-saldo" class="col-sm-2 col-form-label text-right"></label>
-                                <div class="col-sm-4">
-                                    <input type="number" id="txt-novo-saldo" class="form-control">
-                                    <button type="button" class="btn btn-block  btn-outline-success" id="btn-add-saldo-salva">Salvar</button>
-                                </div>
+                            <div class="form-group">
+                                <button id="btn-salvar-pagamento" class="btn btn-success btn-block">Salvar</button>
                             </div>
                         </div>
                         <div class="col">
@@ -169,12 +174,11 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-            <div class="modal-footer">
+            @*<div class="modal-footer">
                 <button id="btn-salvar-pagamento" type="button" class="btn btn-primary">Salvar</button>
                 <button id="btn-nao" type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-            </div>
+            </div>*@
         </div>
     </div>
 </div>

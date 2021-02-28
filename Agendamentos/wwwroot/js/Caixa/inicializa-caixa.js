@@ -1,5 +1,6 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
     $(document).ready(function () {
+        var pHora = $("#p-hora");
 
         var procedimentosDtTable = $('#dt-tb-procedimentos').DataTable({
             "columns": [
@@ -38,9 +39,12 @@
             limparTelaCaixa();
         });
 
-        $("#gr-add-saldo").hide();
-        
         $("input[type=number]").val(Number(0).toFixed(2).toString());
+
+        // Inicia relógio
+        setInterval(() => {
+            pHora.html(moment().format('HH:mm:ss'))
+        }, 1000);
 
         $("#btn-salvar-pagamento").click((e) => {
 
@@ -127,7 +131,18 @@
         function mostraSaldoCliente() {
             obterSaldoCliente($("#sel-cliente-caixa").val())
                 .then(function (response) {
-                    $("#txt-saldo").val(Number(response).toFixed(2).toString())
+                    $("#txt-saldo").html(Number(response).toFixed(2).toString());
+
+                    if (response < 0) {
+                        $(".col-saldo .card")
+                            .removeClass("border-success")
+                            .addClass("border-danger");
+                    }
+                    else {
+                        $(".col-saldo .card")
+                            .removeClass("border-danger")
+                            .addClass("border-success");
+                    }
                 })
         }
 
@@ -146,28 +161,6 @@
             })
         };
 
-        $("#btn-add-saldo").click(function () {
-            mostraAddSaldo();
-        });
-
-        $("#btn-add-saldo-salva").click(function () {
-            let r = new AdicionaSaldoClienteRequest(parseInt($("#sel-cliente-caixa").val(), 10), parseFloat($("#txt-novo-saldo").val()));
-
-            adicionarSaldoCliente(r)
-                .then(() => {
-                    escondeAddSaldo();
-                    mostraSaldoCliente();
-                })
-        });
-
-        function mostraAddSaldo() {
-            $("#gr-add-saldo").show();
-        }
-
-        function escondeAddSaldo() {
-            $("#gr-add-saldo").hide();
-        }
-
         function limparTelaCaixa() {
             $("#sel-cliente-caixa,#txt-recebido,#txt-novo-saldo,#txt-total").val(0);
             $("#sel-cliente-caixa").trigger("change");
@@ -176,4 +169,3 @@
         }
     });
 });
-

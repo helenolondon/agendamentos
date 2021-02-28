@@ -106,3 +106,11 @@ table.dataTable td.dataTables_empty {
 #gr-add-saldo{
     margin-top: -10px;
 }
+
+#cabecalho-caixa .col-titulo {
+    padding: 0;
+}
+
+#cabecalho-caixa .col-saldo{
+    padding-right: 0;
+}
