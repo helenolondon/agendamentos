@@ -67,6 +67,8 @@
 
         pagamento.itens = pagamentoItens;
 
+        mostraSalvando();
+
         pagaAgendamentos(pagamento)
             .then(() => {
                 onPagamentoRealizado();
@@ -78,8 +80,25 @@
                 else {
                     toastr["error"](e.responseText);
                 }
-            });
+            })
+            .always(() => {
+                mostraSalvo();
+            })
+
+        function mostraSalvando() {
+            $("#btn-salvar-pagamento")
+                .attr('disabled', true)
+                .html("Salvando aguarde...");
+        }
+
+        function mostraSalvo() {
+            $("#btn-salvar-pagamento")
+                .attr('disabled', false)
+                .text("Salvo");            
+        }
     });
+
+    $(".spinner").hide();
 
     loadClientes()
         .then(() => {

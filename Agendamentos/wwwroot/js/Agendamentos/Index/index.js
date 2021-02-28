@@ -274,6 +274,9 @@
             "Itens": retAgendamentoItens(codAgendamento, codCliente)
         }
 
+
+        mostrarSalvando();
+
         return $.post("agendamentos/api/agendamentos/salvar", JSON.stringify(request), function () {
             clearAgendamentoForm();            
             onSchedulerRefreshNeeded();
@@ -285,7 +288,25 @@
                     setValidacaoRemota(item);
                 })
             }
-        });
+        }).always(() => {
+            mostrarSalvo();
+        })
+
+        function mostrarSalvando() {
+            $("#btn-salvar")
+                .attr('disabled', true)
+                .html('Salvando');
+
+            $("#btn-cancelar").attr('disabled', true);
+        };
+
+        function mostrarSalvo() {
+            $("#btn-salvar")
+                .attr('disabled', false)
+                .html('Salvo');
+
+            $("#btn-cancelar").attr('disabled', false);
+        }
     }
 
     function retAgendamentoItens(codAgendamento, codCliente) {

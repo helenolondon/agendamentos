@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "3ecSijlrJXzqmI4l6c7N6V28f/cIHvXVje5ymtWg5R77OIRfv8wScKDbAF6lbOBx4cgW2fEW55tF4gWx8VXs8A==",
+  "dgSpecHash": "7ctQcd+Go7PP+pXsf9VR1qqe1GYd8xqYTSJifYxg6sATQsPp3U7p+lC7/Ir2UizU8G8mBM8BmTuiDTcUkYg73g==",
   "success": true,
-  "projectFilePath": "C:\\Lab\\agendamentos\\Agendamentos.Infra\\Agendamentos.Infra.csproj",
+  "projectFilePath": "C:\\Lab\\Agendamentos\\Agendamentos.Infra\\Agendamentos.Infra.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Heleno-pink\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\Heleno-pink\\.nuget\\packages\\microsoft.data.sqlclient\\2.0.1\\microsoft.data.sqlclient.2.0.1.nupkg.sha512",

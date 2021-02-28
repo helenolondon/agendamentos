@@ -114,3 +114,7 @@ table.dataTable td.dataTables_empty {
 #cabecalho-caixa .col-saldo{
     padding-right: 0;
 }
+
+span.spinner-border{
+    margin-right: 5px;
+}
