@@ -159,7 +159,9 @@ namespace Agendamentos.Infra.Repositorios
                             Dat_Inicio = e.Dat_Inicio,
                             Dat_Termino = e.Dat_Termino,
                             Cd_Profissional = e.Cd_Profissional,
-                            Num_ValorServico = e.Num_ValorServico
+                            Num_ValorServico = e.Num_ValorServico,
+                            Num_Comissao = e.Num_Comissao
+                            
                     };
                         
                         novo.Cd_AgendamentoItem = this.dbContext.AgendamentoItens.Count() == 0 ? 1 : this.dbContext.AgendamentoItens.Max(a => a.Cd_AgendamentoItem) + 1;
@@ -181,6 +183,7 @@ namespace Agendamentos.Infra.Repositorios
                             item.Dat_Termino = e.Dat_Termino;
                             item.Cd_Profissional = e.Cd_Profissional;
                             item.Num_ValorServico = e.Num_ValorServico;
+                            item.Num_Comissao = e.Num_Comissao;
                         };
                     }
                 });

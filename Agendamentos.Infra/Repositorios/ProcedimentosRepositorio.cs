@@ -15,10 +15,10 @@ namespace Agendamentos.Infra.Repositorios
         {
             this.dbContext = dbContext;
         }
-        public List<Procedimento> ListarProcedimentos(int codProfiossional)
+        public List<Procedimento> ListarProcedimentos(int codProfissional)
         {
             return this.dbContext.Procedimentos
-                .Where(p => p.Cd_Pessoa == codProfiossional)
+                .Where(p => p.Cd_Pessoa == codProfissional)
                 .Include(t => t.Pessoa)
                 .Include(s => s.Servico)
                 .OrderBy(h => h.Num_HoraInicio)
@@ -36,6 +36,57 @@ namespace Agendamentos.Infra.Repositorios
 
             return null;
         }
+
+        public decimal ObterComissao(DateTime data, TimeSpan inicio, TimeSpan termino, int codServico)
+        {
+            var diaSemana = 0;
+
+            switch (data.DayOfWeek)
+            {
+                case DayOfWeek.Sunday:
+                    diaSemana = 1;
+                    break;
+                case DayOfWeek.Monday:
+                    diaSemana = 2;
+                    break;
+                case DayOfWeek.Tuesday:
+                    diaSemana = 3;
+                    break;
+                case DayOfWeek.Wednesday:
+                    diaSemana = 4;
+                    break;
+                case DayOfWeek.Thursday:
+                    diaSemana = 5;
+                    break;
+                case DayOfWeek.Friday:
+                    diaSemana = 6;
+                    break;
+                case DayOfWeek.Saturday:
+                    diaSemana = 7;
+                    break;
+                default:
+                    break;
+            }
+
+            var procedimentos = this.ListarPorProfissionais(diaSemana, inicio, termino, codServico);
+
+            var pComissTodosOsDias = procedimentos.Where(p => p.Cd_DiaSemana == 0).FirstOrDefault();
+            var pComissDia = procedimentos.Where(p => p.Cd_DiaSemana == diaSemana).FirstOrDefault();
+
+            if (pComissDia != null)
+            {
+                return pComissDia.Num_Comissao;
+            };
+            
+            if (pComissTodosOsDias != null)
+            {
+                return pComissTodosOsDias.Num_Comissao;
+            };
+
+            return 0;
+        }
+
+
         public List<Procedimento> ListarPorProfissionais(int diaSemana, TimeSpan inicio, TimeSpan termino, int codServico)
         {
             var procedimentos = this.dbContext.Procedimentos

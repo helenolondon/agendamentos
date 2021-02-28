@@ -1,15 +1,9 @@
 ﻿using Agendamentos.Infra;
-using Agendamentos.Infra.EF;
-using Agendamentos.Infra.Erros;
 using Agendamentos.Infra.Modelos;
-using Agendamentos.Infra.Repositorios;
 using Agendamentos.Servicos.DTO;
 using Agendamentos.Servicos.Erros;
 using Agendamentos.Servicos.Listas;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Agendamentos.Servicos
 {
@@ -78,6 +72,11 @@ namespace Agendamentos.Servicos
                     {
                         ag.ValorServico = servico.Valor;
                     }
+
+                    var comissaoNoDia = this.repositorio.ProcedimentosRepositorio
+                    .ObterComissao(ag.Inicio, ag.Inicio.TimeOfDay, ag.Termino.TimeOfDay, ag.CodServico);
+
+                    ag.Comissao = comissaoNoDia;
                 }
             });
             

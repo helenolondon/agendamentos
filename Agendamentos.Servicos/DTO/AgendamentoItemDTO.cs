@@ -31,6 +31,11 @@ namespace Agendamentos.Servicos.DTO
         /// </summary>
         public decimal? ValorServico { get; set; }
 
+        /// <summary>
+        /// Este é o valor comissão no dia que o procedimento é realizado
+        /// </summary>
+        public decimal? Comissao { get; set; }
+
         public string Pago { get; set; }
 
         /// <summary>
@@ -69,6 +74,7 @@ namespace Agendamentos.Servicos.DTO
             this.Servico = e.Servico.Nome_Servico;
             this.ValorServico = (decimal)(e.Num_ValorServico ?? 0);
             this.Pago = e.Pago;
+            this.Comissao = e.Num_Comissao;
 
 
             switch (this.CodStatus)
@@ -98,6 +104,7 @@ namespace Agendamentos.Servicos.DTO
             temp.Dat_Termino = this.Termino;
             temp.Cd_Profissional = this.CodProfissional;
             temp.Num_ValorServico = this.ValorServico;
+            temp.Num_Comissao = this.Comissao;
 
             return temp;
         }

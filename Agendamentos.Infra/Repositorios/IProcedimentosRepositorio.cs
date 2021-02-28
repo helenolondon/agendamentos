@@ -10,5 +10,6 @@ namespace Agendamentos.Infra.Repositorios
         List<Procedimento> ListarProcedimentos(int codProfiossional);
         List<Procedimento> ListarPorProfissionais(List<Pessoa> pessoas);
         List<Procedimento> ListarPorProfissionais(int diaSemana, TimeSpan inicio, TimeSpan termino, int codServico);
+        decimal ObterComissao(DateTime data, TimeSpan inicio, TimeSpan termino, int codServico);
     }
 }
