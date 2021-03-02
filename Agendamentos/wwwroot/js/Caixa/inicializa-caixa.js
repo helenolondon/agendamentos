@@ -103,13 +103,32 @@
     loadClientes()
         .then(() => {
             $("#sel-cliente-caixa").on('change', () => {
-                mostraSaldoCliente();
-                mostraTotais();
-                loadDataTables();
+                verificaDebitos($("#sel-cliente-caixa").val())
+                    .then(() => {
+                        atualizaTotaisDoCliente();
+                    });
             });
 
             loadDataTables();
         })
+
+    function atualizaTotaisDoCliente() {
+        mostraSaldoCliente();
+        mostraTotais();
+        loadDataTables();
+    }
+
+    function verificaDebitos(codCliente) {
+        return $.get(`/caixa/api/pessoas/tem-debito/${codCliente}`, (response) => {
+            if (!response) {
+                return Swal.fire(
+                    '',
+                    'Cliente não possui débitos',
+                    'info'
+                );
+            }
+        });
+    }
 
     function loadDataTables() {
         procedimentosDtTable.ajax.url("/caixa/api/agendamentos/agendamentos-a-pagar/" +
@@ -171,7 +190,7 @@
 
     function limparTelaCaixa() {
         $("#sel-cliente-caixa,#txt-recebido,#txt-novo-saldo,#txt-total").val(0);
-        $("#sel-cliente-caixa").trigger("change");
+        atualizaTotaisDoCliente();
     }
 });
 
