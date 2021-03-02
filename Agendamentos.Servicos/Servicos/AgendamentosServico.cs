@@ -99,7 +99,7 @@ namespace Agendamentos.Servicos
 
                 valido &= hist == null || hist.Count == 0;
 
-                hist = this.repositorio.AgendamentosRepositorio.ListarAgendamentosItens(a => a.Dat_Termino >= agendamentoItem.Inicio && a.Dat_Termino <= agendamentoItem.Termino &&
+                hist = this.repositorio.AgendamentosRepositorio.ListarAgendamentosItens(a => a.Dat_Termino > agendamentoItem.Inicio && a.Dat_Termino <= agendamentoItem.Termino &&
                     a.Cd_Profissional == agendamentoItem.CodProfissional && agendamentoItem.CodCliente != a.Agendamento.Cd_Cliente);
 
                 valido &= hist == null || hist.Count == 0;
@@ -116,7 +116,7 @@ namespace Agendamentos.Servicos
 
                 valido &= hist == null || hist.Count == 0;
 
-                hist = this.repositorio.AgendamentosRepositorio.ListarAgendamentosItens(a => a.Dat_Termino >= agendamentoItem.Inicio && a.Dat_Termino <= agendamentoItem.Termino &&
+                hist = this.repositorio.AgendamentosRepositorio.ListarAgendamentosItens(a => a.Dat_Termino > agendamentoItem.Inicio && a.Dat_Termino <= agendamentoItem.Termino &&
                     a.Cd_Profissional == agendamentoItem.CodProfissional && agendamentoItem.CodCliente != a.Agendamento.Cd_Cliente && a.Cd_AgendamentoItem != agendamentoItem.CodAgendamentoItem);
 
                 valido &= hist == null || hist.Count == 0;
