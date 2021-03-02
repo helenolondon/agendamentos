@@ -56,6 +56,18 @@ namespace Agendamentos.Servicos.DTO
             } 
         }
 
+        public string Color { get {
+                switch (this.CodStatus)
+                {
+                    case 2:
+                        return "#F6795E"; // Cancelado
+                    case 3:
+                        return "#659A48"; // Realizado
+                    default:
+                        return "#0366d6"; // Agendado
+                }
+            } }
+
         internal void LoadFromAgendamento(AgendamentoItem e)
         {
             this.CodAgendamento = e.Cd_Agendamento;
