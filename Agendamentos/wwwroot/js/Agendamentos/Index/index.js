@@ -40,49 +40,58 @@
         },
         eventContent: function (arg) {
 
-            if (arg.view.type !== 'timeGridWeek') {
-                return;
-            };
+            if (arg.view.type == 'timeGridWeek') {
 
-            let span = document.createElement("span");
-            span.innerHTML = "X";
-            span.style = "float: right; margin-right: 6px; font-size: 10px"
-            span.onclick = ((ev, e) => {
-                onRemoverAgendamento(arg.event.extendedProps.codAgendamentoItem);
-            })
+                let span = document.createElement("span");
+                span.innerHTML = "X";
+                span.style = "float: right; margin-right: 6px; font-size: 10px"
+                span.onclick = ((ev, e) => {
+                    onRemoverAgendamento(arg.event.extendedProps.codAgendamentoItem);
+                });
 
-            let ElHorario = document.createElement('p')
+                let ElStatus = document.createElement('p')
+                ElStatus.style = "font-size: 11px; margin: 10px 2px 2px;"
 
-            ElHorario.innerHTML = arg.event.extendedProps.horarioLabel;
-            ElHorario.style = "margin: 10px 2px 2px; font-size: 11px;"
+                if (arg.event.extendedProps.pago == "S") {
+                    ElStatus.innerHTML = "Status: " + arg.event.extendedProps.status + " (Pago)";
+                }
+                else {
+                    ElStatus.innerHTML = "Status: " + arg.event.extendedProps.status;
+                }
 
-            let ElCliente = document.createElement('p')
+                let ElHorario = document.createElement('p')
 
-            ElCliente.innerHTML = arg.event.extendedProps.nomeCliente;
-            ElCliente.style = "margin: 0px 2px 2px; font-size: 11px; margin-top: 10px;"
+                ElHorario.innerHTML = "Horário: " + arg.event.extendedProps.horarioLabel;
+                ElHorario.style = "margin: 0px 2px 2px; font-size: 11px;"
 
-            let ElProfissional = document.createElement('p')
-            ElProfissional.style = "font-size: 10px; margin: 0px 2px 2px;"
+                let ElCliente = document.createElement('p')
 
-            ElProfissional.innerHTML = arg.event.extendedProps.nomeProfissional;
+                ElCliente.innerHTML = "Cliente: " + arg.event.extendedProps.nomeCliente;
+                ElCliente.style = "margin: 0px 2px 2px; font-size: 11px;"
 
-            let ElServico = document.createElement('p')
-            ElServico.style = "font-size: 10px; margin: 0px 2px 2px;"
+                let ElProfissional = document.createElement('p')
+                ElProfissional.style = "font-size: 11px; margin: 0px 2px 2px;"
 
-            ElServico.innerHTML = arg.event.extendedProps.servico;
+                ElProfissional.innerHTML = "Profissional: " + arg.event.extendedProps.nomeProfissional;
 
-            let ElCancelado = document.createElement('p')
-            ElCancelado.style = "font-size: 10px; margin: 0px 2px 2px;"
+                let ElServico = document.createElement('p')
+                ElServico.style = "font-size: 11px; margin: 0px 2px 2px;"
 
-            if (arg.event.extendedProps.pago == "S") {
-                ElCancelado.innerHTML = arg.event.extendedProps.status + " (Pago)";
+                ElServico.innerHTML = "Procedimento: " + arg.event.extendedProps.servico;
+
+                let arrayOfDomNodes = [span, ElStatus, ElHorario, ElCliente, ElProfissional, ElServico]
+                return { domNodes: arrayOfDomNodes }
             }
-            else {
-                ElCancelado.innerHTML = arg.event.extendedProps.status;
-            }
+            else if (arg.view.type == 'dayGridMonth') {
 
-            let arrayOfDomNodes = [span, ElCancelado, ElHorario, ElCliente, ElProfissional, ElServico]
-            return { domNodes: arrayOfDomNodes }
+                let ElAgendado = document.createElement('p')
+
+                ElAgendado.innerHTML = arg.event.extendedProps.horarioLabel.substring(0,5) + "-" + arg.event.extendedProps.nomeCliente;;
+                ElAgendado.style = "margin: 0px 2px 2px; font-size: 09px; overflow: hidden;"
+
+                let arrayOfDomNodes = [ElAgendado]
+                return { domNodes: arrayOfDomNodes }
+            }
         },
         eventClick: function (e) {
             if (e.jsEvent.layerY > 10) {
