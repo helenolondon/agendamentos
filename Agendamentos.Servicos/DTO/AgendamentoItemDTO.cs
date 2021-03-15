@@ -25,7 +25,8 @@ namespace Agendamentos.Servicos.DTO
         public string HoraTermino { get; set; }
         public int CodStatus { get; set; }
         public String Status { get; set; }
-        
+        public string Observacao { get; set; }
+
         /// <summary>
         /// Este é o valor do serviço no dia que o procedimento é realizado
         /// </summary>
@@ -87,6 +88,7 @@ namespace Agendamentos.Servicos.DTO
             this.ValorServico = (decimal)(e.Num_ValorServico ?? 0);
             this.Pago = e.Pago;
             this.Comissao = e.Num_Comissao;
+            this.Observacao = e.Txt_Observacao;
 
 
             switch (this.CodStatus)
@@ -117,6 +119,7 @@ namespace Agendamentos.Servicos.DTO
             temp.Cd_Profissional = this.CodProfissional;
             temp.Num_ValorServico = this.ValorServico;
             temp.Num_Comissao = this.Comissao;
+            temp.Txt_Observacao = this.Observacao;
 
             return temp;
         }

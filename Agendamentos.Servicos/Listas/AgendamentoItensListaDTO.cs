@@ -20,7 +20,8 @@ namespace Agendamentos.Servicos.Listas
                     Cd_AgendamentoItem = e.CodAgendamentoItem,
                     Cd_Servico = e.CodServico,
                     Dat_Inicio = e.Inicio,
-                    Dat_Termino = e.Termino
+                    Dat_Termino = e.Termino,
+                    Txt_Observacao = e.Observacao
                 });
             });
 

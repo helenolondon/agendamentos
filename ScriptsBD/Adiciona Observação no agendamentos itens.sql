@@ -1,0 +1,1 @@
+ALTER TABLE AGENDAMENTOSITENS ADD Txt_Observacao varchar(2000)

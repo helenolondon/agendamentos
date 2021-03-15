@@ -32,5 +32,7 @@ namespace Agendamentos.Infra.Modelos
         public decimal? Num_ValorServico { get; set; }
         public decimal? Num_Comissao { get; set; }
         public string Pago { get; set; }
+        [MaxLength(2000)]
+        public string Txt_Observacao { get; set; }
     }
 }

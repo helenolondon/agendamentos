@@ -60,6 +60,10 @@ namespace Agendamentos.Controllers.Apis
 
                 return BadRequest(erros);
             }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         /// <summary>
@@ -85,7 +89,7 @@ namespace Agendamentos.Controllers.Apis
                 return NoContent();
             }
 
-            return BadRequest();
+            return BadRequest("Não foi possível salvar o agendamento");
         }
 
         /// <summary>

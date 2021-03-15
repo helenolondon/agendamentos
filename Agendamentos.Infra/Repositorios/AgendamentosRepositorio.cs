@@ -160,7 +160,8 @@ namespace Agendamentos.Infra.Repositorios
                             Dat_Termino = e.Dat_Termino,
                             Cd_Profissional = e.Cd_Profissional,
                             Num_ValorServico = e.Num_ValorServico,
-                            Num_Comissao = e.Num_Comissao
+                            Num_Comissao = e.Num_Comissao,
+                            Txt_Observacao = e.Txt_Observacao
                             
                     };
                         
@@ -184,6 +185,7 @@ namespace Agendamentos.Infra.Repositorios
                             item.Cd_Profissional = e.Cd_Profissional;
                             item.Num_ValorServico = e.Num_ValorServico;
                             item.Num_Comissao = e.Num_Comissao;
+                            item.Txt_Observacao = e.Txt_Observacao;
                         };
                     }
                 });
