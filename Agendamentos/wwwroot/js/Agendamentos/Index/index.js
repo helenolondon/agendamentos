@@ -13,6 +13,9 @@
         slotLabelInterval: '00:30',
         scrollTime: '08:00:00',
         editable: false,
+        //hiddenDays: [1, 3, 5],
+        slotMinTime: "08:00",
+        slotMaxTime: "18:00",
         events: '/agendamentos/api/agendamentos',
         slotLabelFormat: {
             hour: 'numeric',
@@ -131,6 +134,7 @@
         addProcedimentoItem();
 
         $("#txt-data")[0].valueAsDate = new Date();
+        $("#sel-cliente").attr("disabled", false);
     }
 
     form = $("form").submit(function (event) {
@@ -321,6 +325,7 @@
             let horaTermino = $("#txt-ag-termino-" + id).val();
             let data = $("#txt-data").val();
             let codAgendamentoItem = parseInt($(this).attr("data-cod-procedimento"));
+            let observacoes = $("#txa-observacoes-" + id).val();
 
             if (Number.isNaN(codAgendamentoItem)) {
                 codAgendamentoItem = 0;
@@ -333,7 +338,8 @@
                 "Termino": data + "T" + horaTermino,
                 "codCliente": + codCliente,
                 "CodServico": codServico,
-                "CodProfissional": codProfissional
+                "CodProfissional": codProfissional,
+                "Observacao": observacoes
             });
         })
 
@@ -373,6 +379,7 @@
                 // Cabeçalho
                 $("#cod-agendamento").val(e.codAgendamento);
                 $("#sel-cliente").val(e.codCliente);
+                $("#sel-cliente").attr("disabled", true);
                 $("#txt-data")[0].valueAsDate = new Date(e.dataAgendamento);
                 $("#sel-status").val(e.codStatus)
 
@@ -386,6 +393,7 @@
 
                             $("#txt-ag-inicio-" + novoItem).val(item.horaInicio);
                             $("#txt-ag-termino-" + novoItem).val(item.horaTermino);
+                            $("#txa-observacoes-" + novoItem).val(item.observacao);
 
                             loadProfissionais(novoItem)
                                 .then(() => {
@@ -524,6 +532,13 @@
                 <option selected></option>
             </select>
         </div>
+        
+        <!-- Observações do agendmento -->
+        <div class="form-group">
+            <label for="txa-observacoes-${id}">Observações</label>
+            <textarea class="form-control" id="txa-observacoes-${id}" rows="3"></textarea>
+        </div>
+
     </div>
 </div>
     `;

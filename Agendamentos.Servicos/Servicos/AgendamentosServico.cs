@@ -51,17 +51,6 @@ namespace Agendamentos.Servicos
             agendamento.Itens.ForEach((ag) => 
             {
                 this.ValidaAgendamento(ag);
-                
-                if(agendamento.CodStatus != 3)
-                {
-                    var agOld = this.repositorio.AgendamentosRepositorio
-                    .ConsultarAgendamento(agendamento.CodAgendamento);
-
-                    if(agOld!= null && agOld.Cd_Status == 3)
-                    {
-                        throw new ReAbrirAgendamentoException("Agendamento já foi realizado e não pode ser reaberto");
-                    }
-                }
 
                 // Realizado, atualiza preço na data do fechamento
                 if(agendamento.CodStatus == 3)
@@ -133,6 +122,27 @@ namespace Agendamentos.Servicos
                 nome = nome.Split(" ")[0];
 
                 throw new AgendamentoConflitoException(nome + " não está disponível no horário " + agendamentoItem.horarioLabel);
+            }
+
+            if(agendamentoItem.Observacao.Length > 2000)
+            {
+                throw new ServicosException("Observação não pode ultrapassar 2000 caracteres");
+            }
+
+            var agOld = this.repositorio.AgendamentosRepositorio
+                .ConsultarAgendamento(agendamentoItem.CodAgendamento);
+
+            if (agendamentoItem.CodStatus != 3)
+            {
+                if (agOld != null && agOld.Cd_Status == 3)
+                {
+                    throw new ReAbrirAgendamentoException("Agendamento já foi realizado e não pode ser reaberto");
+                }
+            }
+
+            if(agendamentoItem.CodAgendamentoItem > 0 && agOld.Cd_Cliente != agendamentoItem.CodCliente)
+            {
+                throw new ServicosException("Não é permitido alterar o cliente de um agendamento existente");
             }
         }
     }
