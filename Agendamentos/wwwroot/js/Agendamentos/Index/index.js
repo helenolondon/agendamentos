@@ -36,7 +36,7 @@
         headerToolbar: {
             left: 'prev,next,today',
             center: 'title',
-            right: 'novoAgendamento,caixa,dayGridMonth,timeGridWeek'
+            right: 'novoAgendamento,caixa,dayGridDay,timeGridWeek,dayGridMonth'
         },
         eventContent: function (arg) {
 
