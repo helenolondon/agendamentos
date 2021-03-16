@@ -143,7 +143,8 @@
         addProcedimentoItem();
 
         $("#txt-data")[0].valueAsDate = new Date();
-        $("#sel-cliente").attr("disabled", false);
+        $("input, select, textarea").attr("disabled", false);
+        $("#btn-salvar").attr("disabled", false);
     }
 
     form = $("form").submit(function (event) {
@@ -236,11 +237,9 @@
     function botoesRemoverDisableEnable() {
         if ($(".procedimento-item").length == 1) {
             $(".btn-remover-item").prop('disabled', true);
-            $("#txt-data").prop('disabled', false);
         }
         else {
             $(".btn-remover-item").prop('disabled', false);
-            $("#txt-data").prop('disabled', true);
         }
     }
 
@@ -286,7 +285,6 @@
 
             "Itens": retAgendamentoItens(codAgendamento, codCliente)
         }
-
 
         mostrarSalvando();
 
@@ -385,12 +383,13 @@
         $.when(agendamento, loadClientes(), loadServicos())
             .then(() => {
 
+                let realizado = statusEREalizado(e.codStatus)
+
                 // Cabeçalho
                 $("#cod-agendamento").val(e.codAgendamento);
                 $("#sel-cliente").val(e.codCliente);
-                $("#sel-cliente").attr("disabled", true);
                 $("#txt-data")[0].valueAsDate = new Date(e.dataAgendamento);
-                $("#sel-status").val(e.codStatus)
+                $("#sel-status").val(e.codStatus);
 
                 $.each(agendamento.itens, (index, item) => {
                     
@@ -414,6 +413,13 @@
                         })
                 });
 
+                // Se o status for realizado, só é permitido consultar
+                $("input, select, textarea").attr("disabled", realizado);
+                $("#btn-salvar").attr("disabled", realizado);
+
+                // Não é permitido alterar o cliente
+                $("#sel-cliente").attr("disabled", true);
+
                 $(".collapse.show").each((index, el) => {
                     if (index == 0) {
                         $(el).collapse('show')
@@ -422,6 +428,11 @@
                     }
                 });
             });
+    }
+
+    // Verifica se o status do agendamento é "Realizado"
+    function statusEREalizado(status) {
+        return status == 3;
     }
 
     function consultarAgendamento(codAgendamento) {

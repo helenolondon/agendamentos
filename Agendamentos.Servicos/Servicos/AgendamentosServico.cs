@@ -81,7 +81,15 @@ namespace Agendamentos.Servicos
             var valido = true;
             List<AgendamentoItem> hist;
 
-            if(agendamentoItem.CodAgendamentoItem == 0)
+            var agOld = this.repositorio.AgendamentosRepositorio
+                .ConsultarAgendamento(agendamentoItem.CodAgendamento);
+
+            if(agOld != null && agOld.Cd_Status == 3)
+            {
+                throw new ServicosException("Não é permitido alterar um agendamento Realizado");
+            }
+
+            if (agendamentoItem.CodAgendamentoItem == 0)
             {
                 hist = this.repositorio.AgendamentosRepositorio.ListarAgendamentosItens(a => a.Dat_Inicio >= agendamentoItem.Inicio && a.Dat_Inicio <= agendamentoItem.Termino &&
                     a.Cd_Profissional == agendamentoItem.CodProfissional && agendamentoItem.CodCliente != a.Agendamento.Cd_Cliente);
@@ -128,10 +136,7 @@ namespace Agendamentos.Servicos
             {
                 throw new ServicosException("Observação não pode ultrapassar 2000 caracteres");
             }
-
-            var agOld = this.repositorio.AgendamentosRepositorio
-                .ConsultarAgendamento(agendamentoItem.CodAgendamento);
-
+            
             if (agendamentoItem.CodStatus != 3)
             {
                 if (agOld != null && agOld.Cd_Status == 3)
