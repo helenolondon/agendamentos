@@ -16,6 +16,7 @@ namespace Agendamentos.Infra.EF
         public DbSet<Procedimento> Procedimentos { get; set; }
         public DbSet<AgendamentoItem> AgendamentoItens { get; set; }
         public DbSet<Agendamento> Agendamentos { get; set; }
+        public DbSet<PessoasCategorias> Categorias { get; set; }
 
         public AgendamentosDbContext(string connectionString)
         {
@@ -38,12 +39,9 @@ namespace Agendamentos.Infra.EF
             modelBuilder.Entity<AgendamentoItem>()
                 .HasOne(a => a.Agendamento)
                 .WithMany(a => a.Itens);
-
-            //modelBuilder.Entity<LoginODP>()
-            //    .HasOne<UsuarioODP>(l => l.UsuarioCadastro)
-            //    .WithMany()
-            //    .HasForeignKey(l => l.UsuarioCad)
-            //    .HasPrincipalKey(u => u.Login);
+            
+            modelBuilder.Entity<PessoasCategorias>()
+            .HasKey(c => new { c.Cd_Categoria, c.Cd_Pessoa});
         }
     }
 }

@@ -18,11 +18,11 @@ namespace Agendamentos.Controllers.Apis
         /// Lista todos os agendamentos
         /// </summary>
         [HttpGet]
-        public IActionResult ListarAgendamentos()
+        public IActionResult ListarAgendamentos([FromQuery]DateTime start, [FromQuery] DateTime end, [FromQuery]int codProfissional)
         {
             var servicos = this.CriarServicos();
 
-            return Ok(servicos.AgendamentosServico.Listar());
+            return Ok(servicos.AgendamentosServico.Listar(start, end, codProfissional));
         }
 
         [HttpGet]

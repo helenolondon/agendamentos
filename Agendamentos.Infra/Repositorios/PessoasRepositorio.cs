@@ -1,5 +1,6 @@
 ﻿using Agendamentos.Infra.EF;
 using Agendamentos.Infra.Modelos;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,16 @@ namespace Agendamentos.Infra.Repositorios
             return this.dbContext.Pessoas
                 .Where(c => c.Cod_Pessoa == codPessoa)
                 .FirstOrDefault();
+        }
+
+        public List<Pessoa> ObterProfissionais()
+        {
+            return this.dbContext.Categorias
+                .Where(c => c.Cd_Categoria == 10102)
+                .Include(c => c.Pessoa)
+                .OrderBy(c => c.Pessoa.Txt_Nome)
+                .Select(c => c.Pessoa)
+                .ToList();
         }
     }
 }

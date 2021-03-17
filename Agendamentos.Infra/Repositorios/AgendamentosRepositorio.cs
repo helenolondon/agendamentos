@@ -16,13 +16,15 @@ namespace Agendamentos.Infra.Repositorios
         {
             this.dbContext = dbContext;
         }
-        public List<AgendamentoItem> ListarAgendamentos()
+        public List<AgendamentoItem> ListarAgendamentos(DateTime dataInicial, DateTime dataFinal, int codProfissional)
         {
             return this.dbContext.AgendamentoItens
                 .Include(b => b.Servico)
                 .Include(a => a.Agendamento)
                 .Include(p => p.Profissional)
                 .Include(c => c.Agendamento.Cliente)
+                .Where(b => b.Dat_Inicio.Date >= dataInicial && b.Dat_Inicio <= dataFinal 
+                    && (b.Cd_Profissional == codProfissional || codProfissional == 0))
                 .ToList();
         }
         public List<AgendamentoItem> ListarAgendamentosItens(System.Linq.Expressions.Expression<Func<AgendamentoItem, bool>> filtro)

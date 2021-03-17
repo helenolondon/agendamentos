@@ -8,6 +8,7 @@ namespace Agendamentos.Infra.Repositorios
     public interface IPessoasRepositorio
     {
         List<Pessoa> Listar();
+        List<Pessoa> ObterProfissionais();
         Pessoa Obter(int codPessoa);
     }
 }

@@ -10,38 +10,14 @@ namespace Agendamentos.Controllers.Apis
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProfissionaisController : ControllerBase
+    public class ProfissionaisController : ApibaseController
     {
-        // GET: api/<ProfissionaisController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IActionResult ListarProfissionais()
         {
-            return new string[] { "value1", "value2" };
-        }
+            var servicos = this.CriarServicos();
 
-        // GET api/<ProfissionaisController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<ProfissionaisController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<ProfissionaisController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<ProfissionaisController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return Ok(servicos.PessoaServico.ListarProfissionais());
         }
     }
 }

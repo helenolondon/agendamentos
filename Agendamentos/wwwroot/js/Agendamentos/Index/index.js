@@ -3,6 +3,8 @@
 
     var form;
 
+    CarregaFiltrosProfissionais();
+
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'timeGridWeek',
@@ -16,7 +18,14 @@
         //hiddenDays: [1, 3, 5],
         slotMinTime: "08:00",
         slotMaxTime: "18:00",
-        events: '/agendamentos/api/agendamentos',
+        events: {
+            url: '/agendamentos/api/agendamentos',
+            extraParams: function () {
+                return {
+                    'codProfissional': $(".nav-link.active").attr("data-func-id")
+                }
+            }
+        },
         slotLabelFormat: {
             hour: 'numeric',
             minute: '2-digit',
@@ -186,6 +195,11 @@
             .find("input[type='time']")
             .first()
             .trigger('change');
+    })
+
+    // Evento ocorro quando o filtro de funcionários muda.
+    $("#func-tabs").on("shown.bs.tab", function (event) {
+        onSchedulerRefreshNeeded();
     })
         
     function addProcedimentoItem() {
@@ -472,6 +486,26 @@
                 select.append($("<option>", { value: item.codPessoa, text: item.nomePessoa }));
             });
         });
+    }
+
+    // Carrega profissionais nas tabs de filtro
+    function CarregaFiltrosProfissionais() {
+        let codAtivo = $(".nav-link.active").attr("data-func-id");
+
+        $("#func-tabs").find(".nav-p-filtro").remove();
+
+        $.get("agendamentos/api/profissionais")
+            .then(function (data) {
+                data.forEach(function (item, index, array) {
+                    $("#func-tabs").append(`
+                        <li class="nav-item nav-p-filtro" role="presentation">
+                            <a class="nav-link" id="func-${item.codPessoa}" data-func-id="${item.codPessoa}" data-toggle="tab" href="#${item.nomePessoa}" role="tab" aria-controls="contact" aria-selected="false">${item.nomePessoa}</a>
+                        </li>
+                    `);
+                });
+
+                $(".nav-link[data-func-id=" + codAtivo + "]").addClass("active");
+            });
     }
 
     // Carrega os procedimetos do profiossinal

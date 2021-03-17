@@ -25,5 +25,21 @@ namespace Agendamentos.Servicos
 
             return temp;
         }
+
+        public PessoasListaDTO ListarProfissionais()
+        {
+            var temp = new Listas.PessoasListaDTO();
+
+            var q = this.repositorio.PessoasRepositorio.ObterProfissionais();
+
+            if (q == null)
+            {
+                return null;
+            }
+
+            temp.LoadFromPessoaLista(q);
+
+            return temp;
+        }
     }
 }

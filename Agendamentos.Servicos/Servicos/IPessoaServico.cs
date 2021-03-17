@@ -9,5 +9,6 @@ namespace Agendamentos.Servicos
     public interface IPessoaServico
     {
         PessoasListaDTO ListarPessoas();
+        PessoasListaDTO ListarProfissionais();
     }
 }

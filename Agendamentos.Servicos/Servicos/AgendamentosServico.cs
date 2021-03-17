@@ -3,6 +3,7 @@ using Agendamentos.Infra.Modelos;
 using Agendamentos.Servicos.DTO;
 using Agendamentos.Servicos.Erros;
 using Agendamentos.Servicos.Listas;
+using System;
 using System.Collections.Generic;
 
 namespace Agendamentos.Servicos
@@ -26,9 +27,9 @@ namespace Agendamentos.Servicos
             return null;
         }
 
-        public AgendamentoItensListaDTO Listar()
+        public AgendamentoItensListaDTO Listar(DateTime dataInicial, DateTime dataFinal, int codProfissional)
         {
-            var temp = this.repositorio.AgendamentosRepositorio.ListarAgendamentos();
+            var temp = this.repositorio.AgendamentosRepositorio.ListarAgendamentos(dataInicial, dataFinal, codProfissional);
             
             if(temp == null)
             {
