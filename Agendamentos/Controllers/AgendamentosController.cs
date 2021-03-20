@@ -14,5 +14,12 @@ namespace Agendamentos.Controllers
         {
             return View();
         }
+
+        //[Route("configuracoes")]
+        // Página de configurações da Agenda
+        public ActionResult Configuracoes()
+        {
+            return View();
+        }
     }
 }

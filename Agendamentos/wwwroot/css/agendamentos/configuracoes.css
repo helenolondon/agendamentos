@@ -1,0 +1,43 @@
+﻿#configuracoes {
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+fieldset:first-child {
+    margin-top: .8em;
+}
+
+form {
+    margin-left: 5px;
+}
+
+legend {
+    font-size: inherit;
+    font-weight: 600;
+}
+
+#divBloquearAlmoco {
+    margin-bottom: 15px;
+}
+
+.col, #dias-semana .col-3 {
+    padding-left: 0px;
+}
+
+    .col:last-child, #dias-semana .col-6, #dias-semana .btn-col {
+        padding-right: 0px;
+    }
+
+#dias-semana .col-3, #dias-semana .col-6 {
+    text-align: right;
+}
+
+    #dias-semana .col-3:first-child {
+        text-align: left;
+    }
+
+.dia-semana {
+    width: 65px;
+    text-align: left;
+}

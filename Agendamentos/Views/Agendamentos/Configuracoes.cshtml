@@ -1,0 +1,141 @@
+﻿@section styles{
+    <link rel="stylesheet" href="~/css/agendamentos/configuracoes.css" />
+}
+
+<div id="configuracoes">
+    <ul class="nav nav-tabs" id="tabs-configuracoes" role="tablist">
+        <li class="nav-item" role="presentation">
+            <a class="nav-link active" href="#horarios" data-toggle="tab" role="tab">Horários</a>
+        </li>
+        <li class="nav-item" role="presentation">
+            <a class="nav-link" href="#compromissos" data-toggle="tab" role="tab">Compromissos</a>
+        </li>
+    </ul>
+
+    <form>
+        <div class="tab-content" id="tabs-configuracoes-content">
+            <!-- Tab de horários -->
+            <div class="tab-pane fade show active" id="horarios" role="tabpanel" aria-labelledby="horarios-tab">
+                <fieldset>
+                    <legend>Horário de funcionamento</legend>
+
+                    <div class="container">
+                        <!-- Horário de funcionamento -->
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="horaInicial">Início</label>
+                                    <input type="time" name="horaInicial" id="txt-inicio" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="horaFinal">Final</label>
+                                    <input type="time" name="horaFinal" id="txt-final" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Horário de almoço</legend>
+
+                    <div class="container">
+                        <!-- Horário de almoço -->
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="horaAlmocoInicial">Início</label>
+                                    <input type="time" name="horaAlmocoInicial" id="txt-almoco-inicio" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="horaAlmocoFinal">Final</label>
+                                    <input type="time" name="horaAlmocoFinal" id="txt-almoco-final" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Checkbox bloqueia Agenda -->
+                    <div class="form-check" id="divBloquearAlmoco">
+                        <input class="form-check-input" type="checkbox" id="chkBloquearAlmoco">
+                        <label class="form-check-label" for="chkBloquearAlmoco">
+                            Bloquear
+                        </label>
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Dias disponíveis na agenda</legend>
+
+                    <div class="container" id="dias-semana">
+                        <!-- Horário de almoço -->
+                        <div class="row">
+                            <div class="col-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="chkAlmocoSegunda">
+                                    <label class="form-check-label dia-semana" for="chkAlmocoSegunda">
+                                        Segunda
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="chkAlmocoTerca">
+                                    <label class="form-check-label dia-semana" for="chkAlmocoTerca">
+                                        Terça
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="chkAlmocoQuarta">
+                                    <label class="form-check-label dia-semana" for="chkAlmocoQuarta">
+                                        Quarta
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="chkAlmocoQuinta">
+                                    <label class="form-check-label dia-semana" for="chkAlmocoQuinta">
+                                        Quinta
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="chkAlmocoSexta">
+                                    <label class="form-check-label dia-semana" for="chkAlmocoSexta">
+                                        Sexta
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="chkAlmocoSabado">
+                                    <label class="form-check-label dia-semana" for="chkAlmocoSabado">
+                                        Sábado
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="chkAlmocoDomingo">
+                                    <label class="form-check-label dia-semana" for="chkAlmocoDomingo">
+                                        Domingo
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row justify-content-end">
+                            <div class="col-4 btn-col">
+                                <button type="button" class="btn btn-primary btn-block">Salvar</button>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <!-- Tab de comprimissos -->
+            <div class="tab-pane fade" id="compromissos" role="tabpanel" aria-labelledby="comprimissos-tab">
+                <p>Comprimissos Tab</p>
+            </div>
+        </div>
+    </form>
+</div>

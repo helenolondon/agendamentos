@@ -54,7 +54,7 @@ namespace Agendamentos
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Agendamentos}/{action=Index}/{id?}");
+                    pattern: "{controller=Agendamentos}/{action=Configuracoes}/{id?}");
             });
         }
     }
