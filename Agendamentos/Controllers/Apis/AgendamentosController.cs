@@ -61,13 +61,19 @@ namespace Agendamentos.Controllers.Apis
         public IActionResult SalvarConfiguracoes(AgendamentosConfiguracoesDTO request)
         {
             var serv = this.CriarServicos();
-
-            if (serv.AgendamentosServico.SalvarConfiguracoes(request))
+            try
             {
-                return Ok();
-            }
+                if (serv.AgendamentosServico.SalvarConfiguracoes(request))
+                {
+                    return Ok();
+                }
 
-            return BadRequest("Não foi possível salvar as configurações");
+                return BadRequest("Não foi possível salvar as configurações");
+            }
+            catch (ServicosException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         /// <summary>

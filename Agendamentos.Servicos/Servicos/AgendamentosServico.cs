@@ -94,14 +94,14 @@ namespace Agendamentos.Servicos
 
         private void ValidaConfigurações(AgendamentosConfiguracoesDTO conf)
         {
-            if (!(TimeSpan.Parse(conf.FuncFinal) < TimeSpan.Parse(conf.FuncInicio)))
+            if (!(TimeSpan.Parse(conf.FuncFinal) > TimeSpan.Parse(conf.FuncInicio)))
             {
-                throw new ServicosException("Início do horári de funcionamento precisar ser menor do que o término");
+                throw new ServicosException("Início do início do horário de funcionamento precisar ser menor do que o término");
             }
             
-            if (!(TimeSpan.Parse(conf.AlmocFinal) < TimeSpan.Parse(conf.AlmocInicio)))
+            if (!(TimeSpan.Parse(conf.AlmocFinal) > TimeSpan.Parse(conf.AlmocInicio)))
             {
-                throw new ServicosException("Início do horári de almoço precisar ser menor do que o término");
+                throw new ServicosException("Início do início do horário de almoço precisar ser menor do que o término");
             }
 
             if (conf.BloqAlmoco > 1 || conf.BloqAlmoco < 0)
