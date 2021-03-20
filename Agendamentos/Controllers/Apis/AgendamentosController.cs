@@ -40,6 +40,36 @@ namespace Agendamentos.Controllers.Apis
             return Ok(agendamento);
         }
 
+        [HttpGet]
+        [Route("configuracoes")]
+        public IActionResult ObterConfiguracoes()
+        {
+            var serv = this.CriarServicos();
+
+            var ret = serv.AgendamentosServico.ObterConfiguracoes();
+
+            if(ret == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(ret);
+        }
+
+        [HttpPost]
+        [Route("configuracoes")]
+        public IActionResult SalvarConfiguracoes(AgendamentosConfiguracoesDTO request)
+        {
+            var serv = this.CriarServicos();
+
+            if (serv.AgendamentosServico.SalvarConfiguracoes(request))
+            {
+                return Ok();
+            }
+
+            return BadRequest("Não foi possível salvar as configurações");
+        }
+
         /// <summary>
         /// Salva um agendamento completo
         /// </summary>

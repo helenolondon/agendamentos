@@ -43,6 +43,21 @@ namespace Agendamentos.Servicos
             return lista;
         }
 
+        public AgendamentosConfiguracoesDTO ObterConfiguracoes()
+        {
+            var conf = this.repositorio.AgendamentosRepositorio.ObterConfiguracoes();
+
+            if(conf != null)
+            {
+                var dto = new AgendamentosConfiguracoesDTO();
+                dto.LoadFromConfiguracoes(conf);
+
+                return dto;
+            }
+
+            return null;
+        }
+
         public bool RemoverAgendamento(int codAgendamentoItem)
         {
             return this.repositorio.AgendamentosRepositorio.RemoverAgendamento(codAgendamentoItem);
@@ -75,6 +90,71 @@ namespace Agendamentos.Servicos
         public int SalvarAgendamentoItem(AgendamentoItemDTO agendamento)
         {
             return this.repositorio.AgendamentosRepositorio.SalvarAgendamento(agendamento.ToAgendamento());
+        }
+
+        private void ValidaConfigurações(AgendamentosConfiguracoesDTO conf)
+        {
+            if (!(TimeSpan.Parse(conf.FuncFinal) < TimeSpan.Parse(conf.FuncInicio)))
+            {
+                throw new ServicosException("Início do horári de funcionamento precisar ser menor do que o término");
+            }
+            
+            if (!(TimeSpan.Parse(conf.AlmocFinal) < TimeSpan.Parse(conf.AlmocInicio)))
+            {
+                throw new ServicosException("Início do horári de almoço precisar ser menor do que o término");
+            }
+
+            if (conf.BloqAlmoco > 1 || conf.BloqAlmoco < 0)
+            {
+                throw new ServicosException("O Valor do campo de bloqueio de almoço é inválido");
+            }
+
+            if (conf.DispSegunda > 1 || conf.DispSegunda < 0)
+            {
+                throw new ServicosException("O Valor do campo de disponível segunda é inválido");
+            }
+            
+            if (conf.DispTerca > 1 || conf.DispTerca < 0)
+            {
+                throw new ServicosException("O Valor do campo de disponível terça é inválido");
+            }
+            
+            if (conf.DispQuarta> 1 || conf.DispQuarta < 0)
+            {
+                throw new ServicosException("O Valor do campo de disponível quarta é inválido");
+            }
+            
+            if (conf.DispQuinta > 1 || conf.DispQuinta < 0)
+            {
+                throw new ServicosException("O Valor do campo de disponível quinta é inválido");
+            }
+            
+            if (conf.DispSexta > 1 || conf.DispSexta < 0)
+            {
+                throw new ServicosException("O Valor do campo de disponível sexta é inválido");
+            }
+            
+            if (conf.DispSabado > 1 || conf.DispSabado < 0)
+            {
+                throw new ServicosException("O Valor do campo de disponível sábado é inválido");
+            }
+            
+            if (conf.DispDomingo > 1 || conf.DispDomingo < 0)
+            {
+                throw new ServicosException("O Valor do campo de disponível domingo é inválido");
+            }
+        }
+
+        public bool SalvarConfiguracoes(AgendamentosConfiguracoesDTO conf)
+        {
+            if(conf == null)
+            {
+                throw new ServicosException("Configurações não podem estar vazias");
+            }
+
+            ValidaConfigurações(conf);
+
+            return this.repositorio.AgendamentosRepositorio.SalvarConfiguracoes(conf.ToConfiguracoes()) > 0;
         }
 
         private void ValidaAgendamento(AgendamentoItemDTO agendamentoItem)

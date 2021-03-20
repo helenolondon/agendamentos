@@ -229,5 +229,37 @@ namespace Agendamentos.Infra.Repositorios
 
             return agendamento.Cd_Agendamento;
         }
+
+        public AgendamentosConfiguracoes ObterConfiguracoes()
+        {
+            return this.dbContext.Configuracoes
+                .Where(cf => cf.CodConfiguracao == 1)
+                .FirstOrDefault();
+        }
+
+        public int SalvarConfiguracoes(AgendamentosConfiguracoes configuracoes)
+        {
+            var conf = this.ObterConfiguracoes();
+
+            conf.Tim_FuncInicio = configuracoes.Tim_FuncInicio;
+            conf.Tim_FuncFinal = configuracoes.Tim_FuncFinal;
+
+            conf.Tim_AlmocInicio = configuracoes.Tim_AlmocInicio;
+            conf.Tim_AlmocFinal = configuracoes.Tim_AlmocFinal;
+
+            conf.Num_BloqAlmoco = configuracoes.Num_BloqAlmoco;
+
+            conf.Num_DispSegunda = configuracoes.Num_DispSegunda;
+            conf.Num_DispTerca = configuracoes.Num_DispTerca;
+            conf.Num_DispQuarta = configuracoes.Num_DispQuarta;
+            conf.Num_DispQuinta = configuracoes.Num_DispQuinta;
+            conf.Num_DispSexta = configuracoes.Num_DispSexta;
+            conf.Num_DispSabado = configuracoes.Num_DispSabado;
+            conf.Num_DispDomingo = configuracoes.Num_DispDomingo;
+
+            dbContext.SaveChanges();
+
+            return this.ObterConfiguracoes().CodConfiguracao;
+        }
     }
 }

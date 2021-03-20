@@ -7,6 +7,8 @@ namespace Agendamentos.Infra.Repositorios
 {
     public interface IAgendamentosRepositorio
     {
+        AgendamentosConfiguracoes ObterConfiguracoes();
+        int SalvarConfiguracoes(AgendamentosConfiguracoes configuracoes);
         List<AgendamentoItem> ListarAgendamentos(DateTime dataInicial, DateTime dataFinal, int codProfissional);
         Agendamento ConsultarAgendamento(int codAgendamento);
         List<AgendamentoItem> ListarAgendamentosItens(int? codProfissional, DateTime? dataInicial, DateTime? dataFinal);
