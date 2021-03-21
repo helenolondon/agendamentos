@@ -160,6 +160,7 @@ namespace Agendamentos.Servicos
         private void ValidaAgendamento(AgendamentoItemDTO agendamentoItem)
         {
             var valido = true;
+            var conf = this.ObterConfiguracoes();
             List<AgendamentoItem> hist;
 
             var agOld = this.repositorio.AgendamentosRepositorio
@@ -168,6 +169,38 @@ namespace Agendamentos.Servicos
             if(agOld != null && agOld.Cd_Status == 3)
             {
                 throw new ServicosException("Não é permitido alterar um agendamento Realizado");
+            }
+
+            var conflitaAlmoco = false;
+            var foraDeHorario = false;
+
+            var inicioAlmoco = agendamentoItem.Inicio.Date + TimeSpan.Parse(conf.AlmocInicio);
+            var fimAlmoco = agendamentoItem.Inicio.Date + TimeSpan.Parse(conf.AlmocFinal);
+            
+            var inicioExpediente = agendamentoItem.Inicio.Date + TimeSpan.Parse(conf.FuncInicio);
+            var fimExpediente = agendamentoItem.Inicio.Date + TimeSpan.Parse(conf.FuncFinal);
+
+            if (conf != null)
+            {
+                foraDeHorario = agendamentoItem.Inicio < inicioExpediente;
+                foraDeHorario = foraDeHorario || agendamentoItem.Termino > fimExpediente;
+                
+                if(conf.BloqAlmoco == 1)
+                {
+                    conflitaAlmoco = inicioAlmoco >= agendamentoItem.Inicio && inicioAlmoco < agendamentoItem.Termino;
+                    conflitaAlmoco = conflitaAlmoco || (fimAlmoco > agendamentoItem.Inicio && fimAlmoco <= agendamentoItem.Termino);
+                    conflitaAlmoco = conflitaAlmoco || (inicioAlmoco < agendamentoItem.Inicio && fimAlmoco > agendamentoItem.Termino);
+                }
+            }
+
+            if (foraDeHorario)
+            {
+                throw new ServicosException("Agendamento fora do horário permitido");
+            }
+            
+            if (conflitaAlmoco)
+            {
+                throw new ServicosException("Não é permitido agendar durante o horário de almoço");
             }
 
             if (agendamentoItem.CodAgendamentoItem == 0)

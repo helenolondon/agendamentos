@@ -258,6 +258,8 @@
             slotDuration: '00:15:00',
             slotLabelInterval: '00:30',
             scrollTime: '08:00:00',
+            height: 'auto',
+            allDaySlot: false,
             editable: false,
             hiddenDays: diasDisp,
             slotMinTime: configuracoes.funcInicio,
