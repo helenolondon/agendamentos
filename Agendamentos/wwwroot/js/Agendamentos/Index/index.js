@@ -5,6 +5,7 @@
     var form;
     var calendarEl = document.getElementById('calendar');
     var calendar = null;
+    var configuracoes = {};
 
     // Inicializa a agenda
     init();
@@ -183,6 +184,8 @@
 
         // Carrega filtros de Profissionais
         await carregaFiltrosProfissionais();
+        await carregaConfiguracoes();
+
         // Inicializa o calendário
         calendar = inicializaCalendario();
         calendar.render();
@@ -235,6 +238,18 @@
 
     // Configura e retorna objeto calendário inicializado
     function inicializaCalendario() {
+        let diasDisp = retDiasAgenda();
+
+        if (diasDisp.length == 7) {
+            Swal.fire(
+                '',
+                'A agenda está desabilitada',
+                'info'
+            );
+
+            return;
+        }
+
         return new FullCalendar.Calendar(calendarEl, {
             initialView: 'timeGridWeek',
             timeZone: 'America/Sao_Paulo',
@@ -244,9 +259,20 @@
             slotLabelInterval: '00:30',
             scrollTime: '08:00:00',
             editable: false,
-            //hiddenDays: [1, 3, 5],
-            slotMinTime: "08:00",
-            slotMaxTime: "18:00",
+            hiddenDays: diasDisp,
+            slotMinTime: configuracoes.funcInicio,
+            slotMaxTime: configuracoes.funcFinal,
+            slotLaneClassNames: function (args) {
+                let dataSlot = "1900-01-01T" + moment(args.date).utc().format("HH:mm");
+                let inicioAlmoco = "1900-01-01T" + configuracoes.almocInicio;
+                let finalAlmoco = "1900-01-01T" + configuracoes.almocFinal;
+
+                if (moment(dataSlot).isSameOrAfter(inicioAlmoco) &&
+                    moment(dataSlot).isBefore(finalAlmoco)) {
+
+                    return "hora-almoco";
+                }
+            },
             events: {
                 url: '/agendamentos/api/agendamentos',
                 extraParams: function () {
@@ -523,12 +549,12 @@
     }
 
     // Carrega profissionais nas tabs de filtro
-    function carregaFiltrosProfissionais() {
+    async function carregaFiltrosProfissionais() {
         let codAtivo = $(".nav-link.active").attr("data-func-id");
 
         $("#func-tabs").find(".nav-p-filtro").remove();
 
-        $.get("agendamentos/api/profissionais")
+        await $.get("agendamentos/api/profissionais")
             .then(function (data) {
                 data.forEach(function (item, index, array) {
                     $("#func-tabs").append(`
@@ -631,5 +657,47 @@
     </div>
 </div>
     `;
+    }
+
+    // Carrega as configurações da agenda definidas pelo usuário
+    async function carregaConfiguracoes() {
+        await $.get("agendamentos/api/agendamentos/configuracoes", null, function (data) {
+            configuracoes = data;
+        }).fail(function () {
+            Swal.fire(
+                '',
+                'Não foi possível carregar as configurações da agenda',
+                'error'
+            );
+        });
+    }
+
+    // Retorna os dias em qua a agenda está disponível
+    function retDiasAgenda() {
+        let dias = [];
+
+        if (configuracoes.dispDomingo == 0) {
+            dias.push(0);
+        }
+        if (configuracoes.dispSegunda == 0) {
+            dias.push(1);
+        }
+        if (configuracoes.dispTerca == 0) {
+            dias.push(2);
+        }
+        if (configuracoes.dispQuarta == 0) {
+            dias.push(3);
+        }
+        if (configuracoes.dispQuinta == 0) {
+            dias.push(4);
+        }
+        if (configuracoes.dispSexta == 0) {
+            dias.push(5);
+        }
+        if (configuracoes.dispSabado == 0) {
+            dias.push(6);
+        }
+
+        return dias;
     }
 });

@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
     $.ajaxSetup({ contentType: "application/json; charset=utf-8" });
 
-    let url = "agendamentos/api/agendamentos/configuracoes";
+    let url = "/agendamentos/api/agendamentos/configuracoes";
 
     // Carrega configuracoes
     init();
