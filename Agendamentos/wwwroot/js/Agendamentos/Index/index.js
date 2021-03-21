@@ -1,119 +1,345 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
+    // Configura requisições http
     $.ajaxSetup({ contentType: "application/json; charset=utf-8" });
 
     var form;
-
-    CarregaFiltrosProfissionais();
-
     var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'timeGridWeek',
-        timeZone: 'America/Sao_Paulo',
-        locale: 'pt-br',
-        weekends: true,
-        slotDuration: '00:15:00',
-        slotLabelInterval: '00:30',
-        scrollTime: '08:00:00',
-        editable: false,
-        //hiddenDays: [1, 3, 5],
-        slotMinTime: "08:00",
-        slotMaxTime: "18:00",
-        events: {
-            url: '/agendamentos/api/agendamentos',
-            extraParams: function () {
-                return {
-                    'codProfissional': $(".nav-link.active").attr("data-func-id")
+    var calendar = null;
+
+    // Inicializa a agenda
+    init();
+
+    /**
+    * Eventos da aplicação
+    * */
+
+    // Evento que ocorre quando a tela do caixa é finalizado
+    function onCaixaClosed() {
+        onSchedulerRefreshNeeded();
+    }
+
+    // Evento que ocorre quando o usuário clica em adicionar agendamento
+    function onNovoAgendamento() {
+        clearAgendamentoForm();
+        addProcedimentoItem();
+
+        $("#txt-data")[0].valueAsDate = new Date();
+        $("input, select, textarea").attr("disabled", false);
+        $("#btn-salvar").attr("disabled", false);
+    }
+
+    // Ocorre quando o usuário remove um agendamento
+    function onRemoverAgendamento(codAgendamentoItem) {
+
+        var md = $("#md-confirma");
+        md.find(".modal-body").html("<span>Confirma a exclusão do procedimento?</span>");
+        md.draggable();
+        md.find("#btn-sim").off('click');
+        md.find("#btn-sim").on('click', () => {
+            var q = $.ajax({
+                url: 'agendamentos/api/agendamentos/remover?codAgendamentoItem=' + codAgendamentoItem,
+                type: 'DELETE',
+                success: function (result) {
+                    onSchedulerRefreshNeeded()
                 }
-            }
-        },
-        slotLabelFormat: {
-            hour: 'numeric',
-            minute: '2-digit',
-            omitZeroMinute: false,
-            meridiem: 'short'
-        },
-        customButtons: {
-            novoAgendamento: {
-                text: 'Agendar',
-                click: addAgenmento
-            },
-            caixa: {
-                text: 'Caixa',
-                click: abreCaixa
-            }
-        },
-        headerToolbar: {
-            left: 'prev,next,today',
-            center: 'title',
-            right: 'novoAgendamento,caixa,dayGridDay,timeGridWeek,dayGridMonth'
-        },
-        eventContent: function (arg) {
+            });
 
-            if (arg.view.type == 'timeGridWeek') {
+            $.when([q]).then(() => {
+                md.modal('hide');
+            })
+        })
 
-                let span = document.createElement("span");
-                span.innerHTML = "X";
-                span.style = "float: right; margin-right: 6px; font-size: 10px"
-                span.onclick = ((ev, e) => {
-                    onRemoverAgendamento(arg.event.extendedProps.codAgendamentoItem);
+        md.modal();
+    }
+
+    // Ocorre quando o usuário salva um agendamento
+    function onAgendamentoSalvar() {
+
+        let codAgendamento = parseInt($("#cod-agendamento").val());
+        let data = $("#txt-data").val();
+        let codStatus = parseInt($("#sel-status").val());
+        let codCliente = parseInt($("#sel-cliente").val());
+
+        if (Number.isNaN(codAgendamento)) {
+            codAgendamento = 0;
+        }
+
+        let request = {
+            "CodAgendamento": codAgendamento,
+            "Data": data,
+            "CodStatus": codStatus,
+            "CodCliente": codCliente,
+
+            "Itens": retAgendamentoItens(codAgendamento, codCliente)
+        }
+
+        mostrarSalvando();
+
+        return $.post("agendamentos/api/agendamentos/salvar", JSON.stringify(request), function () {
+            clearAgendamentoForm();
+            onSchedulerRefreshNeeded();
+        }).fail((resp) => {
+            if (resp.responseJSON) {
+                setValidacaoRemota(null);
+
+                $.each(resp.responseJSON, (index, item) => {
+                    setValidacaoRemota(item);
+                })
+            }
+        }).always(() => {
+            mostrarSalvo();
+        })
+
+        function mostrarSalvando() {
+            $("#btn-salvar")
+                .attr('disabled', true)
+                .html('Salvando');
+
+            $("#btn-cancelar").attr('disabled', true);
+        };
+
+        function mostrarSalvo() {
+            $("#btn-salvar")
+                .attr('disabled', false)
+                .html('Salvo');
+
+            $("#btn-cancelar").attr('disabled', false);
+        }
+    }
+
+    // Ocorre quando os dados da agenda precisam ser atualizados na tela
+    function onSchedulerRefreshNeeded() {
+        calendar.refetchEvents();
+    }
+
+    // Ocorre quando o usuário edita um agendamento
+    function onEditarAgendamento(e) {
+
+        var pop = $('#md-editar-agendamento');
+        var agendamento = consultarAgendamento(e.codAgendamento)
+            .then((data) => {
+                agendamento = data
+            });
+
+        setPopAgendamentoTitle("Editar Agendamento");
+        clearAgendamentoForm();
+
+        $.when(agendamento, loadClientes(), loadServicos())
+            .then(() => {
+
+                let realizado = statusEREalizado(e.codStatus)
+
+                // Cabeçalho
+                $("#cod-agendamento").val(e.codAgendamento);
+                $("#sel-cliente").val(e.codCliente);
+                $("#txt-data")[0].valueAsDate = new Date(e.dataAgendamento);
+                $("#sel-status").val(e.codStatus);
+
+                $.each(agendamento.itens, (index, item) => {
+
+                    addProcedimentoItem()
+                        .then((novoItem) => {
+                            $(".procedimento-item[data-id=" + novoItem + "]").attr("data-cod-procedimento", item.codAgendamentoItem);
+
+                            $("#sel-servico-" + novoItem).val(item.codServico);
+
+                            $("#txt-ag-inicio-" + novoItem).val(item.horaInicio);
+                            $("#txt-ag-termino-" + novoItem).val(item.horaTermino);
+                            $("#txa-observacoes-" + novoItem).val(item.observacao);
+
+                            loadProfissionais(novoItem)
+                                .then(() => {
+                                    $("#sel-profissional-" + novoItem).val(item.codProfissional);
+                                });
+
+                            pop.draggable();
+                            pop.modal();
+                        })
                 });
 
-                let ElStatus = document.createElement('p')
-                ElStatus.style = "font-size: 11px; margin: 10px 2px 2px;"
+                // Se o status for realizado, só é permitido consultar
+                $("input, select, textarea").attr("disabled", realizado);
+                $("#btn-salvar").attr("disabled", realizado);
 
-                if (arg.event.extendedProps.pago == "S") {
-                    ElStatus.innerHTML = "Status: " + arg.event.extendedProps.status + " (Pago)";
+                // Não é permitido alterar o cliente
+                $("#sel-cliente").attr("disabled", true);
+
+                $(".collapse.show").each((index, el) => {
+                    if (index == 0) {
+                        $(el).collapse('show')
+                    } else {
+                        $(el).collapse('hide');
+                    }
+                });
+            });
+    }
+
+    /**
+     * Funções utilizadas pelo calendário
+     * */
+
+    // Executa inicializações
+    async function init() {
+
+        // Carrega filtros de Profissionais
+        await carregaFiltrosProfissionais();
+        // Inicializa o calendário
+        calendar = inicializaCalendario();
+        calendar.render();
+
+        // Mostra a área emm volta do horári atual;
+        calendar.scrollToTime(moment(new Date().getTime()).format("H:mm"));
+
+        form = $("form").submit(function (event) {
+            event.preventDefault();
+
+            if (!$("form")[0].checkValidity()) {
+
+                form[0].classList.add('was-validated');
+                event.stopPropagation();
+
+                return;
+            }
+
+            onAgendamentoSalvar()
+                .then(() => {
+                    $('#md-editar-agendamento').modal("hide");
+                })
+        });
+
+        $("#btn-salvar").on("click", () => {
+            form.submit();
+        })
+
+        $("#btn-cancelar").on('click', () => {
+            form[0].reset();
+        })
+
+        $("#btn-novo-procedimento").click(() => {
+            collapseProcedimentos();
+            addProcedimentoItem();
+        })
+
+        $("#txt-data").on('change', function () {
+            $(".procedimento-item")
+                .find("input[type='time']")
+                .first()
+                .trigger('change');
+        })
+
+        // Evento ocorre quando o filtro de funcionários muda.
+        $("#func-tabs").on("shown.bs.tab", function (event) {
+            onSchedulerRefreshNeeded();
+        })
+    }
+
+    // Configura e retorna objeto calendário inicializado
+    function inicializaCalendario() {
+        return new FullCalendar.Calendar(calendarEl, {
+            initialView: 'timeGridWeek',
+            timeZone: 'America/Sao_Paulo',
+            locale: 'pt-br',
+            weekends: true,
+            slotDuration: '00:15:00',
+            slotLabelInterval: '00:30',
+            scrollTime: '08:00:00',
+            editable: false,
+            //hiddenDays: [1, 3, 5],
+            slotMinTime: "08:00",
+            slotMaxTime: "18:00",
+            events: {
+                url: '/agendamentos/api/agendamentos',
+                extraParams: function () {
+                    return {
+                        'codProfissional': $(".nav-link.active").attr("data-func-id")
+                    }
                 }
-                else {
-                    ElStatus.innerHTML = "Status: " + arg.event.extendedProps.status;
+            },
+            slotLabelFormat: {
+                hour: 'numeric',
+                minute: '2-digit',
+                omitZeroMinute: false,
+                meridiem: 'short'
+            },
+            customButtons: {
+                novoAgendamento: {
+                    text: 'Agendar',
+                    click: addAgenmento
+                },
+                caixa: {
+                    text: 'Caixa',
+                    click: abreCaixa
                 }
+            },
+            headerToolbar: {
+                left: 'prev,next,today',
+                center: 'title',
+                right: 'novoAgendamento,caixa,dayGridDay,timeGridWeek,dayGridMonth'
+            },
+            eventContent: function (arg) {
 
-                let ElHorario = document.createElement('p')
+                if (arg.view.type == 'timeGridWeek') {
 
-                ElHorario.innerHTML = "Horário: " + arg.event.extendedProps.horarioLabel;
-                ElHorario.style = "margin: 0px 2px 2px; font-size: 11px;"
+                    let span = document.createElement("span");
+                    span.innerHTML = "X";
+                    span.style = "float: right; margin-right: 6px; font-size: 10px"
+                    span.onclick = ((ev, e) => {
+                        onRemoverAgendamento(arg.event.extendedProps.codAgendamentoItem);
+                    });
 
-                let ElCliente = document.createElement('p')
+                    let ElStatus = document.createElement('p')
+                    ElStatus.style = "font-size: 11px; margin: 10px 2px 2px;"
 
-                ElCliente.innerHTML = "Cliente: " + arg.event.extendedProps.nomeCliente;
-                ElCliente.style = "margin: 0px 2px 2px; font-size: 11px;"
+                    if (arg.event.extendedProps.pago == "S") {
+                        ElStatus.innerHTML = "Status: " + arg.event.extendedProps.status + " (Pago)";
+                    }
+                    else {
+                        ElStatus.innerHTML = "Status: " + arg.event.extendedProps.status;
+                    }
 
-                let ElProfissional = document.createElement('p')
-                ElProfissional.style = "font-size: 11px; margin: 0px 2px 2px;"
+                    let ElHorario = document.createElement('p')
 
-                ElProfissional.innerHTML = "Profissional: " + arg.event.extendedProps.nomeProfissional;
+                    ElHorario.innerHTML = "Horário: " + arg.event.extendedProps.horarioLabel;
+                    ElHorario.style = "margin: 0px 2px 2px; font-size: 11px;"
 
-                let ElServico = document.createElement('p')
-                ElServico.style = "font-size: 11px; margin: 0px 2px 2px;"
+                    let ElCliente = document.createElement('p')
 
-                ElServico.innerHTML = "Procedimento: " + arg.event.extendedProps.servico;
+                    ElCliente.innerHTML = "Cliente: " + arg.event.extendedProps.nomeCliente;
+                    ElCliente.style = "margin: 0px 2px 2px; font-size: 11px;"
 
-                let arrayOfDomNodes = [span, ElStatus, ElHorario, ElCliente, ElProfissional, ElServico]
-                return { domNodes: arrayOfDomNodes }
+                    let ElProfissional = document.createElement('p')
+                    ElProfissional.style = "font-size: 11px; margin: 0px 2px 2px;"
+
+                    ElProfissional.innerHTML = "Profissional: " + arg.event.extendedProps.nomeProfissional;
+
+                    let ElServico = document.createElement('p')
+                    ElServico.style = "font-size: 11px; margin: 0px 2px 2px;"
+
+                    ElServico.innerHTML = "Procedimento: " + arg.event.extendedProps.servico;
+
+                    let arrayOfDomNodes = [span, ElStatus, ElHorario, ElCliente, ElProfissional, ElServico]
+                    return { domNodes: arrayOfDomNodes }
+                }
+                else if (arg.view.type == 'dayGridMonth') {
+
+                    let ElAgendado = document.createElement('p')
+
+                    ElAgendado.innerHTML = arg.event.extendedProps.horarioLabel.substring(0, 5) + "-" + arg.event.extendedProps.nomeCliente;;
+                    ElAgendado.style = "margin: 0px 2px 2px; font-size: 09px; overflow: hidden;"
+
+                    let arrayOfDomNodes = [ElAgendado]
+                    return { domNodes: arrayOfDomNodes }
+                }
+            },
+            eventClick: function (e) {
+                if (e.jsEvent.layerY > 10) {
+                    onEditarAgendamento(e.event.extendedProps);
+                }
             }
-            else if (arg.view.type == 'dayGridMonth') {
+        });
+    }
 
-                let ElAgendado = document.createElement('p')
-
-                ElAgendado.innerHTML = arg.event.extendedProps.horarioLabel.substring(0,5) + "-" + arg.event.extendedProps.nomeCliente;;
-                ElAgendado.style = "margin: 0px 2px 2px; font-size: 09px; overflow: hidden;"
-
-                let arrayOfDomNodes = [ElAgendado]
-                return { domNodes: arrayOfDomNodes }
-            }
-        },
-        eventClick: function (e) {
-            if (e.jsEvent.layerY > 10) {
-                onEditarAgendamento(e.event.extendedProps);
-            }
-        }
-    });
-
-    calendar.render();
-
-    // Mostra a área emm volta do horári atual;
-    calendar.scrollToTime(moment(new Date().getTime()).format("H:mm"));
-
+    // Adicion a um novo agendamento
     function addAgenmento() {
         var pop = $('#md-editar-agendamento');
 
@@ -127,6 +353,7 @@
         }
     }
 
+    // Abre a tela do caixa
     function abreCaixa() {
         let mdCx = $("#md-caixa");
 
@@ -137,71 +364,18 @@
         caixa();
     }
 
-    function onCaixaClosed() {
-        onSchedulerRefreshNeeded();
-    }
-
+    // Altera o título do modal de editar agendamento
     function setPopAgendamentoTitle(titulo) {
         $("#md-editar-agendamento")
             .find(".modal-title")
             .html(titulo);
     }
 
-    function onNovoAgendamento() {
-        clearAgendamentoForm();
-        addProcedimentoItem();
-
-        $("#txt-data")[0].valueAsDate = new Date();
-        $("input, select, textarea").attr("disabled", false);
-        $("#btn-salvar").attr("disabled", false);
-    }
-
-    form = $("form").submit(function (event) {
-        event.preventDefault();
-
-        if (!$("form")[0].checkValidity()) {
-
-            form[0].classList.add('was-validated');
-            event.stopPropagation();
-
-            return;
-        }
-
-        onAgendamentoSalvar()
-            .then(() => {
-                $('#md-editar-agendamento').modal("hide");
-            })
-    });
-
-    $("#btn-salvar").on("click", () => {
-        form.submit();
-    })
-
-    $("#btn-cancelar").on('click', () => {
-        form[0].reset();
-    })
-
-    $("#btn-novo-procedimento").click(() => {
-        collapseProcedimentos();
-        addProcedimentoItem();
-    })
-
     function collapseProcedimentos() {
         $(".collapse").collapse('hide');
     }
 
-    $("#txt-data").on('change', function () {
-        $(".procedimento-item")
-            .find("input[type='time']")
-            .first()
-            .trigger('change');
-    })
-
-    // Evento ocorro quando o filtro de funcionários muda.
-    $("#func-tabs").on("shown.bs.tab", function (event) {
-        onSchedulerRefreshNeeded();
-    })
-        
+    // Adiciona item de agendamento
     function addProcedimentoItem() {
         const procedimentoTemplate = ({ id, codProcedimentoItem }) => retProcedimentoTemplate(id, codProcedimentoItem);
 
@@ -245,7 +419,7 @@
                 botoesRemoverDisableEnable();
 
                 return $.Deferred().resolve(novaId);
-            });        
+            });
     }
 
     function botoesRemoverDisableEnable() {
@@ -257,83 +431,20 @@
         }
     }
 
-    function onRemoverAgendamento(codAgendamentoItem) {
+    // Limpa formulário de agendamento
+    function clearAgendamentoForm() {
+        $("#cod-agendamento").val(0);
+        $("#txt-data").val(null);
+        $("#sel-cliente").val(null);
+        $("#sel-status").val(1);
 
-        var md = $("#md-confirma");
-        md.find(".modal-body").html("<span>Confirma a exclusão do procedimento?</span>");
-        md.draggable();
-        md.find("#btn-sim").off('click');
-        md.find("#btn-sim").on('click', () => {
-            var q = $.ajax({
-                url: 'agendamentos/api/agendamentos/remover?codAgendamentoItem=' + codAgendamentoItem,
-                type: 'DELETE',
-                success: function (result) {
-                    onSchedulerRefreshNeeded()
-                }
-            });
+        $(".procedimento-item").remove();
+        setValidacaoRemota(null);
 
-            $.when([q]).then(() => {
-                md.modal('hide');
-            })
-        })
-
-        md.modal();
+        $("form").removeClass("was-validated");
     }
 
-    function onAgendamentoSalvar() {
-
-        let codAgendamento = parseInt($("#cod-agendamento").val());
-        let data = $("#txt-data").val();
-        let codStatus = parseInt($("#sel-status").val());
-        let codCliente = parseInt($("#sel-cliente").val());
-
-        if (Number.isNaN(codAgendamento)) {
-            codAgendamento = 0;
-        }
-
-        let request = {
-            "CodAgendamento": codAgendamento,
-            "Data": data,
-            "CodStatus": codStatus,
-            "CodCliente": codCliente,
-
-            "Itens": retAgendamentoItens(codAgendamento, codCliente)
-        }
-
-        mostrarSalvando();
-
-        return $.post("agendamentos/api/agendamentos/salvar", JSON.stringify(request), function () {
-            clearAgendamentoForm();            
-            onSchedulerRefreshNeeded();
-        }).fail((resp) => {
-            if (resp.responseJSON) {
-                setValidacaoRemota(null);
-
-                $.each(resp.responseJSON, (index, item) => {
-                    setValidacaoRemota(item);
-                })
-            }
-        }).always(() => {
-            mostrarSalvo();
-        })
-
-        function mostrarSalvando() {
-            $("#btn-salvar")
-                .attr('disabled', true)
-                .html('Salvando');
-
-            $("#btn-cancelar").attr('disabled', true);
-        };
-
-        function mostrarSalvo() {
-            $("#btn-salvar")
-                .attr('disabled', false)
-                .html('Salvo');
-
-            $("#btn-cancelar").attr('disabled', false);
-        }
-    }
-
+    // Constroi vetor de itens de agendamentos para ser enviado para o servidor
     function retAgendamentoItens(codAgendamento, codCliente) {
         let amat = [];
 
@@ -367,83 +478,6 @@
         return amat;
     }
 
-    function clearAgendamentoForm() {
-        $("#cod-agendamento").val(0);
-        $("#txt-data").val(null);
-        $("#sel-cliente").val(null);
-        $("#sel-status").val(1);
-
-        $(".procedimento-item").remove();
-        setValidacaoRemota(null);
-
-        $("form").removeClass("was-validated");
-    }
-
-    function onSchedulerRefreshNeeded() {
-        calendar.refetchEvents();
-    }
-
-    function onEditarAgendamento(e) {
-
-        var pop = $('#md-editar-agendamento');
-        var agendamento = consultarAgendamento(e.codAgendamento)
-            .then((data) => {
-                agendamento = data
-            });
-
-        setPopAgendamentoTitle("Editar Agendamento");
-        clearAgendamentoForm();
-
-        $.when(agendamento, loadClientes(), loadServicos())
-            .then(() => {
-
-                let realizado = statusEREalizado(e.codStatus)
-
-                // Cabeçalho
-                $("#cod-agendamento").val(e.codAgendamento);
-                $("#sel-cliente").val(e.codCliente);
-                $("#txt-data")[0].valueAsDate = new Date(e.dataAgendamento);
-                $("#sel-status").val(e.codStatus);
-
-                $.each(agendamento.itens, (index, item) => {
-                    
-                    addProcedimentoItem()
-                        .then((novoItem) => {
-                            $(".procedimento-item[data-id=" + novoItem + "]").attr("data-cod-procedimento", item.codAgendamentoItem);
-
-                            $("#sel-servico-" + novoItem).val(item.codServico);
-
-                            $("#txt-ag-inicio-" + novoItem).val(item.horaInicio);
-                            $("#txt-ag-termino-" + novoItem).val(item.horaTermino);
-                            $("#txa-observacoes-" + novoItem).val(item.observacao);
-
-                            loadProfissionais(novoItem)
-                                .then(() => {
-                                    $("#sel-profissional-" + novoItem).val(item.codProfissional);
-                                });
-
-                            pop.draggable();
-                            pop.modal();
-                        })
-                });
-
-                // Se o status for realizado, só é permitido consultar
-                $("input, select, textarea").attr("disabled", realizado);
-                $("#btn-salvar").attr("disabled", realizado);
-
-                // Não é permitido alterar o cliente
-                $("#sel-cliente").attr("disabled", true);
-
-                $(".collapse.show").each((index, el) => {
-                    if (index == 0) {
-                        $(el).collapse('show')
-                    } else {
-                        $(el).collapse('hide');
-                    }
-                });
-            });
-    }
-
     // Verifica se o status do agendamento é "Realizado"
     function statusEREalizado(status) {
         return status == 3;
@@ -454,7 +488,7 @@
     }
 
     // Carrega os profiossionais disponíveispara o agendamento
-    function loadProfissionais(id){
+    function loadProfissionais(id) {
 
         if (Number.isNaN(id) || id == null) {
             return;
@@ -489,7 +523,7 @@
     }
 
     // Carrega profissionais nas tabs de filtro
-    function CarregaFiltrosProfissionais() {
+    function carregaFiltrosProfissionais() {
         let codAtivo = $(".nav-link.active").attr("data-func-id");
 
         $("#func-tabs").find(".nav-p-filtro").remove();
@@ -549,6 +583,7 @@
         $("#salvar-erros").append("<p>" + erro + "</p>")
     }
 
+    // Retorna string de template de novo agendamento
     function retProcedimentoTemplate(id, codProcedimentoItem) {
         return `
 <div class="procedimento-item border-top-10" data-id=${id} data-cod-procedimento=${codProcedimentoItem}>
