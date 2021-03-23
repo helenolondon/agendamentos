@@ -18,6 +18,7 @@ namespace Agendamentos.Infra.EF
         public DbSet<Agendamento> Agendamentos { get; set; }
         public DbSet<PessoasCategorias> Categorias { get; set; }
         public DbSet<AgendamentosConfiguracoes> Configuracoes { get; set; }
+        public DbSet<Compromisso> Compromissos { get; set; }
 
         public AgendamentosDbContext(string connectionString)
         {

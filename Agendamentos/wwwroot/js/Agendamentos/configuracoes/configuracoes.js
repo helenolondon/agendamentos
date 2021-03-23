@@ -2,6 +2,7 @@
     $.ajaxSetup({ contentType: "application/json; charset=utf-8" });
 
     let url = "/agendamentos/api/agendamentos/configuracoes";
+    let urlCompromissos = "/agendamentos/agendamentos/compromissos";
 
     // Carrega configuracoes
     init();
@@ -67,7 +68,8 @@
     // Inicializa a página
     function init() {
         loadConfiguracoes();
-        addHandlers();
+        loadCompromissos();
+        addHandlers();        
     }
 
     // Conecta eventos dos objetos da página
@@ -90,6 +92,19 @@
                 'error'
             );
         })
+    }
+
+    // Carrega o conteúdo da tab de compromissos
+    function loadCompromissos() {
+        $("#compromissos")
+            .load(urlCompromissos)
+            .ajaxError(function () {
+                Swal.fire(
+                    '',
+                    'Ocorreu uma falha ao carregar os compromissos',
+                    'error'
+                );
+            });
     }
 
     // Limpa os dados do formulário
