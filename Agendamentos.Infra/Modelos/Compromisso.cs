@@ -10,7 +10,7 @@ namespace Agendamentos.Infra.Modelos
     public class Compromisso
     {
         [Key]
-        public int CodCompromisso { get; set; }
+        public int Cd_Compromisso { get; set; }
         [Required]
         public string Descricao { get; set; }
         [Required]
@@ -21,5 +21,7 @@ namespace Agendamentos.Infra.Modelos
         public int Cd_Tipo { get; set; }
         [Required]
         public int Cd_Pessoa { get; set; }
+        [ForeignKey("Cd_Pessoa")]
+        public Pessoa Pessoa { get; set; }
     }
 }

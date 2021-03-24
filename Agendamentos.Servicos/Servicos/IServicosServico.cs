@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Agendamentos.Servicos
+namespace Agendamentos.ServicosNM
 {
     public interface IServicosServico
     {

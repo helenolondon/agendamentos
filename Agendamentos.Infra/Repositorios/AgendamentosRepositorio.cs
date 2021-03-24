@@ -163,9 +163,8 @@ namespace Agendamentos.Infra.Repositorios
                             Cd_Profissional = e.Cd_Profissional,
                             Num_ValorServico = e.Num_ValorServico,
                             Num_Comissao = e.Num_Comissao,
-                            Txt_Observacao = e.Txt_Observacao
-                            
-                    };
+                            Txt_Observacao = e.Txt_Observacao                            
+                        };
                         
                         novo.Cd_AgendamentoItem = this.dbContext.AgendamentoItens.Count() == 0 ? 1 : this.dbContext.AgendamentoItens.Max(a => a.Cd_AgendamentoItem) + 1;
 

@@ -13,6 +13,7 @@ namespace Agendamentos.Infra.Repositorios
         private IPessoasRepositorio pessoasRepositorio;
         private IProcedimentosRepositorio procedimentosRepositorio;
         private IServicosRepositorio servicosRepositorio;
+        private ICompromissosRepositorio compromissosRepositorio;
 
         public Repositorios(IConfiguration configuration)
         {
@@ -66,6 +67,19 @@ namespace Agendamentos.Infra.Repositorios
                 }
 
                 return this.servicosRepositorio;
+            }
+        }
+
+        public ICompromissosRepositorio CompromissosRepositorio
+        {
+            get
+            {
+                if (this.compromissosRepositorio == null)
+                {
+                    this.compromissosRepositorio = new CompromissosRepositorio(this.dbContext);
+                }
+
+                return this.compromissosRepositorio;
             }
         }
     }

@@ -1,9 +1,10 @@
 ﻿using Agendamentos.Infra;
 using Agendamentos.Infra.Repositorios;
+using Agendamentos.Servicos;
 using Microsoft.Extensions.Configuration;
 using System;
 
-namespace Agendamentos.Servicos
+namespace Agendamentos.ServicosNM
 {
     public class Servicos
     {

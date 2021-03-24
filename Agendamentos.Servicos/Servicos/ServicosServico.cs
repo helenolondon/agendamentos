@@ -1,6 +1,7 @@
 ﻿using Agendamentos.Infra;
 using Agendamentos.Servicos.DTO;
 using Agendamentos.Servicos.Listas;
+using Agendamentos.ServicosNM;
 using System;
 using System.Collections.Generic;
 using System.Text;

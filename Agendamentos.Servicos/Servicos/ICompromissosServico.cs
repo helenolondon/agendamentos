@@ -1,0 +1,16 @@
+﻿using Agendamentos.Servicos.DTO;
+using Agendamentos.Servicos.Listas;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace Agendamentos.Servicos
+{
+    public interface ICompromissosServico
+    {
+        CompromissosListaDTO ObterCompromissosPorProfissional(int codProfissional);
+        CompromissoDTO ObterCompromisso(int codCompromisso);
+        void Excluir(int codCompromisso);
+        int Salvar(CompromissoDTO compromisso);
+    }
+}
