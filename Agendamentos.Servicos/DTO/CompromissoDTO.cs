@@ -15,6 +15,7 @@ namespace Agendamentos.Servicos.DTO
         public DateTime Inicio { get; set; }
         public DateTime Termino { get; set; }
         public int CodTipo { get; set; }
+        public string Descricao { get; set; }
         public string Tipo { get { return ObterTipoPessoa(this.CodTipo); } }
         public int CodProfissional { get; set; }
         public string NomeProfissional { get; set; }
@@ -42,6 +43,7 @@ namespace Agendamentos.Servicos.DTO
             this.CodTipo = compromisso.Cd_Tipo;
             this.CodProfissional = compromisso.Cd_Pessoa;
             this.NomeProfissional = compromisso.Pessoa?.Txt_Nome;
+            this.Descricao = compromisso.Descricao;
         }
 
         public Compromisso ToCompromisso()
@@ -54,6 +56,7 @@ namespace Agendamentos.Servicos.DTO
             comp.Dat_Inicio = this.Inicio;
             comp.Dat_Termino = this.Termino;
             comp.Pessoa = null;
+            comp.Descricao = this.Descricao;
 
             return comp;
         }

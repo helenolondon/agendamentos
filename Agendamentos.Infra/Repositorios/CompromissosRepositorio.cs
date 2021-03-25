@@ -1,6 +1,7 @@
 ﻿using Agendamentos.Infra.EF;
 using Agendamentos.Infra.Erros;
 using Agendamentos.Infra.Modelos;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,13 +32,18 @@ namespace Agendamentos.Infra.Repositorios
 
         public Compromisso ObterCompromisso(int codCompromisso)
         {
-            return this.dbContext.Compromissos.Find(codCompromisso);
+            return this.dbContext
+                .Compromissos
+                .Where(c => c.Cd_Compromisso == codCompromisso)
+                .Include(c => c.Pessoa)
+                .FirstOrDefault();
         }
 
         public List<Compromisso> ObterCompromissosPorProfissional(int codProfissional)
         {
             var comps = this.dbContext
                 .Compromissos
+                .Include(c => c.Pessoa)
                 .Where(comp => comp.Cd_Pessoa == codProfissional)
                 .ToList();
 

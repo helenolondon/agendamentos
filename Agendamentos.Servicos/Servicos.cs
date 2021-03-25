@@ -1,6 +1,7 @@
 ﻿using Agendamentos.Infra;
 using Agendamentos.Infra.Repositorios;
 using Agendamentos.Servicos;
+using Agendamentos.Servicos.Servicos;
 using Microsoft.Extensions.Configuration;
 using System;
 
@@ -14,6 +15,7 @@ namespace Agendamentos.ServicosNM
         private IPessoaServico pessoaServico;
         private IProcedimentoServico procedimentoServico;
         private IServicosServico servicosServico;
+        private ICompromissosServico compromissosServico;
 
         public Servicos(IConfiguration configuration)
         {
@@ -75,6 +77,21 @@ namespace Agendamentos.ServicosNM
                 this.servicosServico = new ServicosServico(this.repositorios);
 
                 return this.servicosServico;
+            }
+        }
+
+        public ICompromissosServico CompromissosServico
+        {
+            get
+            {
+                if (this.compromissosServico != null)
+                {
+                    return this.compromissosServico;
+                }
+
+                this.compromissosServico = new CompromissosServico(this.repositorios);
+
+                return this.compromissosServico;
             }
         }
     }
