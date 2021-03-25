@@ -24,7 +24,7 @@ namespace Agendamentos.Controllers.Apis
                 return NotFound();
             }
 
-            return Ok(comps);
+            return Ok(new { data = comps });
         }
 
         [Route("profissional")]

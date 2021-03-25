@@ -61,6 +61,10 @@
         });
     }
 
+    function onCompromissosTabShow() {
+        compromissos.init();
+    }
+
     /**
      * Funções usadas na página
      * */
@@ -78,6 +82,12 @@
             e.preventDefault();
 
             onPostConfiguracoes();
+        });
+
+        $("#tabs-configuracoes").on('shown.bs.tab', function () {
+            if ($("#tabs-configuracoes-content .tab-pane.active").attr("id") == "compromissos") {
+                onCompromissosTabShow();
+            }
         });
     }
 
