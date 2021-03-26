@@ -4,6 +4,10 @@
     margin-right: auto;
 }
 
+#compromissos{
+    padding-top: 10px;
+}
+
 fieldset:first-child {
     margin-top: .8em;
 }
