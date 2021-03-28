@@ -2,6 +2,7 @@
     inicializado: false,
 
     init: () => {
+        $.ajaxSetup({ contentType: "application/json; charset=utf-8" });
 
         if (this.inicializado) {
             return;
@@ -42,6 +43,15 @@
 
                 $("#sel-filtro-profissional").find("option").remove();
 
+                $("#btn-novo-compromisso").click(() => {
+                    compromissos.clearMdCompromissos();
+
+                    $("#md-novo-compromisso").draggable();
+                    $("#md-novo-compromisso").modal("show");
+                });
+
+                compromissos.initMdCompromissos();
+
                 $.get("/agendamentos/api/profissionais")
                     .then(function (data) {
                         $("#sel-filtro-profissional").append(`<option selected value=null></option>`);
@@ -49,6 +59,14 @@
                         data.forEach(function (item) {
                             $("#sel-filtro-profissional").append(`<option value=${item.codPessoa}>${item.nomePessoa}</option>`);
                         });
+
+                        $("#sel-filtro-profissional").append(`<option selected value=null></option>`);
+
+                        data.forEach(function (item) {
+                            $("#sel-profissional").append(`<option value=${item.codPessoa}>${item.nomePessoa}</option>`);
+                        });
+
+                        $("#sel-profissional").append(`<option selected value=null></option>`);
                     })
                     .fail(function () {
                         Swal.fire(
@@ -76,12 +94,73 @@
                         return moment(data).format("DD/MM/YYYY HH:mm");
                     }
                 },
-                { "data": "tipo"},
+                { "data": "tipo" },
             ],
         });
 
         this.inicializado = true;
     },
+    onCompromissoSalvo: () => { },
+    onCompromissoSalvar: function () {
+        var codCompromisso = $("#txt-cod-compromisso").val();
+
+        if (codCompromisso == null || codCompromisso == undefined) {
+            codCompromisso = 0;
+        }
+
+        var data = {
+            "codCompromisso": codCompromisso,
+            "inicio": $("#txt-compromisso-data-inicio").val() + "T" + $("#txt-compromisso-hora-inicio").val(),
+            "termino": $("#txt-compromisso-data-final").val() + "T" + $("#txt-compromisso-hora-final").val(),
+            "codTipo": parseInt($("#sel-tipo-compromisso").val()),
+            "descricao": $("#txt-compromisso-descricao").val(),
+            "codProfissional": parseInt($("#sel-profissional").val())
+        }
+        console.log(data);
+
+        return $.post("/agendamentos/api/compromissos/profissional", JSON.stringify(data))
+            .fail(function () {
+                Swal.fire(
+                    '',
+                    'Ocorreu um falha ao tentar salvar o compromisso',
+                    'error'
+                );
+            });
+    },
+
+    clearMdCompromissos: function () {
+        $("#txt-compromisso-data-inicio")[0].valueAsDate = new Date();
+        $("#txt-compromisso-data-final")[0].valueAsDate = new Date();
+
+        $("#txt-compromisso-hora-inicio").val(null);
+        $("#txt-compromisso-hora-final").val(null);
+
+        $("#txt-compromisso-descricao").val(null);
+        $("#sel-profissional").val(null);
+    },
+    initMdCompromissos: function () {
+
+        var frm = $("#frm-compromisso").submit(function (event) {
+            event.preventDefault();
+
+            if (!frm[0].checkValidity()) {
+
+                frm[0].classList.add('was-validated');
+                event.stopPropagation();
+
+                return;
+            };
+
+            compromissos.onCompromissoSalvar()
+                .then(() => {
+                    compromissos.onCompromissoSalvo();
+                    $('#md-novo-compromisso').modal("hide");
+                })
+
+            event.preventDefault();
+        });
+    },
+
     compDtToolbarHtml: function () {
         return `
 
@@ -98,10 +177,9 @@
 
 <div class="btn-toolbar" style="margin-bottom: 10px; float: right" role="toolbar" aria-label="navegadores de data">
   <div class="btn-group btn-group-sm" role="group" aria-label="Third group">
-    <button type="button" class="btn btn-outline-success">+</button>
+    <button type="button" id="btn-novo-compromisso" class="btn btn-outline-success">+</button>
   </div>
 </div>
-
 
 <div class="form-group" style="clear: both">
     <label for="sel-filtro-profissional">Profissional: </label>
