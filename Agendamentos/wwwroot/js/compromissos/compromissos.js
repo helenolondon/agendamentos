@@ -27,7 +27,7 @@
             },
             "language": {
                 "info": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
-                "emptyTable": "Sem dados para mostrar",
+                "emptyTable": "Sem dados para exibir",
                 "paginate": {
                     first: "Primeiro",
                     previous: "Anterior",
