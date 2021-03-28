@@ -8,7 +8,7 @@ namespace Agendamentos.Servicos
 {
     public interface ICompromissosServico
     {
-        CompromissosListaDTO ObterCompromissosPorProfissional(int codProfissional);
+        CompromissosListaDTO ObterCompromissosPorProfissional(int codProfissional, DateTime data);
         CompromissoDTO ObterCompromisso(int codCompromisso);
         void Excluir(int codCompromisso);
         int Salvar(CompromissoDTO compromisso);

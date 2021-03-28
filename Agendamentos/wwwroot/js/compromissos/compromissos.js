@@ -1,5 +1,6 @@
 ﻿var compromissos = {
     inicializado: false,
+    dtTableObj: null,
 
     init: () => {
         $.ajaxSetup({ contentType: "application/json; charset=utf-8" });
@@ -8,18 +9,25 @@
             return;
         }
 
-        $("#dt-tbl-compromissos").DataTable({
+        compromissos.initMdCompromissos();
+
+        compromissos.dtTableObj = $("#dt-tbl-compromissos").DataTable({
             'searching': false,
             "lengthChange": false,
             "dom": "<'#comp-dt-toolbar'>",
             "ajax": {
                 "url": "/agendamentos/api/compromissos/profissional",
                 "data": function (d) {
-                    d.codProfissional = 1207;
+                    return $.extend({}, d, {
+                        "codProfissional": $("#sel-filtro-profissional").val(),
+                        "data": $("#txt-data-filtro").val(),
+                    });
+
                 }
             },
             "language": {
                 "info": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                "emptyTable": "Sem dados para mostrar",
                 "paginate": {
                     first: "Primeiro",
                     previous: "Anterior",
@@ -28,6 +36,7 @@
                 }
             },
             "fnInitComplete": () => {
+
                 $("#comp-dt-toolbar").html(compromissos.compDtToolbarHtml());
                 $("#txt-data-filtro")[0].valueAsDate = new Date();
 
@@ -41,8 +50,6 @@
                     $("#txt-data-filtro").trigger('change');
                 });
 
-                $("#sel-filtro-profissional").find("option").remove();
-
                 $("#btn-novo-compromisso").click(() => {
                     compromissos.clearMdCompromissos();
 
@@ -50,17 +57,17 @@
                     $("#md-novo-compromisso").modal("show");
                 });
 
-                compromissos.initMdCompromissos();
+                $("#sel-filtro-profissional").find("option").remove();
 
                 $.get("/agendamentos/api/profissionais")
                     .then(function (data) {
-                        $("#sel-filtro-profissional").append(`<option selected value=null></option>`);
+                        $("#sel-filtro-profissional").append(`<option selected value=0></option>`);
 
                         data.forEach(function (item) {
                             $("#sel-filtro-profissional").append(`<option value=${item.codPessoa}>${item.nomePessoa}</option>`);
                         });
 
-                        $("#sel-filtro-profissional").append(`<option selected value=null></option>`);
+                        $("#sel-profissional").append(`<option selected value=null></option>`);
 
                         data.forEach(function (item) {
                             $("#sel-profissional").append(`<option value=${item.codPessoa}>${item.nomePessoa}</option>`);
@@ -77,32 +84,99 @@
                     });
 
                 $("#sel-filtro-profissional,#txt-data-filtro").change(function () {
-                    $("#dt-tbl-compromissos").dataTable().api().ajax.reload(null, false);
+                    $("#dt-tbl-compromissos").dataTable().api().ajax.reload(function () {
+                        compromissos.onReloadDataTable();
+                    }, false);
                 });
             },
             "columns": [
-                { "data": "descricao" },
+                { "data": "descricao", "width": '35%' },
                 {
                     "data": "inicio",
+                    "width": "15%",
                     "render": function (data, type, row) {
                         return moment(data).format("DD/MM/YYYY HH:mm");
                     }
                 },
                 {
                     "data": "termino",
+                    "width": "18%",
                     "render": function (data, type, row) {
                         return moment(data).format("DD/MM/YYYY HH:mm");
                     }
                 },
-                { "data": "tipo" },
+                { "data": "tipo", "width": "18%" },
+                {
+                    "data": "codCompromisso",
+                    "width": "9%",
+
+                    "orderable": false,
+                    render: function (data, type, row) {
+                        return "<div class='dtbuttoes'><a href='#' class='dtEditar'><i class='fas fa-edit'></i></a>&nbsp;" +
+                            "<a href='#' class='dtRemover'><i class='fas fa-times-circle'></i></a></div>";
+                    }
+                }
             ],
         });
 
         this.inicializado = true;
     },
+    onReloadDataTable: function () {
+        $(".dtEditar").on('click', function (e) {
+            e.preventDefault();
+            var row = $(this).closest('tr');
+
+            compromissos.onEditarCompromisso(compromissos.dtTableObj.row(row).data());
+        })
+
+        $(".dtRemover").on('click', function (e) {
+            e.preventDefault();
+            var row = $(this).closest('tr');
+
+            compromissos.onRemoverCompromisso(compromissos.dtTableObj.row(row).data());
+        });
+    },
+    onRemoverCompromisso: (data) => {
+        var md = $("#md-confirma");
+        md.find(".modal-body").html("<span>Confirma a exclusão do compromisso?</span>");
+        md.draggable();
+        md.find("#btn-sim").off('click');
+        md.find("#btn-sim").on('click', () => {
+            var q = $.ajax({
+                url: '/agendamentos/api/compromissos/profissional?codCompromisso=' + data.codCompromisso,
+                type: 'DELETE',
+                success: function (result) {
+                    $("#dt-tbl-compromissos").dataTable().api().ajax.reload(function () {
+                        compromissos.onReloadDataTable();
+                    }, false);
+                }
+            });
+
+            $.when([q]).then(() => {
+                md.modal('hide');
+            })
+        })
+
+        md.modal();
+    },
+    onEditarCompromisso: (data) => {
+        $("#txt-compromisso-data-inicio")[0].valueAsDate = new Date(data.inicio);
+        $("#txt-compromisso-data-final")[0].valueAsDate = new Date(data.termino);
+
+        $("#txt-compromisso-hora-inicio").val(moment(data.inicio).format("HH:mm:ss"));
+        $("#txt-compromisso-hora-final").val(moment(data.termino).format("HH:mm:ss"));
+
+        $("#txt-compromisso-descricao").val(data.descricao);
+        $("#sel-profissional").val(data.codProfissional);
+
+        $("#txt-cod-compromisso").val(data.codCompromisso);
+
+        $("#md-novo-compromisso").draggable();
+        $("#md-novo-compromisso").modal("show");
+    },
     onCompromissoSalvo: () => { },
     onCompromissoSalvar: function () {
-        var codCompromisso = $("#txt-cod-compromisso").val();
+        var codCompromisso = parseInt($("#txt-cod-compromisso").val());
 
         if (codCompromisso == null || codCompromisso == undefined) {
             codCompromisso = 0;
@@ -116,16 +190,28 @@
             "descricao": $("#txt-compromisso-descricao").val(),
             "codProfissional": parseInt($("#sel-profissional").val())
         }
-        console.log(data);
 
-        return $.post("/agendamentos/api/compromissos/profissional", JSON.stringify(data))
+        $("#btn-salvar-compromisso")
+            .attr('disabled', true)
+            .html("Salvando aguarde...");
+
+        return $.post("/agendamentos/api/compromissos/profissional", JSON.stringify(data), function () {
+            $("#dt-tbl-compromissos").dataTable().api().ajax.reload(function () {
+                compromissos.onReloadDataTable();
+            }, false);
+            })
             .fail(function () {
                 Swal.fire(
                     '',
                     'Ocorreu um falha ao tentar salvar o compromisso',
                     'error'
                 );
-            });
+            })
+            .always(function () {
+                $("#btn-salvar-compromisso")
+                    .attr('disabled', false)
+                    .html("Salvar");
+            })
     },
 
     clearMdCompromissos: function () {
@@ -137,6 +223,7 @@
 
         $("#txt-compromisso-descricao").val(null);
         $("#sel-profissional").val(null);
+        $("#txt-cod-compromisso").val(0);
     },
     initMdCompromissos: function () {
 
@@ -156,8 +243,6 @@
                     compromissos.onCompromissoSalvo();
                     $('#md-novo-compromisso').modal("hide");
                 })
-
-            event.preventDefault();
         });
     },
 

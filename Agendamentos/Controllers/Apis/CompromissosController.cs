@@ -13,15 +13,15 @@ namespace Agendamentos.Controllers.Apis
     {
         [Route("profissional")]
         [HttpGet]
-        public ActionResult<CompromissosListaDTO> ObterPorProfissional([FromQuery] int codProfissional)
+        public ActionResult<CompromissosListaDTO> ObterPorProfissional([FromQuery] int codProfissional, [FromQuery] DateTime data)
         {
             var serv = CriarServicos();
 
-            var comps = serv.CompromissosServico.ObterCompromissosPorProfissional(codProfissional);
+            var comps = serv.CompromissosServico.ObterCompromissosPorProfissional(codProfissional, data);
 
             if(comps == null || comps.Count == 0)
             {
-                return NotFound();
+                return Ok(new { data = new AgendamentoItensListaDTO() });
             }
 
             return Ok(new { data = comps });

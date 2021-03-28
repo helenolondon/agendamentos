@@ -1,17 +1,35 @@
-﻿<form name="frm-heleno">
-</form>
-
-
-<table id="dt-tbl-compromissos" class="display" style="width:100%">
+﻿<table id="dt-tbl-compromissos" class="display" style="width:100%">
     <thead>
         <tr>
             <th>Descrição</th>
             <th>Início</th>
             <th>Término</th>
             <th>Tipo</th>
+            <th style="text-align:center"><i class="fas fa-cog"></i></th>
         </tr>
     </thead>
 </table>
+
+<!-- Modal de confirmação -->
+<div class="modal fade" id="md-confirma" data-backdrop="static" data-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Confirmação</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            </div>
+            <div class="modal-footer">
+                <button id="btn-sim" type="button" class="btn btn-primary">Sim</button>
+                <button id="btn-nao" type="button" class="btn btn-secondary" data-dismiss="modal">Não</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Modal de novo compromisso -->
 <div class="modal fade" id="md-novo-compromisso" data-backdrop="static" data-keyboard="false" tabindex="-1"
@@ -19,7 +37,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Novo compromisso</h5>
+                <h5 class="modal-title">Detalhes do compromisso</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -27,6 +45,9 @@
             <div class="modal-body">
 
                 <form id="frm-compromisso" class="needs-validation" novalidate>
+
+                    <input type="hidden" id="txt-cod-compromisso" name="codCompromisso" />
+
                     <div class="form-group">
                         <label for="txt-compromisso-descricao">Descrição</label>
                         <input type="text" required class="form-control" id="txt-compromisso-descricao" aria-describedby="descrição">
@@ -88,11 +109,8 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="form-group">
-                                    <label for="sel-profissional">Tipo</label>
+                                    <label for="sel-profissional">Profissional</label>
                                     <select required class="form-control" id="sel-profissional">
-                                        <option selected value="1">Lorena</option>
-                                        <option value="2">Cris Cola</option>
-                                        <option value="3">Heleno Sales Mesquita</option>
                                     </select>
                                 </div>
                             </div>

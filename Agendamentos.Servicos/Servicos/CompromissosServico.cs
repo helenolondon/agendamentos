@@ -33,9 +33,9 @@ namespace Agendamentos.Servicos.Servicos
             return dto;
         }
 
-        public CompromissosListaDTO ObterCompromissosPorProfissional(int codProfissional)
+        public CompromissosListaDTO ObterCompromissosPorProfissional(int codProfissional, DateTime data)
         {
-            var comp = this.repositorio.CompromissosRepositorio.ObterCompromissosPorProfissional(codProfissional);
+            var comp = this.repositorio.CompromissosRepositorio.ObterCompromissosPorProfissional(codProfissional, data);
 
             if (comp == null || comp.Count == 0)
             {

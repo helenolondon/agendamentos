@@ -61,7 +61,7 @@
         });
     }
 
-    function onCompromissosTabShow() {
+    function onCompromissosTabShow() {        
         compromissos.init();
     }
 

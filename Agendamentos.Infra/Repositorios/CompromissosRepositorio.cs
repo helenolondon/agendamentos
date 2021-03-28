@@ -39,12 +39,12 @@ namespace Agendamentos.Infra.Repositorios
                 .FirstOrDefault();
         }
 
-        public List<Compromisso> ObterCompromissosPorProfissional(int codProfissional)
+        public List<Compromisso> ObterCompromissosPorProfissional(int codProfissional, DateTime data)
         {
             var comps = this.dbContext
                 .Compromissos
                 .Include(c => c.Pessoa)
-                .Where(comp => comp.Cd_Pessoa == codProfissional)
+                .Where(comp => comp.Cd_Pessoa == codProfissional && comp.Dat_Inicio.Date == data.Date)
                 .ToList();
 
             if(comps != null && comps.Count == 0)
