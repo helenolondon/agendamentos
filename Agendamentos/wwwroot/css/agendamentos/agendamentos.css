@@ -7,9 +7,13 @@
     font-size: 1.2em;
 }
 
+.fc-event-main{
+    overflow: hidden;
+}
+
 .hora-almoco {
     background-color: #ffdab3;
-    border-top-color: #808080!important;
+    border-top-color: #808080 !important;
 }
 
 .display {

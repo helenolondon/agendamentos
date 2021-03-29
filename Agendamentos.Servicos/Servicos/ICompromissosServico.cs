@@ -8,6 +8,7 @@ namespace Agendamentos.Servicos
 {
     public interface ICompromissosServico
     {
+        CompromissosListaDTO ObterCompromissosPorProfissional(int codProfissional, DateTime inicio, DateTime termino, bool permitirTodos);
         CompromissosListaDTO ObterCompromissosPorProfissional(int codProfissional, DateTime data);
         CompromissoDTO ObterCompromisso(int codCompromisso);
         void Excluir(int codCompromisso);

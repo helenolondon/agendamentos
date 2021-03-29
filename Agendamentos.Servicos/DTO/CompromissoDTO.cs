@@ -16,13 +16,37 @@ namespace Agendamentos.Servicos.DTO
         public DateTime Termino { get; set; }
         public int CodTipo { get; set; }
         public string Descricao { get; set; }
-        public string Tipo { get { return ObterTipoPessoa(this.CodTipo); } }
+        public string Tipo { get { return ObterTipoCompromisso(this.CodTipo); } }
         public int CodProfissional { get; set; }
         public string NomeProfissional { get; set; }
 
-        private string ObterTipoPessoa(int codTipoPessoa)
+        /// <summary>
+        /// Propriedades do scheduler
+        /// </summary>
+        public string start { get { return this.Inicio.ToString("yyyy-MM-dd HH':'mm':'ss"); } }
+        public string end { get { return this.Termino.ToString("yyyy-MM-dd HH':'mm':'ss"); } }
+        public string id { get { return this.CodCompromisso.ToString(); } }
+        public string horarioLabel { get { return this.Inicio.ToString("dd'/'MM HH':'mm") + " - " + this.Termino.ToString("dd'/'MM HH':'mm"); } }
+        public string title
         {
-            switch (codTipoPessoa)
+            get
+            {
+                return this.Descricao + "\n" +
+                    this.NomeProfissional + "n";
+            }
+        }
+
+        public string Color
+        {
+            get
+            {
+                return "#ffe6ff";
+            }
+        }
+
+        private string ObterTipoCompromisso(int codTipo)
+        {
+            switch (codTipo)
             {
                 case 1:
                     return "Particular";
@@ -31,7 +55,7 @@ namespace Agendamentos.Servicos.DTO
                 case 3:
                     return "Normal";
                 default:
-                    return "Desconhecido";
+                    return null;
             }
         }
 

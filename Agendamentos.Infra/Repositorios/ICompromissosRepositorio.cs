@@ -7,7 +7,7 @@ namespace Agendamentos.Infra.Repositorios
 {
     public interface ICompromissosRepositorio
     {
-        List<Compromisso> ObterCompromissosPorProfissional(int codProfissional, DateTime data);
+        List<Compromisso> ObterCompromissosPorProfissional(int codProfissional, DateTime inicio, DateTime termino, bool permitirTodos);
         Compromisso ObterCompromisso(int codCompromisso);
         void Excluir(int codCompromisso);
         int Salvar(Compromisso compromisso);

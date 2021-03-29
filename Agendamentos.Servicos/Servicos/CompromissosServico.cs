@@ -13,6 +13,21 @@ namespace Agendamentos.Servicos.Servicos
         public CompromissosServico(IRepositorios repositorio) : base(repositorio)
         {
         }
+        public CompromissosListaDTO ObterCompromissos(DateTime inicio, DateTime termino, int codProfissional)
+        {
+            var comps = this.repositorio.CompromissosRepositorio
+                .ObterCompromissosPorProfissional(codProfissional, inicio, termino, false);
+
+            if(comps == null || comps.Count == 0)
+            {
+                return null;
+            }
+
+            var dtos = new CompromissosListaDTO();
+            dtos.LoadFromCompromissos(comps);
+
+            return dtos;
+        }
         public void Excluir(int codCompromisso)
         {
             this.repositorio.CompromissosRepositorio.Excluir(codCompromisso);
@@ -35,11 +50,26 @@ namespace Agendamentos.Servicos.Servicos
 
         public CompromissosListaDTO ObterCompromissosPorProfissional(int codProfissional, DateTime data)
         {
-            var comp = this.repositorio.CompromissosRepositorio.ObterCompromissosPorProfissional(codProfissional, data);
+            var comp = this.repositorio.CompromissosRepositorio.ObterCompromissosPorProfissional(codProfissional, data, data, false);
 
             if (comp == null || comp.Count == 0)
             {
                 return null;
+            }
+
+            var dto = new CompromissosListaDTO();
+            dto.LoadFromCompromissos(comp);
+
+            return dto;
+        }
+
+        public CompromissosListaDTO ObterCompromissosPorProfissional(int codProfissional, DateTime inicio, DateTime termino, bool permitirTodos)
+        {
+            var comp = this.repositorio.CompromissosRepositorio.ObterCompromissosPorProfissional(codProfissional, inicio, termino, permitirTodos);
+
+            if (comp == null)
+            {
+                return new CompromissosListaDTO(); 
             }
 
             var dto = new CompromissosListaDTO();

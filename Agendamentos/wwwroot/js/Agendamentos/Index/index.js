@@ -250,6 +250,15 @@
             return;
         }
 
+        function eAlmoco(hora) {
+            let dataSlot = "1900-01-01T" + moment(hora).utc().format("HH:mm");
+            let inicioAlmoco = "1900-01-01T" + configuracoes.almocInicio;
+            let finalAlmoco = "1900-01-01T" + configuracoes.almocFinal;
+
+            return (moment(dataSlot).isSameOrAfter(inicioAlmoco) &&
+                moment(dataSlot).isBefore(finalAlmoco));
+        }
+
         return new FullCalendar.Calendar(calendarEl, {
             initialView: 'timeGridWeek',
             timeZone: 'America/Sao_Paulo',
@@ -265,24 +274,28 @@
             slotMinTime: configuracoes.funcInicio,
             slotMaxTime: configuracoes.funcFinal,
             slotLaneClassNames: function (args) {
-                let dataSlot = "1900-01-01T" + moment(args.date).utc().format("HH:mm");
-                let inicioAlmoco = "1900-01-01T" + configuracoes.almocInicio;
-                let finalAlmoco = "1900-01-01T" + configuracoes.almocFinal;
-
-                if (moment(dataSlot).isSameOrAfter(inicioAlmoco) &&
-                    moment(dataSlot).isBefore(finalAlmoco)) {
-
+                if (eAlmoco(args.date)) {
                     return "hora-almoco";
                 }
             },
-            events: {
-                url: '/agendamentos/api/agendamentos',
-                extraParams: function () {
-                    return {
-                        'codProfissional': $(".nav-link.active").attr("data-func-id")
+            eventSources: [
+                {
+                    url: '/agendamentos/api/agendamentos',
+                    extraParams: function () {
+                        return {
+                            'codProfissional': $(".nav-link.active").attr("data-func-id")
+                        }
+                    }
+                },
+                {
+                    url: '/agendamentos/api/compromissos',
+                    extraParams: function () {
+                        return {
+                            'codProfissional': $(".nav-link.active").attr("data-func-id")
+                        }
                     }
                 }
-            },
+            ],
             slotLabelFormat: {
                 hour: 'numeric',
                 minute: '2-digit',
@@ -304,59 +317,86 @@
                 center: 'title',
                 right: 'novoAgendamento,caixa,dayGridDay,timeGridWeek,dayGridMonth'
             },
-            eventContent: function (arg) {
+            eventContent: function (arg, element) {
 
                 if (arg.view.type == 'timeGridWeek') {
+                    if (arg.event.extendedProps.codAgendamentoItem) {
+                        let span = document.createElement("span");
+                        span.innerHTML = "X";
+                        span.style = "float: right; margin-right: 6px; font-size: 10px"
+                        span.onclick = ((ev, e) => {
+                            onRemoverAgendamento(arg.event.extendedProps.codAgendamentoItem);
+                        });
 
-                    let span = document.createElement("span");
-                    span.innerHTML = "X";
-                    span.style = "float: right; margin-right: 6px; font-size: 10px"
-                    span.onclick = ((ev, e) => {
-                        onRemoverAgendamento(arg.event.extendedProps.codAgendamentoItem);
-                    });
+                        let ElStatus = document.createElement('p')
+                        ElStatus.style = "font-size: 11px; margin: 10px 2px 2px;"
 
-                    let ElStatus = document.createElement('p')
-                    ElStatus.style = "font-size: 11px; margin: 10px 2px 2px;"
+                        if (arg.event.extendedProps.pago == "S") {
+                            ElStatus.innerHTML = "Status: " + arg.event.extendedProps.status + " (Pago)";
+                        }
+                        else {
+                            ElStatus.innerHTML = "Status: " + arg.event.extendedProps.status;
+                        }
 
-                    if (arg.event.extendedProps.pago == "S") {
-                        ElStatus.innerHTML = "Status: " + arg.event.extendedProps.status + " (Pago)";
+                        let ElHorario = document.createElement('p')
+
+                        ElHorario.innerHTML = "Horário: " + arg.event.extendedProps.horarioLabel;
+                        ElHorario.style = "margin: 0px 2px 2px; font-size: 11px;"
+
+                        let ElCliente = document.createElement('p')
+
+                        ElCliente.innerHTML = "Cliente: " + arg.event.extendedProps.nomeCliente;
+                        ElCliente.style = "margin: 0px 2px 2px; font-size: 11px;"
+
+                        let ElProfissional = document.createElement('p')
+                        ElProfissional.style = "font-size: 11px; margin: 0px 2px 2px;"
+
+                        ElProfissional.innerHTML = "Profissional: " + arg.event.extendedProps.nomeProfissional;
+
+                        let ElServico = document.createElement('p')
+                        ElServico.style = "font-size: 11px; margin: 0px 2px 2px;"
+
+                        ElServico.innerHTML = "Procedimento: " + arg.event.extendedProps.servico;
+
+                        let arrayOfDomNodes = [span, ElStatus, ElHorario, ElCliente, ElProfissional, ElServico]
+                        return { domNodes: arrayOfDomNodes }
                     }
-                    else {
-                        ElStatus.innerHTML = "Status: " + arg.event.extendedProps.status;
+                    else if (arg.event.extendedProps.codCompromisso) {
+
+                        let ElHorario = document.createElement('p')
+
+                        ElHorario.innerHTML = "Horário: " + arg.event.extendedProps.horarioLabel;
+                        ElHorario.style = "margin: 0px 2px 2px; font-size: 11px; color: #ff8080"
+
+                        let ElProfissional = document.createElement('p')
+                        ElProfissional.style = "font-size: 11px; margin: 0px 2px 2px; color: #ff8080"
+
+                        ElProfissional.innerHTML = "Profissional: " + arg.event.extendedProps.nomeProfissional;
+
+                        let ElDescricao = document.createElement('p')
+                        ElDescricao.style = "font-size: 11px; margin: 0px 2px 2px; color: #ff8080"
+
+                        ElDescricao.innerHTML = "Descrição: " + arg.event.extendedProps.descricao;
+
+                        let ElTipo = document.createElement('p')
+                        ElTipo.style = "font-size: 11px; margin: 0px 2px 2px; color: #ff8080"
+
+                        ElTipo.innerHTML = "Tipo: " + arg.event.extendedProps.tipo;
+
+                        let arrayOfDomNodes = [ElHorario, ElProfissional, ElDescricao, ElTipo]
+                        return { domNodes: arrayOfDomNodes }
                     }
-
-                    let ElHorario = document.createElement('p')
-
-                    ElHorario.innerHTML = "Horário: " + arg.event.extendedProps.horarioLabel;
-                    ElHorario.style = "margin: 0px 2px 2px; font-size: 11px;"
-
-                    let ElCliente = document.createElement('p')
-
-                    ElCliente.innerHTML = "Cliente: " + arg.event.extendedProps.nomeCliente;
-                    ElCliente.style = "margin: 0px 2px 2px; font-size: 11px;"
-
-                    let ElProfissional = document.createElement('p')
-                    ElProfissional.style = "font-size: 11px; margin: 0px 2px 2px;"
-
-                    ElProfissional.innerHTML = "Profissional: " + arg.event.extendedProps.nomeProfissional;
-
-                    let ElServico = document.createElement('p')
-                    ElServico.style = "font-size: 11px; margin: 0px 2px 2px;"
-
-                    ElServico.innerHTML = "Procedimento: " + arg.event.extendedProps.servico;
-
-                    let arrayOfDomNodes = [span, ElStatus, ElHorario, ElCliente, ElProfissional, ElServico]
-                    return { domNodes: arrayOfDomNodes }
                 }
                 else if (arg.view.type == 'dayGridMonth') {
+                    if (arg.event.extendedProps.codAgendamentoItem) {
+                        let ElAgendado = document.createElement('p')
 
-                    let ElAgendado = document.createElement('p')
+                        ElAgendado.innerHTML = arg.event.extendedProps.horarioLabel.substring(0, 5) + "-" + arg.event.extendedProps.nomeCliente;;
+                        ElAgendado.style = "margin: 0px 2px 2px; font-size: 09px; overflow: hidden;"
 
-                    ElAgendado.innerHTML = arg.event.extendedProps.horarioLabel.substring(0, 5) + "-" + arg.event.extendedProps.nomeCliente;;
-                    ElAgendado.style = "margin: 0px 2px 2px; font-size: 09px; overflow: hidden;"
-
-                    let arrayOfDomNodes = [ElAgendado]
-                    return { domNodes: arrayOfDomNodes }
+                        let arrayOfDomNodes = [ElAgendado]
+                        return { domNodes: arrayOfDomNodes }
+                    }
                 }
             },
             eventClick: function (e) {

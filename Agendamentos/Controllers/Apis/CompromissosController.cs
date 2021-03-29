@@ -11,6 +11,17 @@ namespace Agendamentos.Controllers.Apis
     [Route("api/compromissos")]
     public class CompromissosController : ApibaseController
     {
+        /// <summary>
+        /// Lista todos os compromissos - chamado pelo calendar
+        /// </summary>
+        [HttpGet]
+        public IActionResult ListarCompromissos([FromQuery] DateTime start, [FromQuery] DateTime end, [FromQuery] int codProfissional)
+        {
+            var servicos = this.CriarServicos();
+
+            return Ok(servicos.CompromissosServico.ObterCompromissosPorProfissional(codProfissional, start, end, true));
+        }
+
         [Route("profissional")]
         [HttpGet]
         public ActionResult<CompromissosListaDTO> ObterPorProfissional([FromQuery] int codProfissional, [FromQuery] DateTime data)
