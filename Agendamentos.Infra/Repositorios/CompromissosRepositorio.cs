@@ -30,6 +30,13 @@ namespace Agendamentos.Infra.Repositorios
             this.dbContext.SaveChanges();
         }
 
+        public List<Compromisso> ListarCompromissos(System.Linq.Expressions.Expression<Func<Compromisso, bool>> filtro)
+        {
+            return this.dbContext.Compromissos
+                .Where(filtro)
+                .Include(p => p.Pessoa)
+                .ToList();
+        }
         public Compromisso ObterCompromisso(int codCompromisso)
         {
             return this.dbContext

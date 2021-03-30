@@ -162,6 +162,7 @@ namespace Agendamentos.Servicos
             var valido = true;
             var conf = this.ObterConfiguracoes();
             List<AgendamentoItem> hist;
+            List<Compromisso> comps;
 
             var agOld = this.repositorio.AgendamentosRepositorio
                 .ConsultarAgendamento(agendamentoItem.CodAgendamento);
@@ -205,6 +206,7 @@ namespace Agendamentos.Servicos
 
             if (agendamentoItem.CodAgendamentoItem == 0)
             {
+                // Valida confltos com agendamentos
                 hist = this.repositorio.AgendamentosRepositorio.ListarAgendamentosItens(a => a.Dat_Inicio >= agendamentoItem.Inicio && a.Dat_Inicio <= agendamentoItem.Termino &&
                     a.Cd_Profissional == agendamentoItem.CodProfissional && agendamentoItem.CodCliente != a.Agendamento.Cd_Cliente);
 
@@ -218,10 +220,25 @@ namespace Agendamentos.Servicos
                 hist = this.repositorio.AgendamentosRepositorio.ListarAgendamentosItens(a => a.Dat_Inicio < agendamentoItem.Inicio && a.Dat_Termino > agendamentoItem.Termino &&
                     a.Cd_Profissional == agendamentoItem.CodProfissional && agendamentoItem.CodCliente != a.Agendamento.Cd_Cliente);
 
-                valido &= hist == null || hist.Count == 0;               
+                // valida conflitos com compromissos
+                comps = this.repositorio.CompromissosRepositorio.ListarCompromissos(a => a.Dat_Inicio >= agendamentoItem.Inicio && a.Dat_Inicio <= agendamentoItem.Termino &&
+                    a.Cd_Pessoa == agendamentoItem.CodProfissional);
+
+                valido &= comps == null || comps.Count == 0;
+
+                comps = this.repositorio.CompromissosRepositorio.ListarCompromissos(a => a.Dat_Termino > agendamentoItem.Inicio && a.Dat_Termino <= agendamentoItem.Termino &&
+                    a.Cd_Pessoa == agendamentoItem.CodProfissional);
+
+                valido &= comps == null || comps.Count == 0;
+
+                comps = this.repositorio.CompromissosRepositorio.ListarCompromissos(a => a.Dat_Inicio < agendamentoItem.Inicio && a.Dat_Termino > agendamentoItem.Termino &&
+                    a.Cd_Pessoa == agendamentoItem.CodProfissional);
+
+                valido &= comps == null || comps.Count == 0;               
             }
             else
             {
+                // Valida confltos com agendamentos
                 hist = this.repositorio.AgendamentosRepositorio.ListarAgendamentosItens(a => a.Dat_Inicio >= agendamentoItem.Inicio && a.Dat_Inicio <= agendamentoItem.Termino &&
                     a.Cd_Profissional == agendamentoItem.CodProfissional && agendamentoItem.CodCliente != a.Agendamento.Cd_Cliente && a.Cd_AgendamentoItem != agendamentoItem.CodAgendamentoItem);
 
@@ -235,7 +252,21 @@ namespace Agendamentos.Servicos
                 hist = this.repositorio.AgendamentosRepositorio.ListarAgendamentosItens(a => a.Dat_Inicio < agendamentoItem.Inicio && a.Dat_Termino > agendamentoItem.Termino &&
                     a.Cd_Profissional == agendamentoItem.CodProfissional && agendamentoItem.CodCliente != a.Agendamento.Cd_Cliente && a.Cd_AgendamentoItem != agendamentoItem.CodAgendamentoItem);
 
-                valido &= hist == null || hist.Count == 0;
+                // valida conflitos com compromissos
+                comps = this.repositorio.CompromissosRepositorio.ListarCompromissos(a => a.Dat_Inicio >= agendamentoItem.Inicio && a.Dat_Inicio <= agendamentoItem.Termino &&
+                    a.Cd_Pessoa == agendamentoItem.CodProfissional);
+
+                valido &= comps == null || comps.Count == 0;
+
+                comps = this.repositorio.CompromissosRepositorio.ListarCompromissos(a => a.Dat_Termino > agendamentoItem.Inicio && a.Dat_Termino <= agendamentoItem.Termino &&
+                    a.Cd_Pessoa == agendamentoItem.CodProfissional);
+
+                valido &= comps == null || comps.Count == 0;
+
+                comps = this.repositorio.CompromissosRepositorio.ListarCompromissos(a => a.Dat_Inicio < agendamentoItem.Inicio && a.Dat_Termino > agendamentoItem.Termino &&
+                    a.Cd_Pessoa == agendamentoItem.CodProfissional);
+
+                valido &= comps == null || comps.Count == 0;
             }
 
             if (!valido)
