@@ -1,142 +1,146 @@
-﻿var compromissos = {
-    inicializado: false,
-    dtTableObj: null,
+﻿function compromissosCtrl() {
+    var inicializado = false;
+    var dtTableObj = null;
 
-    init: () => {
+    this.init = () => {
         $.ajaxSetup({ contentType: "application/json; charset=utf-8" });
 
-        if (this.inicializado) {
+        if (inicializado) {
             return;
         }
 
-        compromissos.initMdCompromissos();
-
-        compromissos.dtTableObj = $("#dt-tbl-compromissos").DataTable({
-            'searching': false,
-            "lengthChange": false,
-            "dom": "<'#comp-dt-toolbar'>",
-            "ajax": {
-                "url": "/agendamentos/api/compromissos/profissional",
-                "data": function (d) {
-                    return $.extend({}, d, {
-                        "codProfissional": $("#sel-filtro-profissional").val(),
-                        "data": $("#txt-data-filtro").val(),
-                    });
-
-                }
-            },
-            "language": {
-                "info": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
-                "emptyTable": "Sem dados para exibir",
-                "paginate": {
-                    first: "Primeiro",
-                    previous: "Anterior",
-                    next: "Próximo",
-                    last: "Último"
-                }
-            },
-            "fnInitComplete": () => {
-
-                $("#comp-dt-toolbar").html(compromissos.compDtToolbarHtml());
-                $("#txt-data-filtro")[0].valueAsDate = new Date();
-
-                $("#btn-p-data").click(function () {
-                    $("#txt-data-filtro")[0].valueAsDate = new Date(moment($("#txt-data-filtro").val()).add(-1, 'd').format());
-                    $("#txt-data-filtro").trigger('change');
-                });
-
-                $("#btn-px-data").click(function () {
-                    $("#txt-data-filtro")[0].valueAsDate = new Date(moment($("#txt-data-filtro").val()).add(1, 'd').format());
-                    $("#txt-data-filtro").trigger('change');
-                });
-
-                $("#btn-novo-compromisso").click(() => {
-                    compromissos.clearMdCompromissos();
-
-                    $("#md-novo-compromisso").draggable();
-                    $("#md-novo-compromisso").modal("show");
-                });
-
-                $("#sel-filtro-profissional").find("option").remove();
-
-                $.get("/agendamentos/api/profissionais")
-                    .then(function (data) {
-                        $("#sel-filtro-profissional").append(`<option selected value=0></option>`);
-
-                        data.forEach(function (item) {
-                            $("#sel-filtro-profissional").append(`<option value=${item.codPessoa}>${item.nomePessoa}</option>`);
+        this.initMdCompromissos(() => {
+            dtTableObj = $("#dt-tbl-compromissos").DataTable({
+                'searching': false,
+                "lengthChange": false,
+                "dom": "<'#comp-dt-toolbar'>",
+                "ajax": {
+                    "url": "/agendamentos/api/compromissos/profissional",
+                    "data": function (d) {
+                        return $.extend({}, d, {
+                            "codProfissional": $("#sel-filtro-profissional").val(),
+                            "data": $("#txt-data-filtro").val(),
                         });
 
-                        $("#sel-profissional").append(`<option selected value=null></option>`);
+                    }
+                },
+                "language": {
+                    "info": "Mostrando de _START_ até _END_ de _TOTAL_ registros",
+                    "emptyTable": "Sem dados para exibir",
+                    "paginate": {
+                        first: "Primeiro",
+                        previous: "Anterior",
+                        next: "Próximo",
+                        last: "Último"
+                    }
+                },
+                "fnInitComplete": () => {
 
-                        data.forEach(function (item) {
-                            $("#sel-profissional").append(`<option value=${item.codPessoa}>${item.nomePessoa}</option>`);
-                        });
+                    $("#comp-dt-toolbar").html(this.compDtToolbarHtml());
+                    $("#txt-data-filtro")[0].valueAsDate = new Date();
 
-                        $("#sel-profissional").append(`<option selected value=null></option>`);
-                    })
-                    .fail(function () {
-                        Swal.fire(
-                            '',
-                            'Falha ao obter lista de profissionais',
-                            'error'
-                        );
+                    $("#btn-p-data").click(function () {
+                        $("#txt-data-filtro")[0].valueAsDate = new Date(moment($("#txt-data-filtro").val()).add(-1, 'd').format());
+                        $("#txt-data-filtro").trigger('change');
                     });
 
-                $("#sel-filtro-profissional,#txt-data-filtro").change(function () {
-                    $("#dt-tbl-compromissos").dataTable().api().ajax.reload(function () {
-                        compromissos.onReloadDataTable();
-                    }, false);
-                });
-            },
-            "columns": [
-                { "data": "descricao", "width": '35%' },
-                {
-                    "data": "inicio",
-                    "width": "15%",
-                    "render": function (data, type, row) {
-                        return moment(data).format("DD/MM/YYYY HH:mm");
-                    }
-                },
-                {
-                    "data": "termino",
-                    "width": "18%",
-                    "render": function (data, type, row) {
-                        return moment(data).format("DD/MM/YYYY HH:mm");
-                    }
-                },
-                { "data": "tipo", "width": "18%" },
-                {
-                    "data": "codCompromisso",
-                    "width": "9%",
+                    $("#btn-px-data").click(function () {
+                        $("#txt-data-filtro")[0].valueAsDate = new Date(moment($("#txt-data-filtro").val()).add(1, 'd').format());
+                        $("#txt-data-filtro").trigger('change');
+                    });
 
-                    "orderable": false,
-                    render: function (data, type, row) {
-                        return "<div class='dtbuttoes'><a href='#' class='dtEditar'><i class='fas fa-edit'></i></a>&nbsp;" +
-                            "<a href='#' class='dtRemover'><i class='fas fa-times-circle'></i></a></div>";
+                    $("#btn-novo-compromisso").click(() => {
+                        this.clearMdCompromissos();
+
+                        $("#md-novo-compromisso").draggable();
+                        $("#md-novo-compromisso").modal("show");
+                    });
+
+                    $("#sel-filtro-profissional").find("option").remove();
+
+                    $.get("/agendamentos/api/profissionais")
+                        .then(function (data) {
+                            $("#sel-filtro-profissional").append(`<option selected value=0></option>`);
+
+                            data.forEach(function (item) {
+                                $("#sel-filtro-profissional").append(`<option value=${item.codPessoa}>${item.nomePessoa}</option>`);
+                            });
+
+                            $("#sel-profissional").append(`<option selected value=null></option>`);
+
+                            data.forEach(function (item) {
+                                $("#sel-profissional").append(`<option value=${item.codPessoa}>${item.nomePessoa}</option>`);
+                            });
+
+                            $("#sel-profissional").append(`<option selected value=null></option>`);
+                        })
+                        .fail(function () {
+                            Swal.fire(
+                                '',
+                                'Falha ao obter lista de profissionais',
+                                'error'
+                            );
+                        });
+
+                    $("#sel-filtro-profissional,#txt-data-filtro").change(() => {
+                        $("#dt-tbl-compromissos").dataTable().api().ajax.reload(() => {
+                            this.onReloadDataTable();
+                        }, false);
+                    });
+                },
+                "columns": [
+                    { "data": "descricao", "width": '35%' },
+                    {
+                        "data": "inicio",
+                        "width": "15%",
+                        "render": function (data, type, row) {
+                            return moment(data).format("DD/MM/YYYY HH:mm");
+                        }
+                    },
+                    {
+                        "data": "termino",
+                        "width": "18%",
+                        "render": function (data, type, row) {
+                            return moment(data).format("DD/MM/YYYY HH:mm");
+                        }
+                    },
+                    { "data": "tipo", "width": "18%" },
+                    {
+                        "data": "codCompromisso",
+                        "width": "9%",
+
+                        "orderable": false,
+                        render: function (data, type, row) {
+                            return "<div class='dtbuttoes'><a href='#' class='dtEditar'><i class='fas fa-edit'></i></a>&nbsp;" +
+                                "<a href='#' class='dtRemover'><i class='fas fa-times-circle'></i></a></div>";
+                        }
                     }
-                }
-            ],
+                ],
+            });
+
+            this.inicializado = true;
         });
+    };
+    this.onReloadDataTable = () => {
+        var self = this;
 
-        this.inicializado = true;
-    },
-    onReloadDataTable: function () {
         $(".dtEditar").on('click', function (e) {
             e.preventDefault();
+
             var row = $(this).closest('tr');
 
-            compromissos.onEditarCompromisso(compromissos.dtTableObj.row(row).data());
+            self.onEditarCompromisso(dtTableObj.row(row).data());
         })
 
         $(".dtRemover").on('click', function (e) {
             e.preventDefault();
             var row = $(this).closest('tr');
 
-            compromissos.onRemoverCompromisso(compromissos.dtTableObj.row(row).data());
+            self.onRemoverCompromisso(dtTableObj.row(row).data());
         });
-    },
-    onRemoverCompromisso: (data) => {
+    };
+
+    this.onRemoverCompromisso = (data) => {
         var md = $("#md-confirma");
         md.find(".modal-body").html("<span>Confirma a exclusão do compromisso?</span>");
         md.draggable();
@@ -145,9 +149,9 @@
             var q = $.ajax({
                 url: '/agendamentos/api/compromissos/profissional?codCompromisso=' + data.codCompromisso,
                 type: 'DELETE',
-                success: function (result) {
-                    $("#dt-tbl-compromissos").dataTable().api().ajax.reload(function () {
-                        compromissos.onReloadDataTable();
+                success: (result) => {
+                    $("#dt-tbl-compromissos").dataTable().api().ajax.reload(() => {
+                        this.onReloadDataTable();
                     }, false);
                 }
             });
@@ -158,8 +162,9 @@
         })
 
         md.modal();
-    },
-    onEditarCompromisso: (data) => {
+    };
+
+    this.onEditarCompromisso = (data) => {
         $("#txt-compromisso-data-inicio")[0].valueAsDate = new Date(data.inicio);
         $("#txt-compromisso-data-final")[0].valueAsDate = new Date(data.termino);
 
@@ -173,9 +178,11 @@
 
         $("#md-novo-compromisso").draggable();
         $("#md-novo-compromisso").modal("show");
-    },
-    onCompromissoSalvo: () => { },
-    onCompromissoSalvar: function () {
+    };
+
+    this.onCompromissoSalvo = () => { };
+
+    this.onCompromissoSalvar = () => {
         var codCompromisso = parseInt($("#txt-cod-compromisso").val());
 
         if (codCompromisso == null || codCompromisso == undefined) {
@@ -195,21 +202,20 @@
             .attr('disabled', true)
             .html("Salvando aguarde...");
 
-        return $.post("/agendamentos/api/compromissos/profissional", JSON.stringify(data), function () {
+        return $.post("/agendamentos/api/compromissos/profissional", JSON.stringify(data), () => {
             $("#frm-compromisso .salvar-erros")
                 .html(null);
 
-            $("#dt-tbl-compromissos").dataTable().api().ajax.reload(function () {
-                compromissos.onReloadDataTable();
+            $("#dt-tbl-compromissos").dataTable().api().ajax.reload(() => {
+                this.onReloadDataTable();
             }, false);
-            })
+        })
             .fail(function (err) {
                 if (err && err.status == 400) {
                     $("#frm-compromisso .salvar-erros")
                         .html(err.responseText);
                 }
-                else
-                {
+                else {
                     Swal.fire(
                         '',
                         'Ocorreu um erro ao salvar o compromisso',
@@ -222,9 +228,9 @@
                     .attr('disabled', false)
                     .html("Salvar");
             })
-    },
+    };
 
-    clearMdCompromissos: function () {
+    this.clearMdCompromissos = function () {
         $("#txt-compromisso-data-inicio")[0].valueAsDate = new Date();
         $("#txt-compromisso-data-final")[0].valueAsDate = new Date();
 
@@ -237,56 +243,69 @@
 
         $("#frm-compromisso .salvar-erros").html(null);
         $("#frm-compromisso")[0].classList.remove('was-validated');
-    },
-    initMdCompromissos: function () {
+    };
 
-        var frm = $("#frm-compromisso").submit(function (event) {
-            event.preventDefault();
+    this.initMdCompromissos = (readyCallBack) => {
 
-            if (!frm[0].checkValidity()) {
+        $("#md-compromisso-div")
+            .load("/agendamentos/agendamentos/compromissoform", () => {
 
-                frm[0].classList.add('was-validated');
-                event.stopPropagation();
+                var frm = $("#frm-compromisso").submit((event) => {
+                    event.preventDefault();
 
-                return;
-            };
+                    if (!frm[0].checkValidity()) {
 
-            compromissos.onCompromissoSalvar()
-                .then(() => {
-                    compromissos.onCompromissoSalvo();
-                    $('#md-novo-compromisso').modal("hide");
-                })
-        });
-    },
+                        frm[0].classList.add('was-validated');
+                        event.stopPropagation();
 
-    compDtToolbarHtml: function () {
+                        return;
+                    };
+
+                    this.onCompromissoSalvar()
+                        .then(() => {
+                            this.onCompromissoSalvo();
+                            $('#md-novo-compromisso').modal("hide");
+                        })
+                });
+
+                readyCallBack();
+            })
+            .ajaxError(function () {
+                Swal.fire(
+                    '',
+                    'Ocorreu uma falha ao carregar formulário de compromissos',
+                    'error'
+                );
+            });
+    };
+
+    this.compDtToolbarHtml = function () {
         return `
+            <div class="btn-toolbar" style="margin-bottom: 10px; float: left" role="toolbar" aria-label="navegadores de data">
+              <div class="btn-group btn-group-sm mr-2" role="group">
+                <button type="button" id="btn-p-data" class="btn btn-outline-secondary"><</button>
+                <button type="button" id="btn-px-data" class="btn btn-outline-secondary">></button>
+              </div>
+            </div>
 
-<div class="btn-toolbar" style="margin-bottom: 10px; float: left" role="toolbar" aria-label="navegadores de data">
-  <div class="btn-group btn-group-sm mr-2" role="group">
-    <button type="button" id="btn-p-data" class="btn btn-outline-secondary"><</button>
-    <button type="button" id="btn-px-data" class="btn btn-outline-secondary">></button>
-  </div>
-</div>
+            <div class="input-group input-group-sm mb-3" style="width: 150px; float: left;">
+              <input type="date" id="txt-data-filtro" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+            </div>
 
-<div class="input-group input-group-sm mb-3" style="width: 150px; float: left;">
-  <input type="date" id="txt-data-filtro" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
-</div>
+            <div class="btn-toolbar" style="margin-bottom: 10px; float: right" role="toolbar" aria-label="navegadores de data">
+              <div class="btn-group btn-group-sm" role="group" aria-label="Third group">
+                <button type="button" id="btn-novo-compromisso" class="btn btn-outline-success">+</button>
+              </div>
+            </div>
 
-<div class="btn-toolbar" style="margin-bottom: 10px; float: right" role="toolbar" aria-label="navegadores de data">
-  <div class="btn-group btn-group-sm" role="group" aria-label="Third group">
-    <button type="button" id="btn-novo-compromisso" class="btn btn-outline-success">+</button>
-  </div>
-</div>
-
-<div class="form-group" style="clear: both">
-    <label for="sel-filtro-profissional">Profissional: </label>
-    <select class="form-control" id="sel-filtro-profissional">
-      <option>Lorena</option>
-      <option>Cris Cola</option>
-      <option>Heleno Sales Mesquita</option>
-    </select>
-</div>
-`;
-    },
+            <div class="form-group" style="clear: both">
+                <label for="sel-filtro-profissional">Profissional: </label>
+                <select class="form-control" id="sel-filtro-profissional">
+                  <option>Lorena</option>
+                  <option>Cris Cola</option>
+                  <option>Heleno Sales Mesquita</option>
+                </select>
+            </div>
+            `;
+    };
 }

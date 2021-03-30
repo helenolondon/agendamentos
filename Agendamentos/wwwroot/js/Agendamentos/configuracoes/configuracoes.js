@@ -1,6 +1,6 @@
 ﻿$(document).ready(function () {
     $.ajaxSetup({ contentType: "application/json; charset=utf-8" });
-
+    let compromissos = new compromissosCtrl();
     let url = "/agendamentos/api/agendamentos/configuracoes";
     let urlCompromissos = "/agendamentos/agendamentos/compromissos";
 

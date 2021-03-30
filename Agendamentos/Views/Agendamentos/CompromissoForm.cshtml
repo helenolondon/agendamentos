@@ -1,0 +1,96 @@
+﻿<div class="modal fade" id="md-novo-compromisso" data-backdrop="static" data-keyboard="false" tabindex="-1"
+     aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalhes do compromisso</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form id="frm-compromisso" class="needs-validation" novalidate>
+
+                    <input type="hidden" id="txt-cod-compromisso" name="codCompromisso" />
+
+                    <div class="form-group">
+                        <label for="txt-compromisso-descricao">Descrição</label>
+                        <input type="text" required class="form-control" id="txt-compromisso-descricao" aria-describedby="descrição">
+                    </div>
+
+                    <div class="container pl-0 pr-0">
+
+                        <fieldset>
+                            <legend>Começa em:</legend>
+
+                            <div class="row">
+                                <div class="col-6 pr-2">
+                                    <div class="form-group">
+                                        <label for="txt-compromisso-data-inicio">Data</label>
+                                        <input type="date" required class="form-control" id="txt-compromisso-data-inicio" aria-describedby="data de início">
+                                    </div>
+                                </div>
+                                <div class="col-6 pl-2">
+                                    <div class="form-group">
+                                        <label for="txt-compromisso-hora-inicio">Hora</label>
+                                        <input type="time" required class="form-control" id="txt-compromisso-hora-inicio" aria-describedby="hora de início">
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend>Termina em:</legend>
+
+                            <div class="row">
+                                <div class="col-6 pr-1">
+                                    <div class="form-group">
+                                        <label for="txt-compromisso-data-final">Data</label>
+                                        <input type="date" required class="form-control" id="txt-compromisso-data-final" aria-describedby="data de final">
+                                    </div>
+                                </div>
+                                <div class="col-6 pl-2">
+                                    <div class="form-group">
+                                        <label for="txt-compromisso-hora-final">Hora</label>
+                                        <input type="time" required class="form-control" id="txt-compromisso-hora-final" aria-describedby="hora de final">
+                                    </div>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="sel-tipo-compromisso">Tipo</label>
+                                    <select required class="form-control" id="sel-tipo-compromisso">
+                                        <option selected value="1">Particular</option>
+                                        <option value="2">Fechado</option>
+                                        <option value="3">Normal</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="sel-profissional">Profissional</label>
+                                    <select required class="form-control" id="sel-profissional">
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-danger text-center salvar-erros"></div>
+
+                    <div class="modal-footer p-0 pt-2">
+                        <button type="button" class="btn btn-secondary mb-0" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" id="btn-salvar-compromisso" class="btn btn-primary mr-0 mb-0">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -20,6 +20,12 @@ namespace Agendamentos.Controllers
         {
             return PartialView();
         }
+        
+        // Compromissos
+        public PartialViewResult CompromissoForm()
+        {
+            return PartialView();
+        }
 
         // Página de configurações da Agenda
         public ActionResult Configuracoes()
