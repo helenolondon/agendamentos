@@ -196,16 +196,26 @@
             .html("Salvando aguarde...");
 
         return $.post("/agendamentos/api/compromissos/profissional", JSON.stringify(data), function () {
+            $("#frm-compromisso .salvar-erros")
+                .html(null);
+
             $("#dt-tbl-compromissos").dataTable().api().ajax.reload(function () {
                 compromissos.onReloadDataTable();
             }, false);
             })
-            .fail(function () {
-                Swal.fire(
-                    '',
-                    'Ocorreu um falha ao tentar salvar o compromisso',
-                    'error'
-                );
+            .fail(function (err) {
+                if (err && err.status == 400) {
+                    $("#frm-compromisso .salvar-erros")
+                        .html(err.responseText);
+                }
+                else
+                {
+                    Swal.fire(
+                        '',
+                        'Ocorreu um erro ao salvar o compromisso',
+                        'error'
+                    );
+                }
             })
             .always(function () {
                 $("#btn-salvar-compromisso")
@@ -224,6 +234,9 @@
         $("#txt-compromisso-descricao").val(null);
         $("#sel-profissional").val(null);
         $("#txt-cod-compromisso").val(0);
+
+        $("#frm-compromisso .salvar-erros").html(null);
+        $("#frm-compromisso")[0].classList.remove('was-validated');
     },
     initMdCompromissos: function () {
 

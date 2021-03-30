@@ -1,4 +1,5 @@
 ﻿using Agendamentos.Infra;
+using Agendamentos.Infra.Modelos;
 using Agendamentos.Servicos.DTO;
 using Agendamentos.Servicos.Erros;
 using Agendamentos.Servicos.Listas;
@@ -13,6 +14,7 @@ namespace Agendamentos.Servicos.Servicos
         public CompromissosServico(IRepositorios repositorio) : base(repositorio)
         {
         }
+
         public CompromissosListaDTO ObterCompromissos(DateTime inicio, DateTime termino, int codProfissional)
         {
             var comps = this.repositorio.CompromissosRepositorio
@@ -28,6 +30,7 @@ namespace Agendamentos.Servicos.Servicos
 
             return dtos;
         }
+
         public void Excluir(int codCompromisso)
         {
             this.repositorio.CompromissosRepositorio.Excluir(codCompromisso);
@@ -103,6 +106,86 @@ namespace Agendamentos.Servicos.Servicos
             if (comp.Inicio == null || comp.Termino == null)
             {
                 throw new ServicosException("É necessário informar o início e o término do compromisso");
+            }
+
+            var conflitaAlmoco = false;
+            var foraDeHorario = false;
+
+            var valido = true;
+            var conf = this.repositorio.AgendamentosRepositorio.ObterConfiguracoes();
+            List<Compromisso> comps;
+
+            var inicioAlmoco = comp.Inicio.Date + conf.Tim_AlmocInicio;
+            var fimAlmoco = comp.Inicio.Date + conf.Tim_AlmocFinal;
+
+            var inicioExpediente = comp.Inicio.Date + conf.Tim_FuncInicio;
+            var fimExpediente = comp.Inicio.Date + conf.Tim_FuncFinal;
+
+            if (conf != null)
+            {
+                foraDeHorario = comp.Inicio < inicioExpediente;
+                foraDeHorario = foraDeHorario || comp.Termino > fimExpediente;
+
+                if (conf.Num_BloqAlmoco == 1)
+                {
+                    conflitaAlmoco = inicioAlmoco >= comp.Inicio && inicioAlmoco < comp.Termino;
+                    conflitaAlmoco = conflitaAlmoco || (fimAlmoco > comp.Inicio && fimAlmoco <= comp.Termino);
+                    conflitaAlmoco = conflitaAlmoco || (inicioAlmoco < comp.Inicio && fimAlmoco > comp.Termino);
+                }
+            }
+
+            if (foraDeHorario)
+            {
+                throw new ServicosException("Compromisso fora do horário permitido");
+            }
+
+            if (conflitaAlmoco)
+            {
+                throw new ServicosException("Não é permitido marcar compromisso durante o horário de almoço");
+            }
+
+            if (comp.CodCompromisso == 0)
+            {
+                // valida conflitos com compromissos
+                comps = this.repositorio.CompromissosRepositorio.ListarCompromissos(a => a.Dat_Inicio >= comp.Inicio && a.Dat_Inicio <= comp.Termino &&
+                    a.Cd_Pessoa == comp.CodProfissional);
+
+                valido &= comps == null || comps.Count == 0;
+
+                comps = this.repositorio.CompromissosRepositorio.ListarCompromissos(a => a.Dat_Termino > comp.Inicio && a.Dat_Termino <= comp.Termino &&
+                    a.Cd_Pessoa == comp.CodProfissional);
+
+                valido &= comps == null || comps.Count == 0;
+
+                comps = this.repositorio.CompromissosRepositorio.ListarCompromissos(a => a.Dat_Inicio < comp.Inicio && a.Dat_Termino > comp.Termino &&
+                    a.Cd_Pessoa == comp.CodProfissional);
+
+                valido &= comps == null || comps.Count == 0;
+            }
+            else
+            {
+                comps = this.repositorio.CompromissosRepositorio.ListarCompromissos(a => a.Dat_Inicio >= comp.Inicio && a.Dat_Inicio <= comp.Termino &&
+                    a.Cd_Pessoa == comp.CodProfissional && comp.CodCompromisso != a.Cd_Compromisso);
+
+                valido &= comps == null || comps.Count == 0;
+
+                comps = this.repositorio.CompromissosRepositorio.ListarCompromissos(a => a.Dat_Termino > comp.Inicio && a.Dat_Termino <= comp.Termino &&
+                    a.Cd_Pessoa == comp.CodProfissional && comp.CodCompromisso != a.Cd_Compromisso);
+
+                valido &= comps == null || comps.Count == 0;
+
+                comps = this.repositorio.CompromissosRepositorio.ListarCompromissos(a => a.Dat_Inicio < comp.Inicio && a.Dat_Termino > comp.Termino &&
+                    a.Cd_Pessoa == comp.CodProfissional && comp.CodCompromisso != a.Cd_Compromisso);
+
+                valido &= comps == null || comps.Count == 0;
+            }
+
+            if (!valido)
+            {
+                var nome = this.repositorio.PessoasRepositorio.Obter(comp.CodProfissional)?.Txt_Nome ?? "profissional não identificado";
+                nome = nome.Split(" ")[0];
+
+                throw new ServicosException(nome + " já possui compromisso no horário " + comp.horarioLabel);
             }
         }
 

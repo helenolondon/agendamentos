@@ -1,4 +1,5 @@
 ﻿using Agendamentos.Servicos.DTO;
+using Agendamentos.Servicos.Erros;
 using Agendamentos.Servicos.Listas;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -44,14 +45,21 @@ namespace Agendamentos.Controllers.Apis
         {
             var serv = CriarServicos();
 
-            var codProfissional = serv.CompromissosServico.Salvar(compromisso);
-
-            if(codProfissional == 0)
+            try
             {
-                return BadRequest("Não foi possível salvar o compromisso");
-            }
+                var codProfissional = serv.CompromissosServico.Salvar(compromisso);
 
-            return Ok(codProfissional);
+                if (codProfissional == 0)
+                {
+                    return BadRequest("Não foi possível salvar o compromisso");
+                }
+
+                return Ok(codProfissional);
+            }
+            catch (ServicosException e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [Route("profissional")]
