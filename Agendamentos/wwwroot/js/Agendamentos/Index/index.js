@@ -6,6 +6,8 @@
     var calendarEl = document.getElementById('calendar');
     var calendar = null;
     var configuracoes = {};
+    let urlCompromissos = "/agendamentos/agendamentos/compromissos";
+    var compCtrl = new compromissosCtrl();
 
     // Inicializa a agenda
     init();
@@ -183,6 +185,7 @@
     async function init() {
 
         // Carrega filtros de Profissionais
+        carregaCompromissoForm();
         await carregaFiltrosProfissionais();
         await carregaConfiguracoes();
 
@@ -234,6 +237,11 @@
         $("#func-tabs").on("shown.bs.tab", function (event) {
             onSchedulerRefreshNeeded();
         })
+
+        // Evento ocorre após salvar um novo compromisso.
+        compCtrl.onCompromissoSalvo = () => {
+            onSchedulerRefreshNeeded();
+        }
     }
 
     // Configura e retorna objeto calendário inicializado
@@ -310,10 +318,20 @@
                 caixa: {
                     text: 'Caixa',
                     click: abreCaixa
+                },
+                bloquear: {
+                    text: 'Compromisso',
+                    click: addCompromisso
+                },
+                imprimir: {
+                    text: 'Imprimir',                    
+                    click: () => {
+                        window.print();
+                    }
                 }
             },
             headerToolbar: {
-                left: 'prev,next,today',
+                left: 'prev,next,today bloquear,imprimir',
                 center: 'title',
                 right: 'novoAgendamento,caixa,dayGridDay,timeGridWeek,dayGridMonth'
             },
@@ -488,6 +506,18 @@
 
                 return $.Deferred().resolve(novaId);
             });
+    }
+
+    // Carrega view parcial contendo o markup do formulário de compromisso
+    function carregaCompromissoForm() {
+        compCtrl.initMdCompromissos(() => {
+        });         
+    }
+
+    // Adciona bloqueio horário do profissional
+    function addCompromisso() {
+        compCtrl.clearMdCompromissos();
+        compCtrl.showCompromissoForm();
     }
 
     function botoesRemoverDisableEnable() {

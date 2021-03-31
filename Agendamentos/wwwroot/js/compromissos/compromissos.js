@@ -51,9 +51,7 @@
 
                     $("#btn-novo-compromisso").click(() => {
                         this.clearMdCompromissos();
-
-                        $("#md-novo-compromisso").draggable();
-                        $("#md-novo-compromisso").modal("show");
+                        this.showCompromissoForm();
                     });
 
                     $("#sel-filtro-profissional").find("option").remove();
@@ -176,8 +174,7 @@
 
         $("#txt-cod-compromisso").val(data.codCompromisso);
 
-        $("#md-novo-compromisso").draggable();
-        $("#md-novo-compromisso").modal("show");
+        this.showCompromissoForm();
     };
 
     this.onCompromissoSalvo = () => { };
@@ -245,6 +242,11 @@
         $("#frm-compromisso")[0].classList.remove('was-validated');
     };
 
+    this.showCompromissoForm = () => {
+        $("#md-novo-compromisso").draggable();
+        $("#md-novo-compromisso").modal("show");
+    }
+
     this.initMdCompromissos = (readyCallBack) => {
 
         $("#md-compromisso-div")
@@ -267,6 +269,25 @@
                             $('#md-novo-compromisso').modal("hide");
                         })
                 });
+
+                $.get("/agendamentos/api/profissionais")
+                    .then(function (data) {
+
+                        $("#sel-profissional").append(`<option selected value=null></option>`);
+
+                        data.forEach(function (item) {
+                            $("#sel-profissional").append(`<option value=${item.codPessoa}>${item.nomePessoa}</option>`);
+                        });
+
+                        $("#sel-profissional").append(`<option selected value=null></option>`);
+                    })
+                    .fail(function () {
+                        Swal.fire(
+                            '',
+                            'Falha ao obter lista de profissionais',
+                            'error'
+                        );
+                    });
 
                 readyCallBack();
             })
