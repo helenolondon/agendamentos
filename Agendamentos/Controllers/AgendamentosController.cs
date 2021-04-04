@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Agendamentos.Servicos.DTO;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,8 +11,27 @@ namespace Agendamentos.Controllers
     public class AgendamentosController : Controller
     {
         // Agendamentos
-        public ActionResult Index()
+        public ActionResult Index([FromQuery] string auth, [FromQuery] int cod_empresa, [FromQuery] int cod_usu)
         {
+            var serv = new Agendamentos.ServicosNM.Servicos(Startup.Configuration);
+
+            if (!(serv.AutenticaService.TokenValido(auth, cod_usu)))
+            {
+                return View("NaoAutorizado");
+            }
+
+            InfoUsuarioLoginDTO uInfo = serv.AutenticaService.ObterInfoUsuario(cod_usu);
+            
+            if(uInfo == null)
+            {
+                return View("NaoAutorizado");
+            }
+
+            ViewBag.Administrador = uInfo.Administrador;
+            ViewBag.Profissional = uInfo.Funcionario;
+            ViewBag.CodProfissional = cod_usu;
+            ViewBag.NomeProfissional = uInfo.NomeUsuario;
+
             return View();
         }
 

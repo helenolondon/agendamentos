@@ -2,12 +2,27 @@
     <link rel="stylesheet" href="~/css/agendamentos/agendamentos.css" />
 }
 
-<!-- Tabs dos funcionários -->
-<ul class="nav nav-tabs" id="func-tabs" role="tablist">
-    <li class="nav-item" role="presentation">
-        <a class="nav-link active" id="func-0" data-func-id="0" data-toggle="tab" href="#global" role="tab" aria-controls="home" aria-selected="true">Agenda Global</a>
-    </li>
-</ul>
+@{
+    if (ViewBag.Administrador)
+    {
+        <!-- Filtros globais do administrador -->
+        <ul class="nav nav-tabs" id="func-tabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="func-0" data-func-id="0" data-toggle="tab" href="#global" role="tab" aria-controls="home" aria-selected="true">Agenda Global</a>
+            </li>
+        </ul>
+    }
+    else if (ViewBag.Profissional)
+    {
+        <!-- Agenda filtrada por funcionário -->
+        <ul class="nav nav-tabs" id="func-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <a class="nav-link active" id="func-@ViewBag.CodProfissional" data-func-id=@ViewBag.CodProfissional data-toggle="tab" href="#global" 
+                   role="tab" aria-controls="home" aria-selected="true">@ViewBag.NomeProfissional</a>
+            </li>
+        </ul>
+    }
+}
 
 @*Aqui é onde o scheduler inicia*@
 <div id='calendar'></div>

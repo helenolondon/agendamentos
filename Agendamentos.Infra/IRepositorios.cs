@@ -12,5 +12,6 @@ namespace Agendamentos.Infra
         IProcedimentosRepositorio ProcedimentosRepositorio { get; }
         IServicosRepositorio ServicosRepositorio { get; }
         ICompromissosRepositorio CompromissosRepositorio { get; }
+        IAutenticaRepositorio AutenticaRepositorio { get; }
     }
 }

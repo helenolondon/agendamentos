@@ -16,6 +16,7 @@ namespace Agendamentos.ServicosNM
         private IProcedimentoServico procedimentoServico;
         private IServicosServico servicosServico;
         private ICompromissosServico compromissosServico;
+        private IAutenticaService autenticaService;
 
         public Servicos(IConfiguration configuration)
         {
@@ -92,6 +93,21 @@ namespace Agendamentos.ServicosNM
                 this.compromissosServico = new CompromissosServico(this.repositorios);
 
                 return this.compromissosServico;
+            }
+        }
+
+        public IAutenticaService AutenticaService
+        {
+            get
+            {
+                if (this.autenticaService != null)
+                {
+                    return this.autenticaService;
+                }
+
+                this.autenticaService = new AutenticaService(this.repositorios);
+
+                return this.autenticaService;
             }
         }
     }

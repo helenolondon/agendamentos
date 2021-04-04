@@ -14,6 +14,7 @@ namespace Agendamentos.Infra.Repositorios
         private IProcedimentosRepositorio procedimentosRepositorio;
         private IServicosRepositorio servicosRepositorio;
         private ICompromissosRepositorio compromissosRepositorio;
+        private IAutenticaRepositorio autenticaRepositorio;
 
         public Repositorios(IConfiguration configuration)
         {
@@ -32,7 +33,6 @@ namespace Agendamentos.Infra.Repositorios
                 return this.agendamentosRepositorio;
             }
         }
-
         public IPessoasRepositorio PessoasRepositorio
         {
             get
@@ -69,7 +69,6 @@ namespace Agendamentos.Infra.Repositorios
                 return this.servicosRepositorio;
             }
         }
-
         public ICompromissosRepositorio CompromissosRepositorio
         {
             get
@@ -80,6 +79,18 @@ namespace Agendamentos.Infra.Repositorios
                 }
 
                 return this.compromissosRepositorio;
+            }
+        }
+        public IAutenticaRepositorio AutenticaRepositorio
+        {
+            get
+            {
+                if (this.autenticaRepositorio == null)
+                {
+                    this.autenticaRepositorio = new AutenticaRepositorio(this.dbContext);
+                }
+
+                return this.autenticaRepositorio;
             }
         }
     }
