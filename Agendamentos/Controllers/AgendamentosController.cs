@@ -29,7 +29,7 @@ namespace Agendamentos.Controllers
 
             ViewBag.Administrador = uInfo.Administrador;
             ViewBag.Profissional = uInfo.Funcionario;
-            ViewBag.CodProfissional = cod_usu;
+            ViewBag.CodProfissional = uInfo.CodPessoa;
             ViewBag.NomeProfissional = uInfo.NomeUsuario;
 
             return View();
